@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAV Social Assistance - Figure Comparison Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #0f3460 0%, #16213e 100%);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #e94560;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #a0a0a0;
+            font-size: 1.1em;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            border: 2px solid #e94560;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: #e94560;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: #e94560;
+            margin: 30px 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+        }
+
+        .subsection-title {
+            font-size: 1.5em;
+            color: #00d9ff;
+            margin: 25px 0 15px;
+        }
+
+        .description {
+            background: #1e3a5f;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #e94560;
+        }
+
+        .figure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .figure-card {
+            background: #1e3a5f;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .figure-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(233,69,96,0.2);
+        }
+
+        .figure-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .figure-card img:hover {
+            transform: scale(1.02);
+        }
+
+        .figure-caption {
+            padding: 15px;
+            background: #0f3460;
+        }
+
+        .figure-caption h4 {
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .figure-caption p {
+            color: #a0a0a0;
+            font-size: 0.85em;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+            background: #1e3a5f;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .comparison-row.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .comparison-header {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+            margin-bottom: 15px;
+        }
+
+        .comparison-header h3 {
+            color: #00d9ff;
+            font-size: 1.3em;
+        }
+
+        .comparison-cell {
+            text-align: center;
+        }
+
+        .comparison-cell img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .comparison-cell .label {
+            color: #e94560;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .legend-box {
+            background: #1e3a5f;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .legend-box h4 {
+            color: #00d9ff;
+            margin-bottom: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 10px;
+        }
+
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #0f3460 0%, #1e3a5f 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            color: #e94560;
+            font-weight: bold;
+        }
+
+        .stat-card .label {
+            color: #a0a0a0;
+            margin-top: 10px;
+        }
+
+        .toc {
+            background: #1e3a5f;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .toc h3 {
+            color: #00d9ff;
+            margin-bottom: 15px;
+        }
+
+        .toc ul {
+            list-style: none;
+            columns: 3;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        .toc a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc a:hover {
+            color: #e94560;
+        }
+
+        .split-badge {
+            display: inline-block;
+            background: #e94560;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .outcome-badge {
+            display: inline-block;
+            background: #00d9ff;
+            color: #1a1a2e;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .split-section {
+            background: #0f3460;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .split-section h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e94560;
+        }
+
+        .outcomes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .outcomes-grid.with-splits {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .outcome-pair {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .outcome-cell {
+            text-align: center;
+        }
+
+        .outcome-cell img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .outcome-cell .label {
+            color: #a0a0a0;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>NAV Social Assistance Study</h1>
+        <p>Distributional Event Study Figure Comparison Dashboard</p>
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('overview')">Overview</button>
+            <button class="nav-tab" onclick="showSection('full-sample')">Full Sample</button>
+            <button class="nav-tab" onclick="showSection('demographics')">Demographics</button>
+            <button class="nav-tab" onclick="showSection('labor-market')">Labor Market</button>
+            <button class="nav-tab" onclick="showSection('hhi')">HHI Concentration</button>
+            <button class="nav-tab" onclick="showSection('unemployment')">Unemployment</button>
+            <button class="nav-tab" onclick="showSection('shocks')">Life Events</button>
+            <button class="nav-tab" onclick="showSection('education')">Education</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- OVERVIEW SECTION -->
+        <div id="overview" class="section active">
+            <h2 class="section-title">Study Overview</h2>
+
+            <div class="stat-cards">
+                <div class="stat-card">
+                    <div class="number">43</div>
+                    <div class="label">Heterogeneity Splits</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">3</div>
+                    <div class="label">Distributional Outcomes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">1,189</div>
+                    <div class="label">Total Figures</div>
+                </div>
+            </div>
+
+            <div class="description">
+                <h3>Research Design</h3>
+                <p style="margin-top: 10px;">
+                    This study uses an <strong>examiner design</strong> exploiting random caseworker assignment within NAV offices
+                    to estimate causal effects of Social Assistance (SA) benefits on adult outcomes. The instrument is
+                    caseworker leniency (UJIVE - Uniformly Justified Leave-One-Out IV).
+                </p>
+                <p style="margin-top: 10px;">
+                    <strong>Sample:</strong> Norwegian-born adults (nor==1) aged 18-67 receiving Social Assistance during 2012-2022.
+                </p>
+            </div>
+
+            <div class="legend-box">
+                <h4>Distributional Outcomes</h4>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><code>inc_tot_gt_p</code> - <strong>Total Income</strong>: All income sources combined</li>
+                    <li><code>inc_work_gt_p</code> - <strong>Labor Income</strong>: Earnings from employment</li>
+                    <li><code>taxable_income_gt_p</code> - <strong>Taxable Income</strong>: Income subject to taxation</li>
+                </ul>
+                <p style="margin-top: 15px; color: #a0a0a0;">
+                    Each ridgeline plot shows effects across the income distribution. Lines represent percentile thresholds (p10-p90).
+                    Y-axis shows the probability of exceeding that percentile.
+                </p>
+            </div>
+
+            <div class="legend-box">
+                <h4>Split Levels</h4>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>split0</strong> - Reference group (e.g., Male, Low HHI, No shock)</li>
+                    <li><strong>split1</strong> - Treatment group (e.g., Female, High HHI, Shock experienced)</li>
+                    <li><strong>pooled</strong> - Full sample (only in "all" split)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- FULL SAMPLE SECTION -->
+        <div id="full-sample" class="section">
+            <h2 class="section-title">Full Sample (All)</h2>
+
+            <div class="description">
+                <p>Full sample results using the pooled Norwegian-born population. Shows effects of Amount, Duration, and Amount x Duration treatments.</p>
+            </div>
+
+            <div class="split-section">
+                <h3>Total Income <span class="outcome-badge">inc_tot_gt_p</span></h3>
+                <div class="outcomes-grid">
+                    <div class="outcome-cell">
+                        <img src="figs/all/distributional_eventstudy_all_inc_tot_gt_p_amt_pooled_noronly.png" onclick="openModal(this)">
+                        <div class="label">Amount</div>
+                    </div>
+                    <div class="outcome-cell">
+                        <img src="figs/all/distributional_eventstudy_all_inc_tot_gt_p_dur_pooled_noronly.png" onclick="openModal(this)">
+                        <div class="label">Duration</div>
+                    </div>
+                    <div class="outcome-cell">
+                        <img src="figs/all/distributional_eventstudy_all_inc_tot_gt_p_amt_dur_pooled_noronly.png" onclick="openModal(this)">
+                        <div class="label">Amount x Duration</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="split-section">
+                <h3>Labor Income <span class="outcome-badge">inc_work_gt_p</span></h3>
+                <div class="outcomes-grid">
+                    <div class="outcome-cell">
+                        <img src="figs/all/distributional_eventstudy_all_inc_work_gt_p_amt_pooled_noronly.png" onclick="openModal(this)">
+                        <div class="label">Amount</div>
+                    </div>
+                    <div class="outcome-cell">
+                        <img src="figs/all/distributional_eventstudy_all_inc_work_gt_p_dur_pooled_noronly.png" onclick="openModal(this)">
+                        <div class="label">Duration</div>
+                    </div>
+                    <div class="outcome-cell">
+                        <img src="figs/all/distributional_eventstudy_all_inc_work_gt_p_amt_dur_pooled_noronly.png" onclick="openModal(this)">
+                        <div class="label">Amount x Duration</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="split-section">
+                <h3>Taxable Income <span class="outcome-badge">taxable_income_gt_p</span></h3>
+                <div class="outcomes-grid">
+                    <div class="outcome-cell">
+                        <img src="figs/all/distributional_eventstudy_all_taxable_income_gt_p_amt_pooled_noronly.png" onclick="openModal(this)">
+                        <div class="label">Amount</div>
+                    </div>
+                    <div class="outcome-cell">
+                        <img src="figs/all/distributional_eventstudy_all_taxable_income_gt_p_dur_pooled_noronly.png" onclick="openModal(this)">
+                        <div class="label">Duration</div>
+                    </div>
+                    <div class="outcome-cell">
+                        <img src="figs/all/distributional_eventstudy_all_taxable_income_gt_p_amt_dur_pooled_noronly.png" onclick="openModal(this)">
+                        <div class="label">Amount x Duration</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DEMOGRAPHICS SECTION -->
+        <div id="demographics" class="section">
+            <h2 class="section-title">Demographic Splits</h2>
+
+            <!-- Gender -->
+            <div class="split-section">
+                <h3>Gender <span class="split-badge">female</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/female/distributional_eventstudy_female_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Male</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/female/distributional_eventstudy_female_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Female</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/female/distributional_eventstudy_female_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Male</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/female/distributional_eventstudy_female_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Female</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/female/distributional_eventstudy_female_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Male</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/female/distributional_eventstudy_female_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Female</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employment Status -->
+            <div class="split-section">
+                <h3>Prior Employment <span class="split-badge">employed_tm1</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/employed_tm1/distributional_eventstudy_employed_tm1_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Not Employed</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/employed_tm1/distributional_eventstudy_employed_tm1_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Employed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/employed_tm1/distributional_eventstudy_employed_tm1_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Not Employed</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/employed_tm1/distributional_eventstudy_employed_tm1_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Employed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/employed_tm1/distributional_eventstudy_employed_tm1_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Not Employed</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/employed_tm1/distributional_eventstudy_employed_tm1_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Employed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Single Status -->
+            <div class="split-section">
+                <h3>Marital Status <span class="split-badge">single_tm1</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/single_tm1/distributional_eventstudy_single_tm1_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Not Single</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/single_tm1/distributional_eventstudy_single_tm1_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Single</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/single_tm1/distributional_eventstudy_single_tm1_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Not Single</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/single_tm1/distributional_eventstudy_single_tm1_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Single</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/single_tm1/distributional_eventstudy_single_tm1_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Not Single</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/single_tm1/distributional_eventstudy_single_tm1_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Single</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Has Kids -->
+            <div class="split-section">
+                <h3>Children <span class="split-badge">has_kids_tm1</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/has_kids_tm1/distributional_eventstudy_has_kids_tm1_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Children</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/has_kids_tm1/distributional_eventstudy_has_kids_tm1_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Has Children</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/has_kids_tm1/distributional_eventstudy_has_kids_tm1_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Children</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/has_kids_tm1/distributional_eventstudy_has_kids_tm1_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Has Children</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/has_kids_tm1/distributional_eventstudy_has_kids_tm1_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Children</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/has_kids_tm1/distributional_eventstudy_has_kids_tm1_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Has Children</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Homeless -->
+            <div class="split-section">
+                <h3>Housing Status <span class="split-badge">homeless</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/homeless/distributional_eventstudy_homeless_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Housed</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/homeless/distributional_eventstudy_homeless_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Homeless</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/homeless/distributional_eventstudy_homeless_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Housed</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/homeless/distributional_eventstudy_homeless_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Homeless</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/homeless/distributional_eventstudy_homeless_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Housed</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/homeless/distributional_eventstudy_homeless_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Homeless</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Union -->
+            <div class="split-section">
+                <h3>Union Membership <span class="split-badge">union</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/union/distributional_eventstudy_union_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Non-Union</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/union/distributional_eventstudy_union_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Union</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/union/distributional_eventstudy_union_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Non-Union</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/union/distributional_eventstudy_union_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Union</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/union/distributional_eventstudy_union_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Non-Union</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/union/distributional_eventstudy_union_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Union</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LABOR MARKET SECTION -->
+        <div id="labor-market" class="section">
+            <h2 class="section-title">Labor Market Conditions</h2>
+
+            <!-- Rural -->
+            <div class="split-section">
+                <h3>Urban vs Rural <span class="split-badge">rural</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/rural/distributional_eventstudy_rural_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Urban</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/rural/distributional_eventstudy_rural_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Rural</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/rural/distributional_eventstudy_rural_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Urban</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/rural/distributional_eventstudy_rural_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Rural</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/rural/distributional_eventstudy_rural_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Urban</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/rural/distributional_eventstudy_rural_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Rural</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EPOP p50 -->
+            <div class="split-section">
+                <h3>Employment-to-Population Ratio <span class="split-badge">epop_p50</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/epop_p50/distributional_eventstudy_epop_p50_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low EPOP</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/epop_p50/distributional_eventstudy_epop_p50_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High EPOP</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/epop_p50/distributional_eventstudy_epop_p50_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low EPOP</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/epop_p50/distributional_eventstudy_epop_p50_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High EPOP</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/epop_p50/distributional_eventstudy_epop_p50_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low EPOP</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/epop_p50/distributional_eventstudy_epop_p50_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High EPOP</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LLM Best -->
+            <div class="split-section">
+                <h3>Best Labor Markets <span class="split-badge">llm_best</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/llm_best/distributional_eventstudy_llm_best_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Other</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/llm_best/distributional_eventstudy_llm_best_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Best LLM</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/llm_best/distributional_eventstudy_llm_best_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Other</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/llm_best/distributional_eventstudy_llm_best_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Best LLM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/llm_best/distributional_eventstudy_llm_best_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Other</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/llm_best/distributional_eventstudy_llm_best_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Best LLM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LLM Worst -->
+            <div class="split-section">
+                <h3>Worst Labor Markets <span class="split-badge">llm_worst</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/llm_worst/distributional_eventstudy_llm_worst_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Other</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/llm_worst/distributional_eventstudy_llm_worst_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Worst LLM</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/llm_worst/distributional_eventstudy_llm_worst_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Other</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/llm_worst/distributional_eventstudy_llm_worst_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Worst LLM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/llm_worst/distributional_eventstudy_llm_worst_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Other</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/llm_worst/distributional_eventstudy_llm_worst_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Worst LLM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wage Daily p75 -->
+            <div class="split-section">
+                <h3>Daily Wage Level <span class="split-badge">wage_daily_p75</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/wage_daily_p75/distributional_eventstudy_wage_daily_p75_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Wage</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/wage_daily_p75/distributional_eventstudy_wage_daily_p75_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Wage (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/wage_daily_p75/distributional_eventstudy_wage_daily_p75_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Wage</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/wage_daily_p75/distributional_eventstudy_wage_daily_p75_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Wage (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/wage_daily_p75/distributional_eventstudy_wage_daily_p75_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Wage</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/wage_daily_p75/distributional_eventstudy_wage_daily_p75_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Wage (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HHI SECTION -->
+        <div id="hhi" class="section">
+            <h2 class="section-title">HHI Concentration Splits</h2>
+
+            <div class="description">
+                <p><strong>HHI (Herfindahl-Hirschman Index):</strong> Higher HHI = more concentrated market = worse for workers (fewer employers competing).</p>
+            </div>
+
+            <!-- HHI educ p25 -->
+            <div class="split-section">
+                <h3>HHI by Education (p25) <span class="split-badge">HHI_educ_p25</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p25/distributional_eventstudy_HHI_educ_p25_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p25/distributional_eventstudy_HHI_educ_p25_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p25+)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p25/distributional_eventstudy_HHI_educ_p25_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p25/distributional_eventstudy_HHI_educ_p25_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p25+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p25/distributional_eventstudy_HHI_educ_p25_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p25/distributional_eventstudy_HHI_educ_p25_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p25+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HHI educ p50 -->
+            <div class="split-section">
+                <h3>HHI by Education (p50) <span class="split-badge">HHI_educ_p50</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p50/distributional_eventstudy_HHI_educ_p50_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p50/distributional_eventstudy_HHI_educ_p50_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p50+)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p50/distributional_eventstudy_HHI_educ_p50_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p50/distributional_eventstudy_HHI_educ_p50_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p50+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p50/distributional_eventstudy_HHI_educ_p50_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p50/distributional_eventstudy_HHI_educ_p50_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p50+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HHI educ p75 -->
+            <div class="split-section">
+                <h3>HHI by Education (p75) <span class="split-badge">HHI_educ_p75</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p75/distributional_eventstudy_HHI_educ_p75_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p75/distributional_eventstudy_HHI_educ_p75_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p75/distributional_eventstudy_HHI_educ_p75_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p75/distributional_eventstudy_HHI_educ_p75_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p75/distributional_eventstudy_HHI_educ_p75_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_p75/distributional_eventstudy_HHI_educ_p75_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HHI educ moderate -->
+            <div class="split-section">
+                <h3>HHI Moderate Concentration <span class="split-badge">HHI_educ_moderate</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_moderate/distributional_eventstudy_HHI_educ_moderate_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Competitive</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_moderate/distributional_eventstudy_HHI_educ_moderate_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Moderate+ Conc.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_moderate/distributional_eventstudy_HHI_educ_moderate_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Competitive</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_moderate/distributional_eventstudy_HHI_educ_moderate_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Moderate+ Conc.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_moderate/distributional_eventstudy_HHI_educ_moderate_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Competitive</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_educ_moderate/distributional_eventstudy_HHI_educ_moderate_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Moderate+ Conc.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HHI occ2 p75 -->
+            <div class="split-section">
+                <h3>HHI by Occupation (p75) <span class="split-badge">HHI_occ2_p75</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_occ2_p75/distributional_eventstudy_HHI_occ2_p75_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_occ2_p75/distributional_eventstudy_HHI_occ2_p75_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_occ2_p75/distributional_eventstudy_HHI_occ2_p75_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_occ2_p75/distributional_eventstudy_HHI_occ2_p75_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_occ2_p75/distributional_eventstudy_HHI_occ2_p75_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low HHI</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/HHI_occ2_p75/distributional_eventstudy_HHI_occ2_p75_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High HHI (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UNEMPLOYMENT SECTION -->
+        <div id="unemployment" class="section">
+            <h2 class="section-title">Unemployment Rate Splits</h2>
+
+            <!-- Urate LLM p25 -->
+            <div class="split-section">
+                <h3>Unemployment Rate (p25) <span class="split-badge">urate_llm_p25</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p25/distributional_eventstudy_urate_llm_p25_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p25/distributional_eventstudy_urate_llm_p25_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p25+)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p25/distributional_eventstudy_urate_llm_p25_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p25/distributional_eventstudy_urate_llm_p25_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p25+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p25/distributional_eventstudy_urate_llm_p25_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p25/distributional_eventstudy_urate_llm_p25_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p25+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Urate LLM p50 -->
+            <div class="split-section">
+                <h3>Unemployment Rate (p50) <span class="split-badge">urate_llm_p50</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p50/distributional_eventstudy_urate_llm_p50_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p50/distributional_eventstudy_urate_llm_p50_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p50+)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p50/distributional_eventstudy_urate_llm_p50_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p50/distributional_eventstudy_urate_llm_p50_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p50+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p50/distributional_eventstudy_urate_llm_p50_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p50/distributional_eventstudy_urate_llm_p50_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p50+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Urate LLM p75 -->
+            <div class="split-section">
+                <h3>Unemployment Rate (p75) <span class="split-badge">urate_llm_p75</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p75/distributional_eventstudy_urate_llm_p75_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p75/distributional_eventstudy_urate_llm_p75_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p75/distributional_eventstudy_urate_llm_p75_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p75/distributional_eventstudy_urate_llm_p75_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p75/distributional_eventstudy_urate_llm_p75_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_llm_p75/distributional_eventstudy_urate_llm_p75_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p75+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Urate Mun p50 -->
+            <div class="split-section">
+                <h3>Municipal Unemployment (p50) <span class="split-badge">urate_mun_p50</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_mun_p50/distributional_eventstudy_urate_mun_p50_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_mun_p50/distributional_eventstudy_urate_mun_p50_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p50+)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_mun_p50/distributional_eventstudy_urate_mun_p50_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_mun_p50/distributional_eventstudy_urate_mun_p50_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p50+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/urate_mun_p50/distributional_eventstudy_urate_mun_p50_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Low Urate</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/urate_mun_p50/distributional_eventstudy_urate_mun_p50_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">High Urate (p50+)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SHOCKS SECTION -->
+        <div id="shocks" class="section">
+            <h2 class="section-title">Life Events & Shocks</h2>
+
+            <!-- Family Death -->
+            <div class="split-section">
+                <h3>Family Death <span class="split-badge">any_family_death_tm2_t</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/any_family_death_tm2_t/distributional_eventstudy_any_family_death_tm2_t_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Death</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/any_family_death_tm2_t/distributional_eventstudy_any_family_death_tm2_t_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Family Death</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/any_family_death_tm2_t/distributional_eventstudy_any_family_death_tm2_t_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Death</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/any_family_death_tm2_t/distributional_eventstudy_any_family_death_tm2_t_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Family Death</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/any_family_death_tm2_t/distributional_eventstudy_any_family_death_tm2_t_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Death</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/any_family_death_tm2_t/distributional_eventstudy_any_family_death_tm2_t_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Family Death</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employment Shock -->
+            <div class="split-section">
+                <h3>Employment Shock <span class="split-badge">any_employment_shock</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/any_employment_shock/distributional_eventstudy_any_employment_shock_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Shock</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/any_employment_shock/distributional_eventstudy_any_employment_shock_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Emp. Shock</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/any_employment_shock/distributional_eventstudy_any_employment_shock_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Shock</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/any_employment_shock/distributional_eventstudy_any_employment_shock_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Emp. Shock</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/any_employment_shock/distributional_eventstudy_any_employment_shock_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Shock</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/any_employment_shock/distributional_eventstudy_any_employment_shock_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Emp. Shock</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Economic Shock -->
+            <div class="split-section">
+                <h3>Economic Shock <span class="split-badge">any_econ_shock</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/any_econ_shock/distributional_eventstudy_any_econ_shock_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Shock</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/any_econ_shock/distributional_eventstudy_any_econ_shock_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Econ. Shock</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/any_econ_shock/distributional_eventstudy_any_econ_shock_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Shock</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/any_econ_shock/distributional_eventstudy_any_econ_shock_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Econ. Shock</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/any_econ_shock/distributional_eventstudy_any_econ_shock_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No Shock</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/any_econ_shock/distributional_eventstudy_any_econ_shock_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Econ. Shock</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E-to-U Transition -->
+            <div class="split-section">
+                <h3>Employment-to-Unemployment <span class="split-badge">EtoU_0g_tm1</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/EtoU_0g_tm1/distributional_eventstudy_EtoU_0g_tm1_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No E-to-U</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/EtoU_0g_tm1/distributional_eventstudy_EtoU_0g_tm1_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">E-to-U</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/EtoU_0g_tm1/distributional_eventstudy_EtoU_0g_tm1_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No E-to-U</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/EtoU_0g_tm1/distributional_eventstudy_EtoU_0g_tm1_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">E-to-U</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/EtoU_0g_tm1/distributional_eventstudy_EtoU_0g_tm1_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No E-to-U</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/EtoU_0g_tm1/distributional_eventstudy_EtoU_0g_tm1_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">E-to-U</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EDUCATION SECTION -->
+        <div id="education" class="section">
+            <h2 class="section-title">Education Splits</h2>
+
+            <!-- In Education -->
+            <div class="split-section">
+                <h3>In Education <span class="split-badge">ineduc_tm1</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/ineduc_tm1/distributional_eventstudy_ineduc_tm1_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Not in Educ.</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/ineduc_tm1/distributional_eventstudy_ineduc_tm1_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">In Education</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/ineduc_tm1/distributional_eventstudy_ineduc_tm1_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Not in Educ.</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/ineduc_tm1/distributional_eventstudy_ineduc_tm1_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">In Education</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/ineduc_tm1/distributional_eventstudy_ineduc_tm1_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Not in Educ.</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/ineduc_tm1/distributional_eventstudy_ineduc_tm1_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">In Education</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student -->
+            <div class="split-section">
+                <h3>Student Status <span class="split-badge">student</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/student/distributional_eventstudy_student_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Non-Student</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/student/distributional_eventstudy_student_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Student</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/student/distributional_eventstudy_student_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Non-Student</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/student/distributional_eventstudy_student_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Student</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/student/distributional_eventstudy_student_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Non-Student</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/student/distributional_eventstudy_student_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">Student</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HS Dropout -->
+            <div class="split-section">
+                <h3>High School Dropout <span class="split-badge">hs_dropout_tm1</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/hs_dropout_tm1/distributional_eventstudy_hs_dropout_tm1_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Non-Dropout</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/hs_dropout_tm1/distributional_eventstudy_hs_dropout_tm1_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">HS Dropout</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/hs_dropout_tm1/distributional_eventstudy_hs_dropout_tm1_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Non-Dropout</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/hs_dropout_tm1/distributional_eventstudy_hs_dropout_tm1_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">HS Dropout</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/hs_dropout_tm1/distributional_eventstudy_hs_dropout_tm1_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">Non-Dropout</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/hs_dropout_tm1/distributional_eventstudy_hs_dropout_tm1_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">HS Dropout</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HS Start -->
+            <div class="split-section">
+                <h3>HS Start <span class="split-badge">hs_start_t_tm1</span></h3>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Total Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/hs_start_t_tm1/distributional_eventstudy_hs_start_t_tm1_inc_tot_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No HS Start</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/hs_start_t_tm1/distributional_eventstudy_hs_start_t_tm1_inc_tot_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">HS Start</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Labor Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/hs_start_t_tm1/distributional_eventstudy_hs_start_t_tm1_inc_work_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No HS Start</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/hs_start_t_tm1/distributional_eventstudy_hs_start_t_tm1_inc_work_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">HS Start</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="outcomes-grid with-splits">
+                    <div>
+                        <h4 style="color: #00d9ff; margin-bottom: 10px;">Taxable Income</h4>
+                        <div class="outcome-pair">
+                            <div class="outcome-cell">
+                                <img src="figs/hs_start_t_tm1/distributional_eventstudy_hs_start_t_tm1_taxable_income_gt_p_amt_dur_split0_noronly.png" onclick="openModal(this)">
+                                <div class="label">No HS Start</div>
+                            </div>
+                            <div class="outcome-cell">
+                                <img src="figs/hs_start_t_tm1/distributional_eventstudy_hs_start_t_tm1_taxable_income_gt_p_amt_dur_split1_noronly.png" onclick="openModal(this)">
+                                <div class="label">HS Start</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for full-size images -->
+    <div id="modal" class="modal" onclick="closeModal()">
+        <img id="modal-img" src="" alt="Full size figure">
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            // Update nav tabs
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function openModal(img) {
+            document.getElementById('modal').classList.add('active');
+            document.getElementById('modal-img').src = img.src;
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
