@@ -14,52 +14,54 @@
         }
         .header {
             background: linear-gradient(90deg, #0f3460 0%, #16213e 100%);
-            padding: 20px 30px;
+            padding: 8px 20px;
             text-align: center;
-            border-bottom: 3px solid #e94560;
+            border-bottom: 2px solid #e94560;
             position: sticky;
             top: 0;
             z-index: 100;
         }
-        .header h1 { font-size: 2em; color: #fff; margin-bottom: 5px; }
-        .header p { color: #a0a0a0; font-size: 1em; }
+        .header h1 { font-size: 1.3em; color: #fff; margin-bottom: 2px; display: inline; margin-right: 15px; }
+        .header p { color: #a0a0a0; font-size: 0.85em; display: inline; }
+        .header-title { margin-bottom: 6px; }
 
         .controls {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
-            align-items: flex-start;
-            margin-top: 15px;
-            padding: 15px;
+            align-items: center;
+            margin-top: 6px;
+            padding: 6px 10px;
             background: rgba(0,0,0,0.2);
-            border-radius: 10px;
+            border-radius: 6px;
         }
         .control-group {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            flex-direction: row;
+            align-items: center;
             gap: 5px;
             position: relative;
         }
         .control-group > label {
             color: #00d9ff;
             font-weight: bold;
-            font-size: 0.9em;
+            font-size: 0.75em;
+            white-space: nowrap;
         }
 
         /* Multi-select dropdown styles */
         .multi-select {
             position: relative;
-            min-width: 200px;
+            min-width: 140px;
         }
         .multi-select-btn {
             background: #1a1a2e;
             color: #e0e0e0;
-            border: 2px solid #e94560;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.9em;
+            border: 1px solid #e94560;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
             cursor: pointer;
             width: 100%;
             text-align: left;
@@ -92,11 +94,12 @@
         .multi-select-dropdown.open { display: block; }
 
         .multi-select-option {
-            padding: 8px 12px;
+            padding: 4px 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            font-size: 0.8em;
             transition: background 0.2s;
         }
         .multi-select-option:hover { background: #0f3460; }
@@ -139,19 +142,19 @@
         .selected-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 5px;
-            max-width: 300px;
+            gap: 3px;
+            margin-left: 5px;
+            max-width: 200px;
         }
         .selected-tag {
             background: #e94560;
             color: #fff;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.75em;
+            padding: 1px 5px;
+            border-radius: 8px;
+            font-size: 0.65em;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 3px;
         }
         .selected-tag .remove {
             cursor: pointer;
@@ -163,10 +166,10 @@
         select {
             background: #1a1a2e;
             color: #e0e0e0;
-            border: 2px solid #e94560;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.9em;
+            border: 1px solid #e94560;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
             cursor: pointer;
         }
         select:hover { border-color: #00d9ff; }
@@ -291,18 +294,19 @@
 
         .stats-bar {
             display: flex;
-            gap: 20px;
+            gap: 12px;
             justify-content: center;
-            margin-top: 15px;
+            margin-top: 6px;
             flex-wrap: wrap;
         }
         .stat {
             background: rgba(0,0,0,0.3);
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
         }
         .stat .num { color: #e94560; font-weight: bold; }
-        .stat .lbl { color: #a0a0a0; font-size: 0.85em; margin-left: 5px; }
+        .stat .lbl { color: #a0a0a0; margin-left: 3px; }
 
         .filter-summary {
             margin-top: 10px;
@@ -312,14 +316,213 @@
             font-size: 0.9em;
         }
         .filter-summary span { color: #00d9ff; }
+
+        /* Print button styles */
+        .print-btn {
+            background: linear-gradient(135deg, #e94560 0%, #c73e54 100%);
+            color: #fff;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(233,69,96,0.3);
+        }
+        .print-btn:hover {
+            background: linear-gradient(135deg, #ff5a7a 0%, #e94560 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(233,69,96,0.4);
+        }
+        .print-btn svg { width: 14px; height: 14px; }
+
+        /* Print header that shows filter settings */
+        .print-header {
+            display: none;
+            background: #fff;
+            color: #333;
+            padding: 20px 30px;
+            border-bottom: 3px solid #e94560;
+            margin-bottom: 20px;
+        }
+        .print-header h1 {
+            color: #1a1a2e;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .print-header .print-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .print-header .print-meta-item {
+            background: #f5f5f5;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e94560;
+        }
+        .print-header .print-meta-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .print-header .print-meta-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin-top: 2px;
+        }
+        .print-header .print-timestamp {
+            color: #888;
+            font-size: 12px;
+            margin-top: 15px;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+            body {
+                background: #fff !important;
+                color: #333 !important;
+                font-size: 10pt;
+            }
+
+            .header, .modal, .stats-bar { display: none !important; }
+
+            .print-header { display: block !important; }
+
+            .container {
+                max-width: 100% !important;
+                padding: 0 !important;
+            }
+
+            .section-title {
+                color: #1a1a2e !important;
+                font-size: 16pt !important;
+                border-bottom: 2px solid #e94560 !important;
+                page-break-before: auto;
+                page-break-after: avoid;
+                margin-top: 20px !important;
+            }
+
+            .outcome-section {
+                background: #f8f9fa !important;
+                border: 1px solid #ddd !important;
+                border-radius: 8px !important;
+                padding: 15px !important;
+                margin-bottom: 15px !important;
+                page-break-inside: avoid;
+            }
+            .outcome-section h3 {
+                color: #1a1a2e !important;
+                font-size: 12pt !important;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 8px;
+                margin-bottom: 12px;
+            }
+            .outcome-section h4 {
+                color: #333 !important;
+                font-size: 10pt !important;
+            }
+
+            .badge {
+                background: #e94560 !important;
+                color: #fff !important;
+                font-size: 8pt !important;
+            }
+            .badge-outcome {
+                background: #00d9ff !important;
+                color: #1a1a2e !important;
+            }
+
+            .figure-grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 10px !important;
+            }
+
+            .figure-card {
+                background: #fff !important;
+                border: 1px solid #ddd !important;
+                border-radius: 6px !important;
+                overflow: hidden;
+                page-break-inside: avoid;
+            }
+            .figure-card img {
+                width: 100% !important;
+                height: auto !important;
+            }
+            .figure-card .caption {
+                background: #f0f0f0 !important;
+                padding: 6px !important;
+                text-align: center;
+            }
+            .figure-card .split-name {
+                color: #e94560 !important;
+                font-weight: bold;
+                font-size: 9pt;
+            }
+            .figure-card .split-desc {
+                color: #666 !important;
+                font-size: 8pt;
+            }
+
+            .split-pair {
+                background: #fff !important;
+                border: 1px solid #ddd !important;
+                border-radius: 6px !important;
+                padding: 10px !important;
+                page-break-inside: avoid;
+            }
+            .split-pair h4 {
+                color: #1a1a2e !important;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 5px;
+                margin-bottom: 8px;
+            }
+            .split-pair .cell .label {
+                color: #666 !important;
+                font-size: 8pt;
+            }
+
+            .hidden { display: none !important; }
+
+            /* Ensure images don't break across pages */
+            img { page-break-inside: avoid; }
+
+            /* Add page numbers */
+            @page {
+                margin: 0.5in;
+                @bottom-center {
+                    content: "Page " counter(page) " of " counter(pages);
+                }
+            }
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>NAV Social Assistance - Complete Figure Dashboard</h1>
-        <p>Distributional & Standard Event Studies Across All Splits</p>
+        <div class="header-title">
+            <h1>NAV Figure Dashboard</h1>
+            <p>Distributional & Standard Event Studies</p>
+        </div>
 
         <div class="controls">
+            <div class="control-group">
+                <label>View:</label>
+                <select id="viewModeSelect" onchange="switchViewMode()">
+                    <option value="bySplit">By Split</option>
+                    <option value="byOutcome">By Outcome</option>
+                </select>
+            </div>
+
             <div class="control-group">
                 <label>Figure Type:</label>
                 <select id="figTypeSelect" onchange="filterFigures()">
@@ -330,7 +533,15 @@
             </div>
 
             <div class="control-group">
-                <label>Outcome Categories:</label>
+                <label>Sample:</label>
+                <select id="sampleSelect" onchange="filterFigures()">
+                    <option value="balanced">Balanced Panel</option>
+                    <option value="unbalanced">Unbalanced Panel</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Outcomes:</label>
                 <div class="multi-select" id="outcomeMultiSelect">
                     <button class="multi-select-btn" onclick="toggleDropdown('outcomeMultiSelect')">
                         <span class="btn-text">All Outcomes</span>
@@ -343,30 +554,77 @@
                         <div class="multi-select-option" data-value="all">
                             <input type="checkbox" checked> All Outcomes
                         </div>
-                        <div class="multi-select-option" data-value="labor">
-                            <input type="checkbox"> Labor Market
-                        </div>
-                        <div class="multi-select-option" data-value="income">
-                            <input type="checkbox"> Income
-                        </div>
-                        <div class="multi-select-option" data-value="transfers">
-                            <input type="checkbox"> Transfers
-                        </div>
-                        <div class="multi-select-option" data-value="education">
-                            <input type="checkbox"> Education
-                        </div>
-                        <div class="multi-select-option" data-value="family">
-                            <input type="checkbox"> Family
-                        </div>
-                        <div class="multi-select-option" data-value="mobility">
-                            <input type="checkbox"> Mobility
-                        </div>
-                        <div class="multi-select-option" data-value="municipality">
-                            <input type="checkbox"> Municipality
-                        </div>
-                        <div class="multi-select-option" data-value="distributional">
-                            <input type="checkbox"> Distributional Income
-                        </div>
+
+                        <div class="multi-select-group-header">Labor Market</div>
+                        <div class="multi-select-option" data-value="employed_y"><input type="checkbox"> Employed</div>
+                        <div class="multi-select-option" data-value="employed_0g"><input type="checkbox"> Employed (0g)</div>
+                        <div class="multi-select-option" data-value="employed_1g"><input type="checkbox"> Employed (1g)</div>
+                        <div class="multi-select-option" data-value="employed_2g"><input type="checkbox"> Employed (2g)</div>
+                        <div class="multi-select-option" data-value="fulltime_y"><input type="checkbox"> Full-time</div>
+                        <div class="multi-select-option" data-value="hours_y"><input type="checkbox"> Hours</div>
+                        <div class="multi-select-option" data-value="in_educ_or_work"><input type="checkbox"> In Educ/Work</div>
+                        <div class="multi-select-option" data-value="has_short_spell"><input type="checkbox"> Short Spell</div>
+                        <div class="multi-select-option" data-value="has_short_spell_u"><input type="checkbox"> Short Spell (U)</div>
+
+                        <div class="multi-select-group-header">Income</div>
+                        <div class="multi-select-option" data-value="inc_tot"><input type="checkbox"> Total Income</div>
+                        <div class="multi-select-option" data-value="inc_work"><input type="checkbox"> Labor Income</div>
+                        <div class="multi-select-option" data-value="inc_wage"><input type="checkbox"> Wage Income</div>
+                        <div class="multi-select-option" data-value="taxable_income"><input type="checkbox"> Taxable Income</div>
+                        <div class="multi-select-option" data-value="inc_capital"><input type="checkbox"> Capital Income</div>
+                        <div class="multi-select-option" data-value="wage_daily_mainjob"><input type="checkbox"> Daily Wage</div>
+                        <div class="multi-select-option" data-value="wage_hourly_mainjob"><input type="checkbox"> Hourly Wage</div>
+
+                        <div class="multi-select-group-header">Transfers</div>
+                        <div class="multi-select-option" data-value="sa_transfers"><input type="checkbox"> SA Transfers</div>
+                        <div class="multi-select-option" data-value="any_sa_transfers"><input type="checkbox"> Any SA</div>
+                        <div class="multi-select-option" data-value="focal_trans_y"><input type="checkbox"> Focal Transfers</div>
+                        <div class="multi-select-option" data-value="any_focal_trans_y"><input type="checkbox"> Any Focal Trans.</div>
+                        <div class="multi-select-option" data-value="inc_trans_di"><input type="checkbox"> DI Transfers</div>
+                        <div class="multi-select-option" data-value="any_inc_trans_di"><input type="checkbox"> Any DI</div>
+                        <div class="multi-select-option" data-value="inc_trans_unemployment"><input type="checkbox"> UI Transfers</div>
+                        <div class="multi-select-option" data-value="inc_trans_sick_leave"><input type="checkbox"> Sick Leave</div>
+                        <div class="multi-select-option" data-value="inc_trans_work_assessment"><input type="checkbox"> Work Assessment</div>
+                        <div class="multi-select-option" data-value="inc_trans_child_related"><input type="checkbox"> Child-Related</div>
+                        <div class="multi-select-option" data-value="inc_trans_housing"><input type="checkbox"> Housing</div>
+                        <div class="multi-select-option" data-value="inc_trans_sum_pension"><input type="checkbox"> Pension</div>
+                        <div class="multi-select-option" data-value="inc_trans_medical_benefits"><input type="checkbox"> Medical</div>
+                        <div class="multi-select-option" data-value="inc_other_transfers"><input type="checkbox"> Other Transfers</div>
+                        <div class="multi-select-option" data-value="any_inc_other_transfers"><input type="checkbox"> Any Other Trans.</div>
+
+                        <div class="multi-select-group-header">Education</div>
+                        <div class="multi-select-option" data-value="ineduc"><input type="checkbox"> In Education</div>
+                        <div class="multi-select-option" data-value="ineduc_highschool"><input type="checkbox"> In HS</div>
+                        <div class="multi-select-option" data-value="ineduc_college"><input type="checkbox"> In College</div>
+                        <div class="multi-select-option" data-value="ineduc_primary"><input type="checkbox"> In Primary</div>
+                        <div class="multi-select-option" data-value="inc_trans_scholarship"><input type="checkbox"> Scholarship</div>
+
+                        <div class="multi-select-group-header">Family</div>
+                        <div class="multi-select-option" data-value="n_children"><input type="checkbox"> N Children</div>
+                        <div class="multi-select-option" data-value="has_spouse"><input type="checkbox"> Has Spouse</div>
+                        <div class="multi-select-option" data-value="married"><input type="checkbox"> Married</div>
+                        <div class="multi-select-option" data-value="cohabitation"><input type="checkbox"> Cohabitation</div>
+                        <div class="multi-select-option" data-value="separation"><input type="checkbox"> Separation</div>
+                        <div class="multi-select-option" data-value="union"><input type="checkbox"> Union</div>
+
+                        <div class="multi-select-group-header">Mobility</div>
+                        <div class="multi-select-option" data-value="reloc_any"><input type="checkbox"> Any Relocation</div>
+                        <div class="multi-select-option" data-value="reloc_within_mun"><input type="checkbox"> Within Muni.</div>
+                        <div class="multi-select-option" data-value="reloc_across_mun"><input type="checkbox"> Across Muni.</div>
+
+                        <div class="multi-select-group-header">Wealth</div>
+                        <div class="multi-select-option" data-value="wealth_net"><input type="checkbox"> Net Wealth</div>
+                        <div class="multi-select-option" data-value="wealth_net_wins1"><input type="checkbox"> Net Wealth (wins1)</div>
+                        <div class="multi-select-option" data-value="wealth_net_wins5"><input type="checkbox"> Net Wealth (wins5)</div>
+                        <div class="multi-select-option" data-value="wealth_housing"><input type="checkbox"> Housing Wealth</div>
+                        <div class="multi-select-option" data-value="wealth_housing_wins1"><input type="checkbox"> Housing (wins1)</div>
+                        <div class="multi-select-option" data-value="wealth_housing_wins5"><input type="checkbox"> Housing (wins5)</div>
+
+                        <div class="multi-select-group-header">Distributional</div>
+                        <div class="multi-select-option" data-value="inc_tot_gt_p"><input type="checkbox"> Total Income (dist)</div>
+                        <div class="multi-select-option" data-value="inc_work_gt_p"><input type="checkbox"> Labor Income (dist)</div>
+                        <div class="multi-select-option" data-value="inc_wage_gt_p"><input type="checkbox"> Wage Income (dist)</div>
+                        <div class="multi-select-option" data-value="taxable_income_gt_p"><input type="checkbox"> Taxable Income (dist)</div>
                     </div>
                 </div>
                 <div class="selected-tags" id="outcomeTags"></div>
@@ -378,71 +636,8 @@
                     <button class="multi-select-btn" onclick="toggleDropdown('splitMultiSelect')">
                         <span class="btn-text">All Splits</span>
                     </button>
-                    <div class="multi-select-dropdown">
-                        <div class="multi-select-actions">
-                            <button onclick="selectAll('splitMultiSelect')">Select All</button>
-                            <button onclick="clearAll('splitMultiSelect')">Clear All</button>
-                        </div>
-                        <div class="multi-select-option" data-value="all">
-                            <input type="checkbox" checked> All Splits
-                        </div>
-
-                        <div class="multi-select-group-header">Full Sample</div>
-                        <div class="multi-select-option" data-value="all-split">
-                            <input type="checkbox"> all (Full Sample)
-                        </div>
-
-                        <div class="multi-select-group-header">Demographics</div>
-                        <div class="multi-select-option" data-value="female"><input type="checkbox"> female</div>
-                        <div class="multi-select-option" data-value="employed_tm1"><input type="checkbox"> employed_tm1</div>
-                        <div class="multi-select-option" data-value="single_tm1"><input type="checkbox"> single_tm1</div>
-                        <div class="multi-select-option" data-value="has_kids_tm1"><input type="checkbox"> has_kids_tm1</div>
-                        <div class="multi-select-option" data-value="homeless"><input type="checkbox"> homeless</div>
-                        <div class="multi-select-option" data-value="union"><input type="checkbox"> union</div>
-
-                        <div class="multi-select-group-header">HHI Concentration</div>
-                        <div class="multi-select-option" data-value="HHI_educ_p25"><input type="checkbox"> HHI_educ_p25</div>
-                        <div class="multi-select-option" data-value="HHI_educ_p50"><input type="checkbox"> HHI_educ_p50</div>
-                        <div class="multi-select-option" data-value="HHI_educ_p75"><input type="checkbox"> HHI_educ_p75</div>
-                        <div class="multi-select-option" data-value="HHI_educ_moderate"><input type="checkbox"> HHI_educ_moderate</div>
-                        <div class="multi-select-option" data-value="HHI_educ_p75_byeduc"><input type="checkbox"> HHI_educ_p75_byeduc</div>
-                        <div class="multi-select-option" data-value="HHI_occ2_p25"><input type="checkbox"> HHI_occ2_p25</div>
-                        <div class="multi-select-option" data-value="HHI_occ2_p75"><input type="checkbox"> HHI_occ2_p75</div>
-
-                        <div class="multi-select-group-header">Unemployment</div>
-                        <div class="multi-select-option" data-value="urate_llm_p25"><input type="checkbox"> urate_llm_p25</div>
-                        <div class="multi-select-option" data-value="urate_llm_p50"><input type="checkbox"> urate_llm_p50</div>
-                        <div class="multi-select-option" data-value="urate_llm_p75"><input type="checkbox"> urate_llm_p75</div>
-                        <div class="multi-select-option" data-value="urate_mun_p50"><input type="checkbox"> urate_mun_p50</div>
-
-                        <div class="multi-select-group-header">Labor Market</div>
-                        <div class="multi-select-option" data-value="epop_p25"><input type="checkbox"> epop_p25</div>
-                        <div class="multi-select-option" data-value="epop_p50"><input type="checkbox"> epop_p50</div>
-                        <div class="multi-select-option" data-value="epop_p75"><input type="checkbox"> epop_p75</div>
-                        <div class="multi-select-option" data-value="llm_best"><input type="checkbox"> llm_best</div>
-                        <div class="multi-select-option" data-value="llm_worst"><input type="checkbox"> llm_worst</div>
-                        <div class="multi-select-option" data-value="llm_shortspl_p50"><input type="checkbox"> llm_shortspl_p50</div>
-                        <div class="multi-select-option" data-value="llm_shortspl_p75"><input type="checkbox"> llm_shortspl_p75</div>
-                        <div class="multi-select-option" data-value="rural"><input type="checkbox"> rural</div>
-                        <div class="multi-select-option" data-value="wage_daily_p75"><input type="checkbox"> wage_daily_p75</div>
-                        <div class="multi-select-option" data-value="sick_llm_p25"><input type="checkbox"> sick_llm_p25</div>
-                        <div class="multi-select-option" data-value="sick_llm_p75"><input type="checkbox"> sick_llm_p75</div>
-
-                        <div class="multi-select-group-header">Shocks</div>
-                        <div class="multi-select-option" data-value="any_family_death_tm2_t"><input type="checkbox"> any_family_death_tm2_t</div>
-                        <div class="multi-select-option" data-value="any_close_death_tm2_t"><input type="checkbox"> any_close_death_tm2_t</div>
-                        <div class="multi-select-option" data-value="any_family_shock_t"><input type="checkbox"> any_family_shock_t</div>
-                        <div class="multi-select-option" data-value="any_employment_shock"><input type="checkbox"> any_employment_shock</div>
-                        <div class="multi-select-option" data-value="any_econ_shock"><input type="checkbox"> any_econ_shock</div>
-                        <div class="multi-select-option" data-value="EtoU_0g_tm1"><input type="checkbox"> EtoU_0g_tm1</div>
-                        <div class="multi-select-option" data-value="EtoU_1g_tm1"><input type="checkbox"> EtoU_1g_tm1</div>
-
-                        <div class="multi-select-group-header">Education</div>
-                        <div class="multi-select-option" data-value="ineduc_tm1"><input type="checkbox"> ineduc_tm1</div>
-                        <div class="multi-select-option" data-value="student"><input type="checkbox"> student</div>
-                        <div class="multi-select-option" data-value="hs_dropout_tm1"><input type="checkbox"> hs_dropout_tm1</div>
-                        <div class="multi-select-option" data-value="hs_start_t_tm1"><input type="checkbox"> hs_start_t_tm1</div>
-                        <div class="multi-select-option" data-value="any_educ_event_t_tm1"><input type="checkbox"> any_educ_event_t_tm1</div>
+                    <div class="multi-select-dropdown" id="splitDropdownContent">
+                        <!-- Dynamically populated by JavaScript -->
                     </div>
                 </div>
                 <div class="selected-tags" id="splitTags"></div>
@@ -450,14 +645,32 @@
         </div>
 
         <div class="stats-bar">
-            <div class="stat"><span class="num">43</span><span class="lbl">Splits</span></div>
+            <div class="stat"><span class="num" id="splitCount">--</span><span class="lbl">Splits</span></div>
             <div class="stat"><span class="num">50+</span><span class="lbl">Outcomes</span></div>
-            <div class="stat"><span class="num">2,850+</span><span class="lbl">Total Figures</span></div>
             <div class="stat"><span class="num" id="visibleCount">All</span><span class="lbl">Showing</span></div>
+            <button class="print-btn" onclick="printReport()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                Print / PDF
+            </button>
         </div>
     </div>
 
-    <div class="container">
+    <!-- Print header (only visible when printing) -->
+    <div class="print-header" id="printHeader">
+        <h1>NAV Social Assistance - Figure Comparison Report</h1>
+        <p style="color: #666;">Distributional & Standard Event Studies</p>
+        <div class="print-meta" id="printMeta">
+            <!-- Populated by JavaScript -->
+        </div>
+        <div class="print-timestamp" id="printTimestamp"></div>
+    </div>
+
+    <!-- Container for "By Split" view (default) -->
+    <div class="container" id="bySplitContainer">
         <!-- FULL SAMPLE SECTION -->
         <h2 class="section-title" data-category-header="fullsample">Full Sample (all)</h2>
 
@@ -467,53 +680,53 @@
             <div class="figure-grid">
                 <!-- Amount × Duration -->
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_inc_tot_gt_p_amt_dur_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_inc_tot_gt_p_amt_dur_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
                     <div class="caption"><div class="split-name">Total Income</div><div class="split-desc">Amount × Duration</div></div>
                 </div>
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_inc_work_gt_p_amt_dur_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_inc_work_gt_p_amt_dur_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
                     <div class="caption"><div class="split-name">Labor Income</div><div class="split-desc">Amount × Duration</div></div>
                 </div>
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_inc_y_gt_p_amt_dur_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
-                    <div class="caption"><div class="split-name">Annual Labor Income</div><div class="split-desc">Amount × Duration</div></div>
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_inc_wage_gt_p_amt_dur_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <div class="caption"><div class="split-name">Wage Income</div><div class="split-desc">Amount × Duration</div></div>
                 </div>
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_taxable_income_gt_p_amt_dur_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_taxable_income_gt_p_amt_dur_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
                     <div class="caption"><div class="split-name">Taxable Income</div><div class="split-desc">Amount × Duration</div></div>
                 </div>
                 <!-- Amount Only -->
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_inc_tot_gt_p_amt_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_inc_tot_gt_p_amt_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
                     <div class="caption"><div class="split-name">Total Income</div><div class="split-desc">Amount Only</div></div>
                 </div>
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_inc_work_gt_p_amt_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_inc_work_gt_p_amt_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
                     <div class="caption"><div class="split-name">Labor Income</div><div class="split-desc">Amount Only</div></div>
                 </div>
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_inc_y_gt_p_amt_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
-                    <div class="caption"><div class="split-name">Annual Labor Income</div><div class="split-desc">Amount Only</div></div>
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_inc_wage_gt_p_amt_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <div class="caption"><div class="split-name">Wage Income</div><div class="split-desc">Amount Only</div></div>
                 </div>
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_taxable_income_gt_p_amt_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_taxable_income_gt_p_amt_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
                     <div class="caption"><div class="split-name">Taxable Income</div><div class="split-desc">Amount Only</div></div>
                 </div>
                 <!-- Duration Only -->
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_inc_tot_gt_p_dur_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_inc_tot_gt_p_dur_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
                     <div class="caption"><div class="split-name">Total Income</div><div class="split-desc">Duration Only</div></div>
                 </div>
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_inc_work_gt_p_dur_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_inc_work_gt_p_dur_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
                     <div class="caption"><div class="split-name">Labor Income</div><div class="split-desc">Duration Only</div></div>
                 </div>
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_inc_y_gt_p_dur_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
-                    <div class="caption"><div class="split-name">Annual Labor Income</div><div class="split-desc">Duration Only</div></div>
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_inc_wage_gt_p_dur_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <div class="caption"><div class="split-name">Wage Income</div><div class="split-desc">Duration Only</div></div>
                 </div>
                 <div class="figure-card">
-                    <img src="figs/all/distributional_eventstudy_all_taxable_income_gt_p_dur_pooled_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                    <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_taxable_income_gt_p_dur_pooled" data-suffix="_noronly.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
                     <div class="caption"><div class="split-name">Taxable Income</div><div class="split-desc">Duration Only</div></div>
                 </div>
             </div>
@@ -521,59 +734,187 @@
 
         <!-- SPLITS WITH ALL OUTCOMES - Generated by JavaScript -->
         <script>
-            // Define all splits
-            const splits = [
-                {name: 'female', label0: 'Male', label1: 'Female', category: 'demographics'},
-                {name: 'employed_tm1', label0: 'Not Employed', label1: 'Employed', category: 'demographics'},
-                {name: 'single_tm1', label0: 'Not Single', label1: 'Single', category: 'demographics'},
-                {name: 'has_kids_tm1', label0: 'No Children', label1: 'Has Children', category: 'demographics'},
-                {name: 'homeless', label0: 'Housed', label1: 'Homeless', category: 'demographics'},
-                {name: 'union', label0: 'Non-Union', label1: 'Union', category: 'demographics'},
-                {name: 'HHI_educ_p25', label0: 'Low HHI', label1: 'High HHI (p25+)', category: 'hhi'},
-                {name: 'HHI_educ_p50', label0: 'Low HHI', label1: 'High HHI (p50+)', category: 'hhi'},
-                {name: 'HHI_educ_p75', label0: 'Low HHI', label1: 'High HHI (p75+)', category: 'hhi'},
-                {name: 'HHI_educ_moderate', label0: 'Competitive', label1: 'Moderate+ Conc.', category: 'hhi'},
-                {name: 'HHI_educ_p75_byeduc', label0: 'Low HHI', label1: 'High HHI', category: 'hhi'},
-                {name: 'HHI_occ2_p25', label0: 'Low HHI', label1: 'High HHI (p25+)', category: 'hhi'},
-                {name: 'HHI_occ2_p75', label0: 'Low HHI', label1: 'High HHI (p75+)', category: 'hhi'},
-                {name: 'urate_llm_p25', label0: 'Low Urate', label1: 'High Urate (p25+)', category: 'unemployment'},
-                {name: 'urate_llm_p50', label0: 'Low Urate', label1: 'High Urate (p50+)', category: 'unemployment'},
-                {name: 'urate_llm_p75', label0: 'Low Urate', label1: 'High Urate (p75+)', category: 'unemployment'},
-                {name: 'urate_mun_p50', label0: 'Low Urate', label1: 'High Urate (p50+)', category: 'unemployment'},
-                {name: 'epop_p25', label0: 'Low EPOP', label1: 'High EPOP (p25+)', category: 'labormarket'},
-                {name: 'epop_p50', label0: 'Low EPOP', label1: 'High EPOP (p50+)', category: 'labormarket'},
-                {name: 'epop_p75', label0: 'Low EPOP', label1: 'High EPOP (p75+)', category: 'labormarket'},
-                {name: 'llm_best', label0: 'Other', label1: 'Best LLM', category: 'labormarket'},
-                {name: 'llm_worst', label0: 'Other', label1: 'Worst LLM', category: 'labormarket'},
-                {name: 'llm_shortspl_p50', label0: 'Low', label1: 'High (p50+)', category: 'labormarket'},
-                {name: 'llm_shortspl_p75', label0: 'Low', label1: 'High (p75+)', category: 'labormarket'},
-                {name: 'rural', label0: 'Urban', label1: 'Rural', category: 'labormarket'},
-                {name: 'wage_daily_p75', label0: 'Low Wage', label1: 'High Wage (p75+)', category: 'labormarket'},
-                {name: 'sick_llm_p25', label0: 'Low Sick', label1: 'High Sick (p25+)', category: 'labormarket'},
-                {name: 'sick_llm_p75', label0: 'Low Sick', label1: 'High Sick (p75+)', category: 'labormarket'},
-                {name: 'any_family_death_tm2_t', label0: 'No Death', label1: 'Family Death', category: 'shocks'},
-                {name: 'any_close_death_tm2_t', label0: 'No Death', label1: 'Close Death', category: 'shocks'},
-                {name: 'any_family_shock_t', label0: 'No Shock', label1: 'Family Shock', category: 'shocks'},
-                {name: 'any_employment_shock', label0: 'No Shock', label1: 'Emp. Shock', category: 'shocks'},
-                {name: 'any_econ_shock', label0: 'No Shock', label1: 'Econ. Shock', category: 'shocks'},
-                {name: 'EtoU_0g_tm1', label0: 'No E-to-U', label1: 'E-to-U', category: 'shocks'},
-                {name: 'EtoU_1g_tm1', label0: 'No E-to-U', label1: 'E-to-U (1g)', category: 'shocks'},
-                {name: 'ineduc_tm1', label0: 'Not in Educ.', label1: 'In Education', category: 'education'},
-                {name: 'student', label0: 'Non-Student', label1: 'Student', category: 'education'},
-                {name: 'hs_dropout_tm1', label0: 'Non-Dropout', label1: 'HS Dropout', category: 'education'},
-                {name: 'hs_start_t_tm1', label0: 'No HS Start', label1: 'HS Start', category: 'education'},
-                {name: 'any_educ_event_t_tm1', label0: 'No Event', label1: 'Educ. Event', category: 'education'},
+            // ============================================================
+            // AUTO-CATEGORIZATION SYSTEM FOR SPLITS
+            // When you add new splits, they will be auto-categorized based on naming patterns
+            // ============================================================
+
+            // Helper function to auto-generate labels based on split name
+            function generateSplitLabels(name) {
+                // Extract percentile if present
+                const pMatch = name.match(/_p(\d+)(_|$)/);
+                const percentile = pMatch ? pMatch[1] : null;
+
+                // For p25 splits: split_level==1 means < p25 (low group)
+                // For p50/p75 splits: split_level==1 means >= pXX (high group)
+                const isP25 = percentile === '25';
+
+                // Base label patterns
+                if (name.startsWith('HHI_')) {
+                    const suffix = percentile ? `p${percentile}` : '';
+                    if (isP25) {
+                        return { label0: `High HHI (>=${suffix})`, label1: `Low HHI (<${suffix})` };
+                    }
+                    return { label0: `Low HHI (<${suffix})`, label1: `High HHI (>=${suffix})` };
+                }
+                if (name.startsWith('urate_')) {
+                    const suffix = percentile ? `p${percentile}` : '';
+                    if (isP25) {
+                        return { label0: `High Urate (>=${suffix})`, label1: `Low Urate (<${suffix})` };
+                    }
+                    return { label0: `Low Urate (<${suffix})`, label1: `High Urate (>=${suffix})` };
+                }
+                if (name.startsWith('epop_')) {
+                    const suffix = percentile ? `p${percentile}` : '';
+                    if (isP25) {
+                        return { label0: `High Emp-Pop (>=${suffix})`, label1: `Low Emp-Pop (<${suffix})` };
+                    }
+                    return { label0: `Low Emp-Pop (<${suffix})`, label1: `High Emp-Pop (>=${suffix})` };
+                }
+                if (name.startsWith('llm_shortspl_')) {
+                    const suffix = percentile ? `p${percentile}` : '';
+                    if (isP25) {
+                        return { label0: `High Short Spell (>=${suffix})`, label1: `Low Short Spell (<${suffix})` };
+                    }
+                    return { label0: `Low Short Spell (<${suffix})`, label1: `High Short Spell (>=${suffix})` };
+                }
+                if (name.startsWith('sick_')) {
+                    const suffix = percentile ? `p${percentile}` : '';
+                    if (isP25) {
+                        return { label0: `High Sick Leave (>=${suffix})`, label1: `Low Sick Leave (<${suffix})` };
+                    }
+                    return { label0: `Low Sick Leave (<${suffix})`, label1: `High Sick Leave (>=${suffix})` };
+                }
+                if (name.startsWith('wage_')) {
+                    const suffix = percentile ? `p${percentile}` : '';
+                    if (isP25) {
+                        return { label0: `High Wage (>=${suffix})`, label1: `Low Wage (<${suffix})` };
+                    }
+                    return { label0: `Low Wage (<${suffix})`, label1: `High Wage (>=${suffix})` };
+                }
+                if (name.startsWith('pop_density_') || name === 'rural') {
+                    if (name === 'rural') return { label0: 'Urban', label1: 'Rural' };
+                    const suffix = percentile ? `p${percentile}` : '';
+                    return { label0: `Low Density (<${suffix})`, label1: `High Density (>=${suffix})` };
+                }
+                if (name.startsWith('muni_inc_')) {
+                    const suffix = percentile ? `p${percentile}` : '';
+                    return { label0: `Low Muni Inc (<${suffix})`, label1: `High Muni Inc (>=${suffix})` };
+                }
+                // Binary demographic splits
+                if (name === 'female') return { label0: 'Male', label1: 'Female' };
+                if (name === 'employed_tm1') return { label0: 'Not Employed (t-1)', label1: 'Employed (t-1)' };
+                if (name === 'single_tm1') return { label0: 'Not Single (t-1)', label1: 'Single (t-1)' };
+                if (name === 'homeless') return { label0: 'Not Homeless', label1: 'Homeless' };
+                if (name === 'student') return { label0: 'Not Student', label1: 'Student' };
+                if (name === 'ineduc_tm1') return { label0: 'Not in Educ (t-1)', label1: 'In Educ (t-1)' };
+                if (name === 'has_kids_tm1') return { label0: 'No Kids (t-1)', label1: 'Has Kids (t-1)' };
+                if (name === 'union') return { label0: 'Not in Union', label1: 'In Union' };
+                // LLM composite
+                if (name === 'llm_best') return { label0: 'Worse LLM', label1: 'Best LLM (Low HHI & Urate)' };
+                if (name === 'llm_worst') return { label0: 'Better LLM', label1: 'Worst LLM (High HHI & Urate)' };
+                // Life events
+                if (name.includes('death')) return { label0: 'No Death Event', label1: 'Death Event' };
+                if (name.includes('shock')) return { label0: 'No Shock', label1: 'Shock' };
+                if (name.includes('EtoU')) return { label0: 'No E-to-U', label1: 'E-to-U Transition' };
+                if (name.includes('hs_dropout')) return { label0: 'Not HS Dropout', label1: 'HS Dropout' };
+                if (name.includes('hs_start')) return { label0: 'Did Not Start HS', label1: 'Started HS' };
+                if (name.includes('educ_event')) return { label0: 'No Educ Event', label1: 'Educ Event' };
+                // Default
+                return { label0: 'Group 0', label1: 'Group 1' };
+            }
+
+            // Helper function to auto-categorize splits
+            function categorize(name) {
+                if (name.startsWith('HHI_')) return 'hhi';
+                if (name.startsWith('urate_')) return 'unemployment';
+                if (name.startsWith('epop_')) return 'epop';
+                if (name.startsWith('llm_shortspl_')) return 'shortspell';
+                if (name.startsWith('sick_')) return 'sickleave';
+                if (name.startsWith('wage_') || name.startsWith('muni_inc_')) return 'wages';
+                if (name.startsWith('pop_density_') || name === 'rural') return 'density';
+                if (name === 'llm_best' || name === 'llm_worst') return 'llm_composite';
+                if (['female', 'employed_tm1', 'single_tm1', 'homeless', 'student', 'ineduc_tm1', 'has_kids_tm1'].includes(name)) return 'demographics';
+                if (name.includes('death') || name.includes('shock') || name.includes('EtoU') || name.includes('hs_')) return 'events';
+                if (name === 'union') return 'demographics';
+                return 'other';
+            }
+
+            // MASTER LIST OF ALL SPLITS - add new splits here and they auto-categorize
+            const allSplitNames = [
+                // HHI Education-based
+                'HHI_educ_p25', 'HHI_educ_p25_byeduc', 'HHI_educ_p50', 'HHI_educ_p50_byeduc', 'HHI_educ_p75', 'HHI_educ_p75_byeduc',
+                // HHI Municipality-based
+                'HHI_mun_p25', 'HHI_mun_p50', 'HHI_mun_p75',
+                // HHI Occupation-based
+                'HHI_occ1_p25', 'HHI_occ1_p50', 'HHI_occ1_p75',
+                'HHI_occ2_p25', 'HHI_occ2_p50', 'HHI_occ2_p75',
+                'HHI_occ3_p25', 'HHI_occ3_p50', 'HHI_occ3_p75',
+                // HHI Mean
+                'HHI_mean_educ_p25', 'HHI_mean_educ_p50', 'HHI_mean_educ_p75',
+                'HHI_mean_occ2_p25', 'HHI_mean_occ2_p50', 'HHI_mean_occ2_p75',
+                // Unemployment LLM
+                'urate_llm_p25', 'urate_llm_p50', 'urate_llm_p75',
+                // Unemployment Municipality
+                'urate_mun_p25', 'urate_mun_p50', 'urate_mun_p75',
+                // Employment-to-Population
+                'epop_p25', 'epop_p50', 'epop_p75',
+                // Short Spell Rate
+                'llm_shortspl_p25', 'llm_shortspl_p50', 'llm_shortspl_p75',
+                // Sick Leave
+                'sick_llm_p25', 'sick_llm_p50', 'sick_llm_p75',
+                'sick_mun_p25', 'sick_mun_p50', 'sick_mun_p75',
+                // Wages
+                'wage_daily_p25', 'wage_daily_p50', 'wage_daily_p75',
+                'wage_hourly_p25', 'wage_hourly_p50', 'wage_hourly_p75',
+                'muni_inc_p25', 'muni_inc_p50', 'muni_inc_p75',
+                // Population Density
+                'pop_density_p25', 'pop_density_p50', 'pop_density_p75', 'rural',
+                // LLM Composite
+                'llm_best', 'llm_worst',
+                // Demographics
+                'female', 'employed_tm1', 'single_tm1', 'homeless', 'student', 'ineduc_tm1', 'has_kids_tm1', 'union',
+                // Life Events / Shocks
+                'any_family_death_tm2_t', 'any_close_death_tm2_t', 'any_family_shock_t',
+                'any_employment_shock', 'any_educ_event_t_tm1', 'any_econ_shock',
+                'EtoU_0g_tm1', 'EtoU_1g_tm1',
+                'hs_dropout_tm1', 'hs_start_t_tm1'
             ];
 
-            // Define all standard outcomes grouped by category
+            // Build splits array with auto-generated labels and categories
+            const splits = allSplitNames.map(name => {
+                const labels = generateSplitLabels(name);
+                return {
+                    name: name,
+                    label0: labels.label0,
+                    label1: labels.label1,
+                    category: categorize(name)
+                };
+            });
+
+            // Sort splits by category then name
+            const categoryOrder = ['hhi', 'unemployment', 'epop', 'shortspell', 'sickleave', 'wages', 'density', 'llm_composite', 'demographics', 'events', 'other'];
+            splits.sort((a, b) => {
+                const catDiff = categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
+                if (catDiff !== 0) return catDiff;
+                return a.name.localeCompare(b.name);
+            });
+
+            // Define all outcomes grouped by category (distributional + standard)
+            // Based on actual files in HHI_educ_p50 directory
             const outcomeGroups = {
                 labor: {
                     title: 'Labor Market Outcomes',
                     outcomes: [
                         {name: 'employed_y', label: 'Employed'},
+                        {name: 'employed_0g', label: 'Employed (0g)'},
+                        {name: 'employed_1g', label: 'Employed (1g)'},
+                        {name: 'employed_2g', label: 'Employed (2g)'},
                         {name: 'fulltime_y', label: 'Full-time'},
                         {name: 'hours_y', label: 'Hours'},
                         {name: 'in_educ_or_work', label: 'In Educ/Work'},
+                        {name: 'has_short_spell', label: 'Short Spell'},
+                        {name: 'has_short_spell_u', label: 'Short Spell (U)'},
                     ]
                 },
                 income: {
@@ -581,8 +922,11 @@
                     outcomes: [
                         {name: 'inc_tot', label: 'Total Income'},
                         {name: 'inc_work', label: 'Labor Income'},
+                        {name: 'inc_wage', label: 'Wage Income'},
                         {name: 'taxable_income', label: 'Taxable Income'},
                         {name: 'inc_capital', label: 'Capital Income'},
+                        {name: 'wage_daily_mainjob', label: 'Daily Wage (Main)'},
+                        {name: 'wage_hourly_mainjob', label: 'Hourly Wage (Main)'},
                     ]
                 },
                 transfers: {
@@ -599,7 +943,6 @@
                         {name: 'inc_trans_work_assessment', label: 'Work Assessment'},
                         {name: 'inc_trans_child_related', label: 'Child-Related'},
                         {name: 'inc_trans_housing', label: 'Housing'},
-                        {name: 'inc_trans_scholarship', label: 'Scholarship'},
                         {name: 'inc_trans_sum_pension', label: 'Pension'},
                         {name: 'inc_trans_medical_benefits', label: 'Medical'},
                         {name: 'inc_other_transfers', label: 'Other Transfers'},
@@ -613,6 +956,7 @@
                         {name: 'ineduc_highschool', label: 'In HS'},
                         {name: 'ineduc_college', label: 'In College'},
                         {name: 'ineduc_primary', label: 'In Primary'},
+                        {name: 'inc_trans_scholarship', label: 'Scholarship'},
                     ]
                 },
                 family: {
@@ -623,7 +967,7 @@
                         {name: 'married', label: 'Married'},
                         {name: 'cohabitation', label: 'Cohabitation'},
                         {name: 'separation', label: 'Separation'},
-                        {name: 'has_died', label: 'Died'},
+                        {name: 'union', label: 'Union'},
                     ]
                 },
                 mobility: {
@@ -632,24 +976,17 @@
                         {name: 'reloc_any', label: 'Any Relocation'},
                         {name: 'reloc_within_mun', label: 'Within Muni.'},
                         {name: 'reloc_across_mun', label: 'Across Muni.'},
-                        {name: 'has_short_spell', label: 'Short Spell'},
-                        {name: 'has_short_spell_u', label: 'Short Spell (U)'},
                     ]
                 },
-                municipality: {
-                    title: 'Municipality Characteristics',
+                wealth: {
+                    title: 'Wealth Outcomes',
                     outcomes: [
-                        {name: 'municipality_inc', label: 'Muni. Income'},
-                        {name: 'municipality_epop', label: 'Muni. EPOP'},
-                        {name: 'municipality_college', label: 'Muni. College'},
-                        {name: 'municipality_highschool', label: 'Muni. HS'},
-                        {name: 'municipality_age', label: 'Muni. Age'},
-                        {name: 'municipality_imm_share', label: 'Muni. Imm. Share'},
-                        {name: 'municipality_pop_density', label: 'Muni. Pop. Density'},
-                        {name: 'municipality_death_age', label: 'Muni. Death Age'},
-                        {name: 'municipality_wealth_net', label: 'Muni. Wealth'},
-                        {name: 'municipality_wealth_housing', label: 'Muni. Housing'},
-                        {name: 'municipality_welfare_dependent', label: 'Muni. Welfare Dep.'},
+                        {name: 'wealth_net', label: 'Net Wealth'},
+                        {name: 'wealth_net_wins1', label: 'Net Wealth (wins1)'},
+                        {name: 'wealth_net_wins5', label: 'Net Wealth (wins5)'},
+                        {name: 'wealth_housing', label: 'Housing Wealth'},
+                        {name: 'wealth_housing_wins1', label: 'Housing Wealth (wins1)'},
+                        {name: 'wealth_housing_wins5', label: 'Housing Wealth (wins5)'},
                     ]
                 },
                 distributional: {
@@ -657,7 +994,7 @@
                     outcomes: [
                         {name: 'inc_tot_gt_p', label: 'Total Income', isDistributional: true},
                         {name: 'inc_work_gt_p', label: 'Labor Income', isDistributional: true},
-                        {name: 'inc_y_gt_p', label: 'Annual Labor Income', isDistributional: true},
+                        {name: 'inc_wage_gt_p', label: 'Wage Income', isDistributional: true},
                         {name: 'taxable_income_gt_p', label: 'Taxable Income', isDistributional: true},
                     ]
                 }
@@ -665,15 +1002,20 @@
 
             // Generate HTML for all splits
             function generateSplitSections() {
-                const container = document.querySelector('.container');
+                const container = document.getElementById('bySplitContainer');
 
                 const categoryTitles = {
-                    demographics: 'Demographic Splits',
                     hhi: 'HHI Concentration Splits',
                     unemployment: 'Unemployment Rate Splits',
-                    labormarket: 'Labor Market Condition Splits',
-                    shocks: 'Life Events & Shocks',
-                    education: 'Education Splits'
+                    epop: 'Employment-to-Population Splits',
+                    shortspell: 'Short Spell Rate Splits',
+                    sickleave: 'Sick Leave Rate Splits',
+                    wages: 'Wage & Income Splits',
+                    density: 'Population Density Splits',
+                    llm_composite: 'LLM Composite Splits',
+                    demographics: 'Demographic Splits',
+                    events: 'Life Events & Shocks',
+                    other: 'Other Splits'
                 };
 
                 let currentCategory = '';
@@ -708,15 +1050,16 @@
                             if (outcome.isDistributional) {
                                 const pairDiv = document.createElement('div');
                                 pairDiv.className = 'split-pair';
+                                pairDiv.setAttribute('data-outcome', outcome.name);
                                 pairDiv.innerHTML = `
                                     <h4>${outcome.label}</h4>
                                     <div class="cell">
-                                        <img src="figs/${split.name}/distributional_eventstudy_${split.name}_${outcome.name}_amt_dur_split0_noronly.png"
+                                        <img class="sample-img" data-base="figs/${split.name}/distributional_eventstudy_${split.name}_${outcome.name}_amt_dur_split0" data-suffix="_noronly.png"
                                              onclick="openModal(this)" onerror="this.parentElement.parentElement.style.display='none'">
                                         <div class="label">${split.label0}</div>
                                     </div>
                                     <div class="cell">
-                                        <img src="figs/${split.name}/distributional_eventstudy_${split.name}_${outcome.name}_amt_dur_split1_noronly.png"
+                                        <img class="sample-img" data-base="figs/${split.name}/distributional_eventstudy_${split.name}_${outcome.name}_amt_dur_split1" data-suffix="_noronly.png"
                                              onclick="openModal(this)" onerror="this.style.display='none'">
                                         <div class="label">${split.label1}</div>
                                     </div>
@@ -725,8 +1068,9 @@
                             } else {
                                 const card = document.createElement('div');
                                 card.className = 'figure-card';
+                                card.setAttribute('data-outcome', outcome.name);
                                 card.innerHTML = `
-                                    <img src="figs/${split.name}/eventstudy_${split.name}_${outcome.name}_amt_dur_noronly.png"
+                                    <img class="sample-img" data-base="figs/${split.name}/eventstudy_${split.name}_${outcome.name}_amt_dur" data-suffix="_noronly.png"
                                          onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
                                     <div class="caption">
                                         <div class="split-name">${outcome.label}</div>
@@ -744,8 +1088,181 @@
                 });
             }
 
-            document.addEventListener('DOMContentLoaded', generateSplitSections);
+            // Generate HTML for "By Outcome" view - outcomes as main sections, splits within
+            function generateOutcomeSections() {
+                const container = document.getElementById('byOutcomeContainer');
+
+                Object.entries(outcomeGroups).forEach(([groupKey, group]) => {
+                    // Add category header
+                    const header = document.createElement('h2');
+                    header.className = 'section-title';
+                    header.textContent = group.title;
+                    header.setAttribute('data-outcome-category-header', groupKey);
+                    container.appendChild(header);
+
+                    // Create a section for each outcome in this category
+                    group.outcomes.forEach(outcome => {
+                        const outcomeSection = document.createElement('div');
+                        outcomeSection.className = 'outcome-section';
+                        outcomeSection.setAttribute('data-outcome-view', outcome.name);
+                        outcomeSection.setAttribute('data-type', outcome.isDistributional ? 'distributional' : 'standard');
+
+                        outcomeSection.innerHTML = `<h3>${outcome.label} <span class="badge badge-outcome">${outcome.isDistributional ? 'Distributional' : 'Standard'}</span></h3>`;
+
+                        const grid = document.createElement('div');
+                        grid.className = 'figure-grid';
+
+                        // FIRST: Add Full Sample figure(s)
+                        if (outcome.isDistributional) {
+                            // For distributional outcomes in full sample, show pooled figure
+                            const fullSampleCard = document.createElement('div');
+                            fullSampleCard.className = 'figure-card';
+                            fullSampleCard.setAttribute('data-split-view', 'all-split');
+                            fullSampleCard.style.border = '2px solid #e94560'; // Highlight full sample
+                            fullSampleCard.innerHTML = `
+                                <img class="sample-img" data-base="figs/all/distributional_eventstudy_all_${outcome.name}_amt_dur_pooled" data-suffix="_noronly.png"
+                                     onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                                <div class="caption">
+                                    <div class="split-name" style="color: #e94560;">Full Sample</div>
+                                    <div class="split-desc">All Observations (Pooled)</div>
+                                </div>
+                            `;
+                            grid.appendChild(fullSampleCard);
+                        } else {
+                            // Standard outcomes - full sample figure
+                            const fullSampleCard = document.createElement('div');
+                            fullSampleCard.className = 'figure-card';
+                            fullSampleCard.setAttribute('data-split-view', 'all-split');
+                            fullSampleCard.style.border = '2px solid #e94560'; // Highlight full sample
+                            fullSampleCard.innerHTML = `
+                                <img class="sample-img" data-base="figs/all/eventstudy_all_${outcome.name}_amt_dur" data-suffix="_noronly.png"
+                                     onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                                <div class="caption">
+                                    <div class="split-name" style="color: #e94560;">Full Sample</div>
+                                    <div class="split-desc">All Observations</div>
+                                </div>
+                            `;
+                            grid.appendChild(fullSampleCard);
+                        }
+
+                        // THEN: Add figures for each split
+                        splits.forEach(split => {
+                            if (outcome.isDistributional) {
+                                // For distributional outcomes, show split0 and split1 side by side
+                                const pairDiv = document.createElement('div');
+                                pairDiv.className = 'split-pair';
+                                pairDiv.setAttribute('data-split-view', split.name);
+                                pairDiv.innerHTML = `
+                                    <h4>${split.name}</h4>
+                                    <div class="cell">
+                                        <img class="sample-img" data-base="figs/${split.name}/distributional_eventstudy_${split.name}_${outcome.name}_amt_dur_split0" data-suffix="_noronly.png"
+                                             onclick="openModal(this)" onerror="this.parentElement.parentElement.style.display='none'">
+                                        <div class="label">${split.label0}</div>
+                                    </div>
+                                    <div class="cell">
+                                        <img class="sample-img" data-base="figs/${split.name}/distributional_eventstudy_${split.name}_${outcome.name}_amt_dur_split1" data-suffix="_noronly.png"
+                                             onclick="openModal(this)" onerror="this.style.display='none'">
+                                        <div class="label">${split.label1}</div>
+                                    </div>
+                                `;
+                                grid.appendChild(pairDiv);
+                            } else {
+                                // Standard outcomes - one card per split
+                                const card = document.createElement('div');
+                                card.className = 'figure-card';
+                                card.setAttribute('data-split-view', split.name);
+                                card.innerHTML = `
+                                    <img class="sample-img" data-base="figs/${split.name}/eventstudy_${split.name}_${outcome.name}_amt_dur" data-suffix="_noronly.png"
+                                         onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+                                    <div class="caption">
+                                        <div class="split-name">${split.name}</div>
+                                        <div class="split-desc">${split.label0} vs ${split.label1}</div>
+                                    </div>
+                                `;
+                                grid.appendChild(card);
+                            }
+                        });
+
+                        outcomeSection.appendChild(grid);
+                        container.appendChild(outcomeSection);
+                    });
+                });
+            }
+
+            // Dynamically populate the split filter dropdown
+            function populateSplitDropdown() {
+                const dropdown = document.getElementById('splitDropdownContent');
+
+                const categoryTitles = {
+                    hhi: 'HHI Concentration',
+                    unemployment: 'Unemployment Rate',
+                    epop: 'Employment-to-Population',
+                    shortspell: 'Short Spell Rate',
+                    sickleave: 'Sick Leave Rate',
+                    wages: 'Wage & Income',
+                    density: 'Population Density',
+                    llm_composite: 'LLM Composite',
+                    demographics: 'Demographics',
+                    events: 'Life Events & Shocks',
+                    other: 'Other'
+                };
+
+                let html = `
+                    <div class="multi-select-actions">
+                        <button onclick="selectAll('splitMultiSelect')">Select All</button>
+                        <button onclick="clearAll('splitMultiSelect')">Clear All</button>
+                    </div>
+                    <div class="multi-select-option" data-value="all">
+                        <input type="checkbox" checked> All Splits
+                    </div>
+                    <div class="multi-select-group-header">Full Sample</div>
+                    <div class="multi-select-option" data-value="all-split">
+                        <input type="checkbox"> all (Full Sample)
+                    </div>
+                `;
+
+                let currentCategory = '';
+                splits.forEach(split => {
+                    if (split.category !== currentCategory) {
+                        currentCategory = split.category;
+                        html += `<div class="multi-select-group-header">${categoryTitles[currentCategory] || currentCategory}</div>`;
+                    }
+                    html += `<div class="multi-select-option" data-value="${split.name}"><input type="checkbox"> ${split.name}</div>`;
+                });
+
+                dropdown.innerHTML = html;
+
+                // Update split count in stats bar
+                document.getElementById('splitCount').textContent = splits.length;
+
+                // Re-attach event listeners for dynamically created options
+                dropdown.querySelectorAll('.multi-select-option').forEach(option => {
+                    option.addEventListener('click', function(e) {
+                        if (e.target.tagName === 'INPUT') return;
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                        handleOptionChange(this);
+                    });
+
+                    option.querySelector('input').addEventListener('change', function() {
+                        handleOptionChange(option);
+                    });
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                populateSplitDropdown();
+                generateSplitSections();
+                generateOutcomeSections();
+                // Initialize image sources after sections are generated
+                filterFigures();
+            });
         </script>
+    </div>
+
+    <!-- Container for "By Outcome" view (hidden by default) -->
+    <div class="container hidden" id="byOutcomeContainer">
+        <!-- Generated by JavaScript: generateOutcomeSections() -->
     </div>
 
     <!-- Modal -->
@@ -916,54 +1433,143 @@
             if (e.key === 'Escape') closeModal();
         });
 
+        // Switch between "By Split" and "By Outcome" views
+        function switchViewMode() {
+            const viewMode = document.getElementById('viewModeSelect').value;
+            const bySplitContainer = document.getElementById('bySplitContainer');
+            const byOutcomeContainer = document.getElementById('byOutcomeContainer');
+
+            if (viewMode === 'bySplit') {
+                bySplitContainer.classList.remove('hidden');
+                byOutcomeContainer.classList.add('hidden');
+            } else {
+                bySplitContainer.classList.add('hidden');
+                byOutcomeContainer.classList.remove('hidden');
+            }
+
+            filterFigures();
+        }
+
         function filterFigures() {
             const figType = document.getElementById('figTypeSelect').value;
+            const sampleType = document.getElementById('sampleSelect').value;
             const selectedOutcomes = getSelectedValues(document.getElementById('outcomeMultiSelect'));
             const selectedSplits = getSelectedValues(document.getElementById('splitMultiSelect'));
+            const viewMode = document.getElementById('viewModeSelect').value;
 
             const showAllOutcomes = selectedOutcomes.includes('all') || selectedOutcomes.length === 0;
             const showAllSplits = selectedSplits.includes('all') || selectedSplits.length === 0;
 
-            let visibleSections = 0;
-
-            // Filter sections by split
-            document.querySelectorAll('.outcome-section').forEach(section => {
-                const sectionSplit = section.getAttribute('data-split');
-                const showSplit = showAllSplits || selectedSplits.includes(sectionSplit);
-                section.classList.toggle('hidden', !showSplit);
-
-                if (showSplit) {
-                    // Filter by outcome category within visible sections
-                    let hasVisibleGroups = false;
-                    section.querySelectorAll('[data-category]').forEach(group => {
-                        const category = group.getAttribute('data-category');
-                        const type = group.getAttribute('data-type');
-
-                        let showCategory = showAllOutcomes || selectedOutcomes.includes(category);
-                        let showType = figType === 'all' || type === figType;
-
-                        const isVisible = showCategory && showType;
-                        group.classList.toggle('hidden', !isVisible);
-                        if (isVisible) hasVisibleGroups = true;
-                    });
-
-                    // Hide section if no groups visible
-                    if (!hasVisibleGroups) {
-                        section.classList.add('hidden');
-                    } else {
-                        visibleSections++;
-                    }
+            // Update all image sources based on sample type
+            const sampleSuffix = sampleType === 'balanced' ? '_balanced' : '_unbalanced';
+            document.querySelectorAll('img.sample-img').forEach(img => {
+                const base = img.getAttribute('data-base');
+                const suffix = img.getAttribute('data-suffix');
+                if (base && suffix) {
+                    img.src = base + sampleSuffix + suffix;
                 }
             });
 
-            // Update section headers visibility
-            document.querySelectorAll('[data-category-header]').forEach(header => {
-                const nextSibling = header.nextElementSibling;
-                if (nextSibling && nextSibling.classList.contains('outcome-section')) {
-                    // Check if any sections in this category are visible
+            let visibleSections = 0;
+
+            if (viewMode === 'bySplit') {
+                // ======= BY SPLIT VIEW =======
+                // Filter sections by split
+                document.querySelectorAll('#bySplitContainer .outcome-section').forEach(section => {
+                    const sectionSplit = section.getAttribute('data-split');
+                    const showSplit = showAllSplits || selectedSplits.includes(sectionSplit);
+                    section.classList.toggle('hidden', !showSplit);
+
+                    if (showSplit) {
+                        // Filter by outcome category and specific outcomes within visible sections
+                        let hasVisibleGroups = false;
+                        section.querySelectorAll('[data-category]').forEach(group => {
+                            const type = group.getAttribute('data-type');
+                            let showType = figType === 'all' || type === figType;
+
+                            if (!showType) {
+                                group.classList.add('hidden');
+                                return;
+                            }
+
+                            // Filter individual figure cards/pairs by outcome name
+                            let hasVisibleCards = false;
+                            group.querySelectorAll('[data-outcome]').forEach(card => {
+                                const outcomeName = card.getAttribute('data-outcome');
+                                const showOutcome = showAllOutcomes || selectedOutcomes.includes(outcomeName);
+                                card.style.display = showOutcome ? '' : 'none';
+                                if (showOutcome) hasVisibleCards = true;
+                            });
+
+                            const isVisible = showType && hasVisibleCards;
+                            group.classList.toggle('hidden', !isVisible);
+                            if (isVisible) hasVisibleGroups = true;
+                        });
+
+                        // Hide section if no groups visible
+                        if (!hasVisibleGroups) {
+                            section.classList.add('hidden');
+                        } else {
+                            visibleSections++;
+                        }
+                    }
+                });
+
+                // Update section headers visibility for By Split view
+                document.querySelectorAll('#bySplitContainer [data-category-header]').forEach(header => {
+                    const nextSibling = header.nextElementSibling;
+                    if (nextSibling && nextSibling.classList.contains('outcome-section')) {
+                        // Check if any sections in this category are visible
+                        let hasVisible = false;
+                        let el = header.nextElementSibling;
+                        while (el && !el.matches('[data-category-header]')) {
+                            if (el.matches('.outcome-section:not(.hidden)')) {
+                                hasVisible = true;
+                                break;
+                            }
+                            el = el.nextElementSibling;
+                        }
+                        header.classList.toggle('hidden', !hasVisible);
+                    }
+                });
+            } else {
+                // ======= BY OUTCOME VIEW =======
+                // Filter sections by outcome
+                document.querySelectorAll('#byOutcomeContainer .outcome-section').forEach(section => {
+                    const sectionOutcome = section.getAttribute('data-outcome-view');
+                    const sectionType = section.getAttribute('data-type');
+                    const showOutcome = showAllOutcomes || selectedOutcomes.includes(sectionOutcome);
+                    const showType = figType === 'all' || sectionType === figType;
+
+                    if (!showOutcome || !showType) {
+                        section.classList.add('hidden');
+                        return;
+                    }
+
+                    // Filter individual cards/pairs by split within this outcome section
+                    let hasVisibleCards = false;
+                    section.querySelectorAll('[data-split-view]').forEach(card => {
+                        const splitName = card.getAttribute('data-split-view');
+                        const showSplit = showAllSplits || selectedSplits.includes(splitName);
+                        card.style.display = showSplit ? '' : 'none';
+                        if (showSplit) hasVisibleCards = true;
+                    });
+
+                    if (hasVisibleCards) {
+                        section.classList.remove('hidden');
+                        visibleSections++;
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+
+                // Update section headers visibility for By Outcome view
+                document.querySelectorAll('#byOutcomeContainer [data-outcome-category-header]').forEach(header => {
+                    const category = header.getAttribute('data-outcome-category-header');
+                    // Check if any sections for this category are visible
                     let hasVisible = false;
                     let el = header.nextElementSibling;
-                    while (el && !el.matches('[data-category-header]')) {
+                    while (el && !el.matches('[data-outcome-category-header]')) {
                         if (el.matches('.outcome-section:not(.hidden)')) {
                             hasVisible = true;
                             break;
@@ -971,12 +1577,95 @@
                         el = el.nextElementSibling;
                     }
                     header.classList.toggle('hidden', !hasVisible);
-                }
-            });
+                });
+            }
 
             // Update visible count
             document.getElementById('visibleCount').textContent = visibleSections === 0 ? 'None' :
                 (showAllSplits && showAllOutcomes && figType === 'all') ? 'All' : visibleSections;
+        }
+
+        // Print report function
+        function printReport() {
+            // Get current filter settings
+            const viewMode = document.getElementById('viewModeSelect').value;
+            const figType = document.getElementById('figTypeSelect').value;
+            const sampleType = document.getElementById('sampleSelect').value;
+            const selectedOutcomes = getSelectedValues(document.getElementById('outcomeMultiSelect'));
+            const selectedSplits = getSelectedValues(document.getElementById('splitMultiSelect'));
+
+            // Format the filter values for display
+            const viewModeLabel = viewMode === 'bySplit' ? 'By Split' : 'By Outcome';
+            const figTypeLabel = figType === 'all' ? 'All Figures' :
+                                 figType === 'distributional' ? 'Distributional Only' : 'Standard Only';
+            const sampleLabel = sampleType === 'balanced' ? 'Balanced Panel' : 'Unbalanced Panel';
+
+            // Format outcomes
+            let outcomesLabel;
+            if (selectedOutcomes.includes('all') || selectedOutcomes.length === 0) {
+                outcomesLabel = 'All Outcomes';
+            } else if (selectedOutcomes.length <= 5) {
+                outcomesLabel = selectedOutcomes.join(', ');
+            } else {
+                outcomesLabel = selectedOutcomes.slice(0, 5).join(', ') + ` (+${selectedOutcomes.length - 5} more)`;
+            }
+
+            // Format splits
+            let splitsLabel;
+            if (selectedSplits.includes('all') || selectedSplits.length === 0) {
+                splitsLabel = 'All Splits';
+            } else if (selectedSplits.length <= 4) {
+                splitsLabel = selectedSplits.join(', ');
+            } else {
+                splitsLabel = selectedSplits.slice(0, 4).join(', ') + ` (+${selectedSplits.length - 4} more)`;
+            }
+
+            // Count visible figures
+            const visibleCount = document.getElementById('visibleCount').textContent;
+
+            // Populate print header
+            const printMeta = document.getElementById('printMeta');
+            printMeta.innerHTML = `
+                <div class="print-meta-item">
+                    <div class="print-meta-label">View Mode</div>
+                    <div class="print-meta-value">${viewModeLabel}</div>
+                </div>
+                <div class="print-meta-item">
+                    <div class="print-meta-label">Figure Type</div>
+                    <div class="print-meta-value">${figTypeLabel}</div>
+                </div>
+                <div class="print-meta-item">
+                    <div class="print-meta-label">Sample</div>
+                    <div class="print-meta-value">${sampleLabel}</div>
+                </div>
+                <div class="print-meta-item">
+                    <div class="print-meta-label">Outcomes</div>
+                    <div class="print-meta-value">${outcomesLabel}</div>
+                </div>
+                <div class="print-meta-item">
+                    <div class="print-meta-label">Splits</div>
+                    <div class="print-meta-value">${splitsLabel}</div>
+                </div>
+                <div class="print-meta-item">
+                    <div class="print-meta-label">Sections Showing</div>
+                    <div class="print-meta-value">${visibleCount}</div>
+                </div>
+            `;
+
+            // Add timestamp
+            const now = new Date();
+            const timestamp = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('printTimestamp').textContent = `Generated: ${timestamp}`;
+
+            // Trigger print dialog
+            window.print();
         }
     </script>
 </body>

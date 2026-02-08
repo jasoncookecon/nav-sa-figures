@@ -1,0 +1,2727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAV Social Assistance - Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .slide {
+            min-height: 100vh;
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 3px solid #0f3460;
+        }
+
+        .slide-title {
+            font-size: 2.2em;
+            color: #00d9ff;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #e94560;
+            padding-bottom: 10px;
+        }
+
+        .slide-subtitle {
+            font-size: 1.3em;
+            color: #e94560;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            background: linear-gradient(90deg, #0f3460, #1a1a2e);
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .section-header .slide-title {
+            font-size: 3em;
+            border: none;
+        }
+
+        .section-header .slide-subtitle {
+            font-size: 1.8em;
+            margin-top: 20px;
+        }
+
+        .figure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .figure-grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .figure-grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .figure-grid-1 {
+            grid-template-columns: 1fr;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* For tall faceted figures (amt vs dur 2-panel) */
+        .figure-grid-faceted {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .figure-grid-faceted .figure-card img {
+            max-height: 55vh;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* Constrain figures in Part I Full Sample section */
+        .figure-grid-2 .figure-card img,
+        .figure-grid-3 .figure-card img {
+            max-height: 35vh;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* For demographic/shock heterogeneity slides (6 figures per slide) */
+        .demo-shock-slide .comparison-row .figure-card img {
+            max-height: 28vh;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .demo-shock-slide .comparison-row {
+            margin-bottom: 10px;
+        }
+
+        .demo-shock-slide .comparison-label {
+            font-size: 0.9em;
+            margin-bottom: 3px;
+        }
+
+        .figure-card {
+            background: rgba(15, 52, 96, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .figure-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .figure-card img:hover {
+            transform: scale(1.02);
+        }
+
+        .figure-caption {
+            margin-top: 10px;
+            font-size: 0.95em;
+            color: #a0a0a0;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .comparison-label {
+            text-align: center;
+            font-weight: bold;
+            color: #00d9ff;
+            margin-bottom: 5px;
+        }
+
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+
+        th, td {
+            padding: 10px 15px;
+            text-align: left;
+            border-bottom: 1px solid #0f3460;
+        }
+
+        th {
+            background: #0f3460;
+            color: #00d9ff;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .table-section-header {
+            background: #1a1a2e;
+            font-weight: bold;
+            color: #e94560;
+        }
+
+        /* Appendix link styles */
+        .appendix-link {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85em;
+            margin-left: 10px;
+            transition: background 0.2s;
+        }
+
+        .appendix-link:hover {
+            background: #ff6b8a;
+        }
+
+        /* Small appendix link for figure captions */
+        .appendix-link-small {
+            color: #e94560;
+            text-decoration: none;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+
+        .appendix-link-small:hover {
+            color: #ff6b8a;
+            text-decoration: underline;
+        }
+
+        /* Navigation - auto-hide until hover */
+        .nav-toc {
+            position: fixed;
+            right: 0;
+            top: 10px;
+            bottom: 10px;
+            background: rgba(15, 52, 96, 0.95);
+            padding: 15px;
+            border-radius: 8px 0 0 8px;
+            z-index: 1000;
+            font-size: 0.8em;
+            /* Auto-hide: start collapsed */
+            width: 30px;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .nav-toc::before {
+            content: "≡";
+            display: block;
+            font-size: 1.5em;
+            color: #00d9ff;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .nav-toc:hover {
+            width: 220px;
+            opacity: 1;
+            padding: 15px;
+            right: 0;
+            overflow-y: auto;
+        }
+
+        .nav-toc:hover::before {
+            display: none;
+        }
+
+        .nav-toc a {
+            display: block;
+            color: #a0a0a0;
+            text-decoration: none;
+            padding: 4px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-toc:hover a {
+            opacity: 1;
+        }
+
+        .nav-toc a:hover {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+        }
+
+        .nav-toc .section-link {
+            font-weight: bold;
+            color: #e94560;
+            margin-top: 10px;
+        }
+
+        /* Modal for enlarged images */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .modal img {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+        }
+
+        /* Appendix slides */
+        .appendix-slide {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+        }
+
+        .appendix-slide .slide-title::before {
+            content: "Appendix: ";
+            color: #e94560;
+        }
+
+        /* Back to main link - dynamic, positioned fixed */
+        #back-to-main {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            background: #e94560;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            z-index: 1000;
+            cursor: pointer;
+            display: none; /* Hidden by default, shown via JS */
+        }
+
+        #back-to-main:hover {
+            background: #ff6b8a;
+        }
+
+        /* Hide old static back links */
+        .back-link {
+            display: none;
+        }
+
+        /* Slide bullets for key findings */
+        .slide-bullets {
+            margin: 15px 0;
+            padding: 12px 20px;
+            background: rgba(15, 52, 96, 0.4);
+            border-left: 3px solid #00d9ff;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.9em;
+        }
+
+        .slide-bullets ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .slide-bullets li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            color: #d0d0d0;
+        }
+
+        .slide-bullets li:last-child {
+            margin-bottom: 0;
+        }
+
+        .slide-bullets li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #e94560;
+            font-weight: bold;
+        }
+
+        .slide-bullets .highlight-pos {
+            color: #4ade80;
+            font-weight: 500;
+        }
+
+        .slide-bullets .highlight-neg {
+            color: #f87171;
+            font-weight: 500;
+        }
+
+        .slide-bullets .highlight-neutral {
+            color: #fbbf24;
+            font-weight: 500;
+        }
+
+        /* Facet-matched colors for LLM conditions */
+        .slide-bullets .facet-hhi-lo {
+            color: rgb(100, 160, 210);  /* Steel blue - brightened for readability */
+            font-weight: 600;
+        }
+
+        .slide-bullets .facet-hhi-hi {
+            color: rgb(90, 130, 130);   /* Dark slate - brightened for readability */
+            font-weight: 600;
+        }
+
+        .slide-bullets .facet-urate-lo {
+            color: rgb(220, 160, 120);  /* Terracotta - brightened for readability */
+            font-weight: 600;
+        }
+
+        .slide-bullets .facet-urate-hi {
+            color: rgb(180, 100, 100);  /* Rosy brown - brightened for readability */
+            font-weight: 600;
+        }
+
+        /* Print styles */
+        @media print {
+            .nav-toc, .back-link { display: none; }
+            .slide { page-break-after: always; min-height: auto; }
+        }
+
+        /* Presentation mode styles */
+        body.presentation-mode {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+        }
+
+        body.presentation-mode .slide {
+            scroll-snap-align: start;
+            height: 100vh;
+            min-height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Keep nav-toc visible and hoverable in presentation mode */
+        body.presentation-mode .nav-toc {
+            /* Keep the same hover behavior as normal mode */
+        }
+
+        /* Toggle bar for balanced/unbalanced and firstapp/allapp */
+        .toggle-bar {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1001;
+            display: flex;
+            gap: 8px;
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+
+        .toggle-bar:hover {
+            opacity: 1;
+        }
+
+        .toggle-btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .toggle-btn.balanced-btn {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .toggle-btn.balanced-btn.active-unbalanced {
+            background: #e67e22;
+            color: white;
+        }
+
+        .toggle-btn.apptype-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .toggle-btn.apptype-btn.active-allapp {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Toggle buttons for balanced/unbalanced and firstapp/allapp -->
+<div class="toggle-bar">
+    <button id="toggle-balanced" class="toggle-btn balanced-btn active-unbalanced" onclick="toggleBalanced()">Unbalanced</button>
+    <button id="toggle-apptype" class="toggle-btn apptype-btn" onclick="toggleAppType()">First App</button>
+</div>
+
+<!-- Navigation TOC -->
+<nav class="nav-toc">
+    <a href="#title" class="section-link">Title</a>
+
+    <a href="#part1-header" class="section-link">Part I: Full Sample</a>
+    <a href="#transfers-income">SA & Income</a>
+    <a href="#labor-income">Labor Income</a>
+    <a href="#hours-job-quality">Hours & Quality</a>
+    <a href="#transfers-other">DI, UI, Housing</a>
+    <a href="#transfers-health">Health Transfers</a>
+    <a href="#income-wealth">Income & Wealth</a>
+    <a href="#education">Education</a>
+    <a href="#mobility">Mobility</a>
+    <a href="#family">Family</a>
+
+    <a href="#amt-vs-dur-header" class="section-link">Amt vs Dur</a>
+    <a href="#amt-dur-transfers-income">SA & Income</a>
+    <a href="#amt-dur-labor-income">Labor Income</a>
+    <a href="#amt-dur-hours-quality">Hours & Quality</a>
+    <a href="#amt-dur-transfers-other">DI, UI, Housing</a>
+    <a href="#amt-dur-transfers-health">Health Transfers</a>
+    <a href="#amt-dur-income-wealth">Income & Wealth</a>
+    <a href="#amt-dur-education">Education</a>
+    <a href="#amt-dur-mobility">Mobility</a>
+    <a href="#amt-dur-family">Family</a>
+
+    <a href="#part2-header" class="section-link">Part II: LLM Heterogeneity</a>
+    <a href="#llm-theory">Theory</a>
+    <a href="#llm-characteristics">Characteristics</a>
+    <a href="#llm-transfers-income">SA & Income</a>
+    <a href="#llm-labor">Labor Income</a>
+    <a href="#llm-labor-hours">Hours & Quality</a>
+    <a href="#llm-transfers-other">DI, UI, Housing</a>
+    <a href="#llm-transfers-health">Health Transfers</a>
+    <a href="#llm-wealth">Income & Wealth</a>
+    <a href="#llm-education">Education</a>
+    <a href="#llm-mobility">Mobility</a>
+    <a href="#llm-takeaways">Takeaways</a>
+
+    <a href="#part3-header" class="section-link">Part III: Demo/Shock</a>
+    <a href="#demo-transfers-sa">SA & Income</a>
+    <a href="#demo-labor-emp">Employment & Labor</a>
+    <a href="#demo-labor-hours">Hours & Quality</a>
+    <a href="#demo-transfers-di">DI, UI, Housing</a>
+    <a href="#demo-transfers-medical">Health Transfers</a>
+    <a href="#demo-income-capital">Income & Wealth</a>
+    <a href="#demo-educ">Education</a>
+    <a href="#demo-reloc-any">Mobility</a>
+    <a href="#demo-family-children">Family</a>
+</nav>
+
+<!-- Modal for enlarged images -->
+<div id="modal" class="modal" onclick="closeModal()">
+    <img id="modal-img" src="" alt="Enlarged figure">
+</div>
+
+<!-- Dynamic back-to-main button -->
+<a id="back-to-main">← Back to Main</a>
+
+<!-- ==================== TITLE SLIDE ==================== -->
+<div class="slide section-header" id="title">
+    <h1 class="slide-title">Effects of Social Assistance on Adult Outcomes</h1>
+    <p class="slide-subtitle">Evidence from Norwegian Administrative Data</p>
+    <p style="margin-top: 30px; color: #a0a0a0;">Balanced Panel • Norwegian-Born Sample • Treatment: Amount × Duration</p>
+</div>
+
+<!-- ==================== PART I: FULL SAMPLE ==================== -->
+<div class="slide section-header" id="part1-header">
+    <h1 class="slide-title">Part I: Full Sample Results</h1>
+    <p class="slide-subtitle">Event Study Estimates for the Complete Population</p>
+</div>
+
+<!-- SLIDE 1: Transfers & Income (matches LLM Slide 1) -->
+<div class="slide" id="transfers-income">
+    <h2 class="slide-title">Transfers & Income</h2>
+    <p class="slide-subtitle">SA Transfers, Total Income, and Distributional Total Income</p>
+    <ul class="key-findings" style="font-size: 0.85em; color: #b0b0b0; margin: 5px 0 10px 20px; line-height: 1.4;">
+        <li>SA transfers increase sharply at treatment (t=0), persist through t+1</li>
+        <li>Little impact on total income
+    </ul>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_sa_transfers_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">SA Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_inc_tot_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Total Income</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/distributional_eventstudy_all_inc_tot_gt_p_amt_dur_pooled_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Total Income (Distributional)</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 2: Employment & Labor Income (matches LLM Slide 2) -->
+<div class="slide" id="labor-income">
+    <h2 class="slide-title">Employment & Labor Income</h2>
+    <p class="slide-subtitle">Employment, Labor Income, and Distributional Labor Income</p>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_employed_0g_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Any Employment</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_inc_work_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Labor Income</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/distributional_eventstudy_all_inc_work_gt_p_amt_dur_pooled_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Labor Income (Distributional)</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 3: Hours & Job Quality (matches LLM Slide 3) -->
+<div class="slide" id="hours-job-quality">
+    <h2 class="slide-title">Hours & Job Quality</h2>
+    <p class="slide-subtitle">Hours, Short Employment Spells, and Hourly Wage</p>
+    <ul class="key-findings" style="font-size: 0.85em; color: #b0b0b0; margin: 5px 0 10px 20px; line-height: 1.4;">
+        <li>Suggestive hours worked increases</li>
+        <li>Hourly wages show short-run negative effects—may reflect selection into worse jobs</li>
+    </ul>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_hours_y_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Annual Hours</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_has_short_spell_u_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Short Employment Spell</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_wage_hourly_mainjob_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Hourly Wage (Main Job)</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 4: Other Transfers (matches LLM Slide 4) -->
+<div class="slide" id="transfers-other">
+    <h2 class="slide-title">Other Transfers</h2>
+    <p class="slide-subtitle">DI, Unemployment, and Housing Transfers</p>
+    <ul class="key-findings" style="font-size: 0.85em; color: #b0b0b0; margin: 5px 0 10px 20px; line-height: 1.4;">
+        <li>DI receipt increases over medium-term—potential pathway from SA to disability</li>
+        <li>UI transfers show modest negative effects in short run</li>
+    </ul>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_inc_trans_di_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">DI Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_inc_trans_unemployment_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">UI Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_inc_trans_housing_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Housing Transfers</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 5: Health & Pension Transfers (matches LLM Slide 5) -->
+<div class="slide" id="transfers-health">
+    <h2 class="slide-title">Health & Pension Transfers</h2>
+    <p class="slide-subtitle">Medical Benefits, Sick Leave, and Pension</p>
+    <ul class="key-findings" style="font-size: 0.85em; color: #b0b0b0; margin: 5px 0 10px 20px; line-height: 1.4;">
+        <li>Medical benefits and sick leave show small negative effects</li>
+    </ul>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_inc_trans_medical_benefits_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Medical Benefits</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_inc_trans_sick_leave_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Sick Leave Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_inc_trans_sum_pension_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Pension Transfers</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 6: Income & Wealth (matches LLM Slide 6) -->
+<div class="slide" id="income-wealth">
+    <h2 class="slide-title">Income & Wealth</h2>
+    <p class="slide-subtitle">Capital Income, Net Wealth, and Housing Wealth</p>
+    <ul class="key-findings" style="font-size: 0.85em; color: #b0b0b0; margin: 5px 0 10px 20px; line-height: 1.4;">        
+        <li>Net wealth show small increases over time</li>
+    </ul>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_inc_capital_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Capital Income</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_wealth_net_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Net Wealth (W1%)</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_wealth_housing_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Housing Wealth (W1%)</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 7: Education (matches LLM Slide 7) -->
+<div class="slide" id="education">
+    <h2 class="slide-title">Education</h2>
+    <p class="slide-subtitle">Enrollment and Education Transfers</p>
+    <ul class="key-findings" style="font-size: 0.85em; color: #b0b0b0; margin: 5px 0 10px 20px; line-height: 1.4;">        
+        <li>Suggestive High school enrollment increases but possible imbalance</li>
+    </ul>
+    <div class="figure-grid figure-grid-2">
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_ineduc_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">In Education (Any)</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_ineduc_highschool_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">In High School</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_ineduc_college_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">In College</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_inc_trans_scholarship_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Scholarship Transfers</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 8: Geographic Mobility (matches LLM Slide 8) -->
+<div class="slide" id="mobility">
+    <h2 class="slide-title">Geographic Mobility</h2>
+    <p class="slide-subtitle">Residential Relocation</p>
+    <ul class="key-findings" style="font-size: 0.85em; color: #b0b0b0; margin: 5px 0 10px 20px; line-height: 1.4;">
+        <li>Relocation rates decrease modestly—SA may reduce geographic mobility to retain benefits</li>
+        <li>Primarily across-municipality moves</li>
+    </ul>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_reloc_any_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Any Relocation</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_reloc_across_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Across Municipality</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_reloc_within_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Within Municipality</div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 9: Family Formation (Full Sample Only - not in LLM) -->
+<div class="slide" id="family">
+    <h2 class="slide-title">Family Formation</h2>
+    <p class="slide-subtitle">Marriage, Cohabitation, and Fertility</p>
+    <ul class="key-findings" style="font-size: 0.85em; color: #b0b0b0; margin: 5px 0 10px 20px; line-height: 1.4;">
+        <li>Cohabitation rates decline</li>
+    </ul>
+    <div class="figure-grid figure-grid-2">
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_n_children_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Number of Children</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_has_spouse_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Has Spouse</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_married_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Married</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all/eventstudy_all_cohabitation_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Cohabitation</div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== AMOUNT VS DURATION ==================== -->
+<div class="slide section-header" id="amt-vs-dur-header">
+    <h1 class="slide-title">Amount vs Duration</h1>
+    <p class="slide-subtitle">Comparing Treatment Effect Channels</p>
+    <p style="margin-top: 20px; color: #a0a0a0;">Top panel: Amount (blue) | Bottom panel: Duration (terracotta)</p>
+</div>
+
+<!-- AMT VS DUR SLIDE 1: Transfers & Income -->
+<div class="slide" id="amt-dur-transfers-income">
+    <h2 class="slide-title">Amount vs Duration: Transfers & Income</h2>
+    <p class="slide-subtitle">SA Transfers and Total Income</p>
+    <ul class="key-findings" style="font-size: 0.8em; color: #b0b0b0; margin: 3px 0 8px 20px; line-height: 1.3;">
+        <li><strong style="color: rgb(70, 130, 180);">Amount:</strong> Total income falls from decreases at bottom of distribution</li>
+        <li><strong style="color: rgb(180, 100, 100);">Duration:</strong> More persistent SA use over time; total income distribution shifts down</li>
+    </ul>
+    <div class="figure-grid figure-grid-faceted">
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_sa_transfers_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">SA Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_inc_tot_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Total Income</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted_distributional/distributional_faceted_inc_tot_gt_p_amt_dur_allapp_balanced.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Total Income (Distributional)</div>
+        </div>
+    </div>
+</div>
+
+<!-- AMT VS DUR SLIDE 2: Employment & Labor Income -->
+<div class="slide" id="amt-dur-labor-income">
+    <h2 class="slide-title">Amount vs Duration: Employment & Labor Income</h2>
+    <p class="slide-subtitle">Employment and Labor Income</p>
+    <ul class="key-findings" style="font-size: 0.8em; color: #b0b0b0; margin: 3px 0 8px 20px; line-height: 1.3;">
+        <li><strong style="color: rgb(70, 130, 180);">Amount:</strong> Employment effects concentrated in short-term</li>
+        <li><strong style="color: rgb(180, 100, 100);">Duration:</strong> More persistent employment suppression; longer labor force detachment</li>
+    </ul>
+    <div class="figure-grid figure-grid-faceted">
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_employed_0g_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Any Employment</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_inc_work_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Labor Income</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted_distributional/distributional_faceted_inc_work_gt_p_amt_dur_allapp_balanced.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Labor Income (Distributional)</div>
+        </div>
+    </div>
+</div>
+
+<!-- AMT VS DUR SLIDE 3: Hours & Job Quality -->
+<div class="slide" id="amt-dur-hours-quality">
+    <h2 class="slide-title">Amount vs Duration: Hours & Job Quality</h2>
+    <p class="slide-subtitle">Hours, Short Employment Spells, and Hourly Wage</p>
+    <div class="figure-grid figure-grid-faceted">
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_hours_y_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Annual Hours</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_has_short_spell_u_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Short Employment Spell</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_wage_hourly_mainjob_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Hourly Wage (Main Job)</div>
+        </div>
+    </div>
+</div>
+
+<!-- AMT VS DUR SLIDE 4: Other Transfers -->
+<div class="slide" id="amt-dur-transfers-other">
+    <h2 class="slide-title">Amount vs Duration: Other Transfers</h2>
+    <p class="slide-subtitle">DI, Unemployment, and Housing Transfers</p>
+    <ul class="key-findings" style="font-size: 0.8em; color: #b0b0b0; margin: 3px 0 8px 20px; line-height: 1.3;">
+        <li><strong style="color: rgb(70, 130, 180);">Amount:</strong> UI transfers increase in short-run</li>
+        <li><strong style="color: rgb(180, 100, 100);">Duration:</strong> Stronger DI transition effects—extended SA spells → disability pathway</li>
+    </ul>
+    <div class="figure-grid figure-grid-faceted">
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_inc_trans_di_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">DI Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_inc_trans_unemployment_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">UI Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_inc_trans_housing_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Housing Transfers</div>
+        </div>
+    </div>
+</div>
+
+<!-- AMT VS DUR SLIDE 5: Health & Pension Transfers -->
+<div class="slide" id="amt-dur-transfers-health">
+    <h2 class="slide-title">Amount vs Duration: Health & Pension Transfers</h2>
+    <p class="slide-subtitle">Medical Benefits, Sick Leave, and Pension</p>
+    <div class="figure-grid figure-grid-faceted">
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_inc_trans_medical_benefits_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Medical Benefits</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_inc_trans_sick_leave_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Sick Leave Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_inc_trans_sum_pension_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Pension Transfers</div>
+        </div>
+    </div>
+</div>
+
+<!-- AMT VS DUR SLIDE 6: Income & Wealth -->
+<div class="slide" id="amt-dur-income-wealth">
+    <h2 class="slide-title">Amount vs Duration: Income & Wealth</h2>
+    <p class="slide-subtitle">Capital Income, Net Wealth, and Housing Wealth</p>
+    <ul class="key-findings" style="font-size: 0.8em; color: #b0b0b0; margin: 3px 0 8px 20px; line-height: 1.3;">
+        <li>Suggestive wealth increases for amount channel</li>
+    </ul>
+    <div class="figure-grid figure-grid-faceted">
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_inc_capital_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Capital Income</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_wealth_net_wins1_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Net Wealth (W1%)</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_wealth_housing_wins1_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Housing Wealth (W1%)</div>
+        </div>
+    </div>
+</div>
+
+<!-- AMT VS DUR SLIDE 7: Education -->
+<div class="slide" id="amt-dur-education">
+    <h2 class="slide-title">Amount vs Duration: Education</h2>
+    <p class="slide-subtitle">Enrollment and Education Transfers</p>
+    <ul class="key-findings" style="font-size: 0.8em; color: #b0b0b0; margin: 3px 0 8px 20px; line-height: 1.3;">
+        <li><strong style="color: rgb(70, 130, 180);">Amount:</strong> Fewer scholarships in longer run</li>
+        <li><strong style="color: rgb(180, 100, 100);">Duration:</strong> Scholarship and high school uptake suggests longer SA enables training programs</li>
+    </ul>
+    <div class="figure-grid figure-grid-faceted" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_ineduc_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">In Education (Any)</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_ineduc_highschool_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">In High School</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_ineduc_college_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">In College</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_inc_trans_scholarship_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Scholarship Transfers</div>
+        </div>
+    </div>
+</div>
+
+<!-- AMT VS DUR SLIDE 8: Geographic Mobility -->
+<div class="slide" id="amt-dur-mobility">
+    <h2 class="slide-title">Amount vs Duration: Geographic Mobility</h2>
+    <p class="slide-subtitle">Residential Relocation</p>
+    <ul class="key-findings" style="font-size: 0.8em; color: #b0b0b0; margin: 3px 0 8px 20px; line-height: 1.3;">
+        <li><strong style="color: rgb(180, 100, 100);">Duration:</strong> Longer SA duration reduces mobility, perhaps to retain benefits</li>
+    </ul>
+    <div class="figure-grid figure-grid-faceted">
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_reloc_any_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Any Relocation</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_reloc_across_mun_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Across Municipality</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_reloc_within_mun_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Within Municipality</div>
+        </div>
+    </div>
+</div>
+
+<!-- AMT VS DUR SLIDE 9: Family Formation (Full Sample Only) -->
+<div class="slide" id="amt-dur-family">
+    <h2 class="slide-title">Amount vs Duration: Family Formation</h2>
+    <p class="slide-subtitle">Marriage, Cohabitation, and Fertility</p>
+    <div class="figure-grid figure-grid-faceted" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_n_children_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Number of Children</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_has_spouse_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Has Spouse</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_married_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Married</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/all_faceted/eventstudy_faceted_cohabitation_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Cohabitation</div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== PART II: LLM HETEROGENEITY ==================== -->
+<div class="slide section-header" id="part2-header">
+    <h1 class="slide-title">Part II: Local Labor Market Heterogeneity</h1>
+    <p class="slide-subtitle">How Effects Vary by Labor Market Conditions</p>
+</div>
+
+<!-- THEORY FRAMEWORK SLIDE -->
+<div class="slide" id="llm-theory">
+    <h2 class="slide-title">Theoretical Framework: SA and Labor Market Power</h2>
+    <p class="slide-subtitle">Key Mechanisms and Predictions</p>
+    <div class="theory-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; padding: 10px 20px;">
+        <div class="theory-box" style="background: rgba(100, 160, 210, 0.1); border-left: 4px solid rgb(100, 160, 210); padding: 15px; border-radius: 8px;">
+            <h3 style="color: rgb(100, 160, 210); margin-top: 0; font-size: 1.1em;">Monopsony & Labor Market Power</h3>
+            <ul style="font-size: 0.9em; line-height: 1.5; margin-bottom: 0;">
+                <li>In <strong>concentrated markets</strong>, employers extract rents by paying wages below marginal productivity (Azar, Marinescu & Steinbaum, 2022)</li>
+                <li>SA may act as <strong>countervailing force</strong>—raising workers' outside option and improving bargaining position</li>
+                <li><em>Prediction:</em> Larger income gains from SA in high-HHI markets where wage suppression is greatest</li>
+            </ul>
+        </div>
+        <div class="theory-box" style="background: rgba(220, 160, 120, 0.1); border-left: 4px solid rgb(220, 160, 120); padding: 15px; border-radius: 8px;">
+            <h3 style="color: rgb(220, 160, 120); margin-top: 0; font-size: 1.1em;">Reservation Wages & Job Search</h3>
+            <ul style="font-size: 0.9em; line-height: 1.5; margin-bottom: 0;">
+                <li>SA raises reservation wages, allowing workers to be more selective about job quality</li>
+                <li>In <strong>tight labor markets</strong>, workers can leverage improved outside option to demand better wages/hours</li>
+                <li><em>Prediction:</em> Hours and job quality effects strongest in low-unemployment settings</li>
+            </ul>
+        </div>
+        <div class="theory-box" style="background: rgba(180, 100, 100, 0.1); border-left: 4px solid rgb(180, 100, 100); padding: 15px; border-radius: 8px;">
+            <h3 style="color: rgb(180, 100, 100); margin-top: 0; font-size: 1.1em;">Liquidity vs. Moral Hazard</h3>
+            <ul style="font-size: 0.9em; line-height: 1.5; margin-bottom: 0;">
+                <li>Chetty (2008): 60% of UI duration effects are <strong>liquidity</strong>, not moral hazard</li>
+                <li>In <strong>slack labor markets</strong>, liquidity relief may be most valuable—workers can wait for better matches</li>
+                <li><em>Prediction:</em> Different channels dominate in different labor market conditions</li>
+            </ul>
+        </div>
+        <div class="theory-box" style="background: rgba(90, 130, 130, 0.1); border-left: 4px solid rgb(90, 130, 130); padding: 15px; border-radius: 8px;">
+            <h3 style="color: rgb(90, 130, 130); margin-top: 0; font-size: 1.1em;">Human Capital Investment</h3>
+            <ul style="font-size: 0.9em; line-height: 1.5; margin-bottom: 0;">
+                <li>SA relaxes <strong>liquidity constraints</strong> that prevent education investment</li>
+                <li>Returns to human capital higher in <strong>competitive markets</strong>; opportunity cost lower in <strong>high unemployment</strong></li>
+                <li><em>Prediction:</em> Education enrollment increases most in competitive and high-unemployment LLMs</li>
+            </ul>
+        </div>
+    </div>
+    <p style="font-size: 0.75em; color: #888; margin-top: 10px; text-align: center;">
+        Key references: Azar et al. (2022, JHR); Chetty (2008, JPE); Manning (2003); Mortensen & Pissarides (1994)
+    </p>
+</div>
+
+<!-- LLM CHARACTERISTICS TABLE -->
+<div class="slide" id="llm-characteristics">
+    <h2 class="slide-title">Local Labor Market Characteristics</h2>
+    <p class="slide-subtitle">Comparing Split Definitions</p>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Characteristic</th>
+                    <th>Mean (=0)</th>
+                    <th>Mean (=1)</th>
+                    <th>Difference</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="table-section-header"><td colspan="4">HHI ≥ p50 (Concentrated Markets)</td></tr>
+                <tr><td>HHI (Educ × LLM)</td><td>0.006</td><td>0.045</td><td>+0.040***</td></tr>
+                <tr><td>Unemployment Rate</td><td>0.105</td><td>0.090</td><td>-0.014***</td></tr>
+                <tr><td>Employment-Pop Ratio</td><td>0.711</td><td>0.697</td><td>-0.015***</td></tr>
+                <tr><td>Population Density</td><td>379</td><td>140</td><td>-239***</td></tr>
+
+                <tr class="table-section-header"><td colspan="4">Unemployment Rate ≥ p50 (High Unemployment)</td></tr>
+                <tr><td>HHI (Educ × LLM)</td><td>0.014</td><td>0.018</td><td>+0.004***</td></tr>
+                <tr><td>Unemployment Rate</td><td>0.078</td><td>0.197</td><td>+0.118***</td></tr>
+                <tr><td>Employment-Pop Ratio</td><td>0.714</td><td>0.673</td><td>-0.042***</td></tr>
+                <tr><td>Population Density</td><td>355</td><td>244</td><td>-111***</td></tr>
+
+                <tr class="table-section-header"><td colspan="4">Employment-Pop Ratio ≥ p50 (Tight Labor Markets)</td></tr>
+                <tr><td>HHI (Educ × LLM)</td><td>0.018</td><td>0.012</td><td>-0.006***</td></tr>
+                <tr><td>Unemployment Rate</td><td>0.095</td><td>0.078</td><td>-0.017***</td></tr>
+                <tr><td>Employment-Pop Ratio</td><td>0.675</td><td>0.780</td><td>+0.105***</td></tr>
+                <tr><td>Population Density</td><td>270</td><td>408</td><td>+138***</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 15px;">
+        Notes: Sample restricted to baseline period (event time = -1). *** p<0.01
+    </p>
+</div>
+
+<!-- LLM SLIDE 1: SA Transfers, Total Income, Distributional Total Income -->
+<div class="slide" id="llm-transfers-income">
+    <h2 class="slide-title">LLM Heterogeneity: Transfers & Income</h2>
+    <p class="slide-subtitle">SA Transfers, Total Income, and Distributional Total Income</p>
+    <div class="slide-bullets">
+        <ul>
+            <li><span class="highlight-neutral">No heterogeneity</span> in SA transfers across labor market conditions</li>
+            <li><span class="highlight-pos">Higher total income</span> from SA in <span class="facet-hhi-hi">high-HHI (concentrated)</span> markets; gains concentrated at bottom of distribution</li>
+            <li><span class="highlight-neg">Decreased total income</span> from SA in <span class="facet-hhi-lo">low-HHI (competitive)</span> markets</li>
+            <li>Some evidence of <span class="highlight-neg">decreases at top of income distribution</span> in <span class="facet-urate-hi">high-unemployment</span> settings</li>
+        </ul>
+    </div>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_sa_transfers_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">SA Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_inc_tot_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Total Income</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted_distributional/distributional_faceted_inc_tot_gt_p_amt_dur_allapp_balanced.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Total Income (Distributional)</div>
+        </div>
+    </div>
+</div>
+
+<!-- LLM SLIDE 2: Employment, Labor Income, Distributional Labor Income -->
+<div class="slide" id="llm-labor">
+    <h2 class="slide-title">LLM Heterogeneity: Employment & Labor Income</h2>
+    <p class="slide-subtitle">Employment, Labor Income, and Distributional Labor Income</p>
+    <div class="slide-bullets">
+        <ul>
+            <li><span class="highlight-neg">Decreases at bottom of labor income distribution</span> in <span class="facet-hhi-lo">low-HHI (competitive)</span> markets when receiving SA</li>
+            <li><span class="highlight-neg">Decreases in labor income</span> also observed in <span class="facet-urate-hi">high-unemployment</span> settings</li>
+        </ul>
+    </div>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_employed_0g_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Any Employment</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_inc_work_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Labor Income</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted_distributional/distributional_faceted_inc_work_gt_p_amt_dur_allapp_balanced.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Labor Income (Distributional)</div>
+        </div>
+    </div>
+</div>
+
+<!-- LLM SLIDE 3: Hours, Short Spell, Hourly Wage -->
+<div class="slide" id="llm-labor-hours">
+    <h2 class="slide-title">LLM Heterogeneity: Hours & Job Quality</h2>
+    <p class="slide-subtitle">Hours, Short Employment Spells, and Hourly Wage</p>
+    <div class="slide-bullets">
+        <ul>
+            <li>SA allows people to accept <span class="highlight-neg">lower-paying jobs</span> with <span class="highlight-pos">higher hours</span> in <span class="facet-hhi-hi">high-HHI (concentrated)</span> markets</li>
+            <li>People work <span class="highlight-pos">longer hours</span> in <span class="facet-urate-lo">low-unemployment</span> settings</li>
+        </ul>
+    </div>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_hours_y_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Annual Hours</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_has_short_spell_u_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Short Employment Spell</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_wage_hourly_mainjob_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Hourly Wage</div>
+        </div>
+    </div>
+</div>
+
+<!-- LLM SLIDE 4: DI, UI, Housing Transfers -->
+<div class="slide" id="llm-transfers-other">
+    <h2 class="slide-title">LLM Heterogeneity: Other Transfers</h2>
+    <p class="slide-subtitle">DI, Unemployment, and Housing Transfers</p>
+    <div class="slide-bullets">
+        <ul>
+            <li>SA in both <span class="facet-hhi-hi">high-HHI (concentrated)</span> and <span class="facet-urate-hi">high-unemployment</span> settings leads to <span class="highlight-pos">higher DI utilization</span> in the longer run</li>
+            <li><span class="highlight-neg">Temporary decline in UI</span>, but <span class="highlight-neutral">no heterogeneous effects</span> across labor market conditions</li>
+        </ul>
+    </div>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_inc_trans_di_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">DI Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_inc_trans_unemployment_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">UI Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_inc_trans_housing_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Housing Transfers</div>
+        </div>
+    </div>
+</div>
+
+<!-- LLM SLIDE 5: Medical Benefits, Sick Leave, Pension -->
+<div class="slide" id="llm-transfers-health">
+    <h2 class="slide-title">LLM Heterogeneity: Health & Pension Transfers</h2>
+    <p class="slide-subtitle">Medical Benefits, Sick Leave, and Pension</p>
+    <div class="slide-bullets">
+        <ul>
+            <li><span class="effect-negative">Declines in medical benefits</span> for <span class="facet-hhi-hi">high-HHI (concentrated)</span> and <span class="facet-urate-lo">low-unemployment</span> settings</li>
+            <li><span class="effect-negative">Less sick-leave usage</span> in <span class="facet-hhi-lo">low-HHI (competitive)</span> and <span class="facet-urate-hi">high-unemployment</span> labor markets</li>
+            <li><span class="effect-negative">Fewer pension transfers</span> in longer run in <span class="facet-hhi-hi">high-HHI (concentrated)</span> labor markets</li>
+        </ul>
+    </div>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_inc_trans_medical_benefits_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Medical Benefits</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_inc_trans_sick_leave_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Sick Leave Transfers</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_inc_trans_sum_pension_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Pension Transfers</div>
+        </div>
+    </div>
+</div>
+
+<!-- LLM SLIDE 6: Capital Income, Net Wealth, Housing Wealth -->
+<div class="slide" id="llm-wealth">
+    <h2 class="slide-title">LLM Heterogeneity: Income & Wealth</h2>
+    <p class="slide-subtitle">Capital Income, Net Wealth, and Housing Wealth</p>
+    <div class="slide-bullets">
+        <ul>
+            <li>Suggestive evidence of <span class="effect-positive">wealth increases</span> in <span class="facet-hhi-hi">high-HHI (concentrated)</span> areas</li>
+        </ul>
+    </div>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_inc_capital_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Capital Income</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_wealth_net_wins1_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Net Wealth (W1%)</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_wealth_housing_wins1_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Housing Wealth (W1%)</div>
+        </div>
+    </div>
+</div>
+
+<!-- LLM SLIDE 7: Education -->
+<div class="slide" id="llm-education">
+    <h2 class="slide-title">LLM Heterogeneity: Education</h2>
+    <p class="slide-subtitle">Enrollment and Education Transfers</p>
+    <div class="slide-bullets">
+        <ul>
+            <li>SA <span class="effect-positive">increases HS enrollment rates</span> in <span class="facet-hhi-lo">low-HHI (competitive)</span> and particularly in <span class="facet-urate-hi">high-unemployment</span> labor markets</li>
+        </ul>
+    </div>
+    <div class="figure-grid figure-grid-2">
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_ineduc_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">In Education (Any)</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_ineduc_highschool_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">In High School</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_ineduc_college_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">In College</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_inc_trans_scholarship_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Scholarship Transfers</div>
+        </div>
+    </div>
+</div>
+
+<!-- LLM SLIDE 8: Geographic Mobility -->
+<div class="slide" id="llm-mobility">
+    <h2 class="slide-title">LLM Heterogeneity: Geographic Mobility</h2>
+    <p class="slide-subtitle">Residential Relocation</p>
+    <div class="figure-grid figure-grid-3">
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_reloc_any_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Any Relocation</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_reloc_across_mun_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Across Municipality</div>
+        </div>
+        <div class="figure-card">
+            <img src="figs/llm_faceted/eventstudy_faceted_reloc_within_mun_amt_dur_balanced_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+            <div class="figure-caption">Within Municipality</div>
+        </div>
+    </div>
+</div>
+
+<!-- LLM TAKEAWAYS SLIDE -->
+<div class="slide" id="llm-takeaways">
+    <h2 class="slide-title">LLM Heterogeneity: What We Learn</h2>
+    <p class="slide-subtitle">Synthesizing Evidence Across Labor Market Conditions</p>
+    <div class="takeaways-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 10px 20px;">
+        <div class="takeaway-box" style="background: linear-gradient(135deg, rgba(100, 160, 210, 0.15), rgba(90, 130, 130, 0.15)); padding: 18px; border-radius: 10px; border: 1px solid rgba(100, 160, 210, 0.3);">
+            <h3 style="color: #e0e0e0; margin-top: 0; font-size: 1.05em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px;">
+                📊 SA as Countervailing Force Against Monopsony
+            </h3>
+            <ul style="font-size: 0.85em; line-height: 1.6; margin-bottom: 0; color: #c0c0c0;">
+                <li><span class="facet-hhi-hi">Concentrated markets</span>: Higher total income, gains at bottom of distribution</li>
+                <li>SA improves worker bargaining position where employers have most wage-setting power</li>
+                <li>Supports monopsony theory: transfers most beneficial where wage suppression is greatest</li>
+            </ul>
+        </div>
+        <div class="takeaway-box" style="background: linear-gradient(135deg, rgba(220, 160, 120, 0.15), rgba(180, 100, 100, 0.15)); padding: 18px; border-radius: 10px; border: 1px solid rgba(220, 160, 120, 0.3);">
+            <h3 style="color: #e0e0e0; margin-top: 0; font-size: 1.05em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px;">
+                📚 SA Facilitates Human Capital Investment
+            </h3>
+            <ul style="font-size: 0.85em; line-height: 1.6; margin-bottom: 0; color: #c0c0c0;">
+                <li><span class="facet-hhi-lo">Competitive markets</span> + <span class="facet-urate-hi">high unemployment</span>: Increased HS enrollment</li>
+                <li>High unemployment lowers opportunity cost of education; competitive markets raise returns to skills</li>
+                <li>Consistent with liquidity constraint models—transfers unlock human capital accumulation</li>
+            </ul>
+        </div>
+        <div class="takeaway-box" style="background: linear-gradient(135deg, rgba(180, 100, 100, 0.15), rgba(90, 130, 130, 0.15)); padding: 18px; border-radius: 10px; border: 1px solid rgba(180, 100, 100, 0.3);">
+            <h3 style="color: #e0e0e0; margin-top: 0; font-size: 1.05em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px;">
+                ⚠️ Different Channels in Different Markets
+            </h3>
+            <ul style="font-size: 0.85em; line-height: 1.6; margin-bottom: 0; color: #c0c0c0;">
+                <li><span class="facet-hhi-hi">High-HHI</span>: SA enables accepting lower-wage, higher-hour jobs (compensating differentials)</li>
+                <li><span class="facet-urate-lo">Low unemployment</span>: Workers leverage SA to negotiate better hours</li>
+                <li><span class="facet-urate-hi">High unemployment</span>: Labor income declines suggest search/waiting effects</li>
+            </ul>
+        </div>
+        <div class="takeaway-box" style="background: linear-gradient(135deg, rgba(90, 130, 130, 0.15), rgba(100, 160, 210, 0.15)); padding: 18px; border-radius: 10px; border: 1px solid rgba(90, 130, 130, 0.3);">
+            <h3 style="color: #e0e0e0; margin-top: 0; font-size: 1.05em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px;">
+                🎯 Policy Implications
+            </h3>
+            <ul style="font-size: 0.85em; line-height: 1.6; margin-bottom: 0; color: #c0c0c0;">
+                <li><strong>Context matters:</strong> SA effects depend critically on local labor market structure</li>
+                <li><strong>Targeting:</strong> Greatest income gains in concentrated markets—areas often overlooked</li>
+                <li><strong>Long-run effects:</strong> Higher DI utilization in disadvantaged LLMs suggests potential scarring</li>
+            </ul>
+        </div>
+    </div>
+    <div style="background: rgba(255,255,255,0.05); padding: 12px 20px; border-radius: 8px; margin-top: 15px;">
+        <p style="font-size: 0.85em; color: #b0b0b0; margin: 0; text-align: center;">
+            <strong>Big Picture:</strong> Social assistance does not have uniform effects—its impacts depend on the degree of employer market power and local labor market conditions.
+            These findings support models of monopsonistic wage-setting and suggest welfare policy should account for labor market structure.
+        </p>
+    </div>
+</div>
+
+<!-- ==================== PART III: DEMOGRAPHIC & SHOCK HETEROGENEITY ==================== -->
+<div class="slide section-header" id="part3-header">
+    <h1 class="slide-title">Part III: Demographic & Shock Heterogeneity</h1>
+    <p class="slide-subtitle">How Effects Vary by Individual Characteristics and Life Events</p>
+    <p style="margin-top: 20px; color: #a0a0a0;">Comparing: Female • Single • Has Kids • Employed • Employment Shock • Close Death</p>
+</div>
+
+<!-- ===== TRANSFERS & INCOME ===== -->
+<!-- COMBINED: SA TRANSFERS -->
+<div class="slide demo-shock-slide" id="demo-transfers-sa">
+    <h2 class="slide-title">Heterogeneity: SA Transfers</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_sa_transfers_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_sa_transfers_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_sa_transfers_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_sa_transfers_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_sa_transfers_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_sa_transfers_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: TOTAL INCOME -->
+<div class="slide demo-shock-slide" id="demo-income-tot">
+    <h2 class="slide-title">Heterogeneity: Total Income</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_inc_tot_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_inc_tot_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_inc_tot_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_inc_tot_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_inc_tot_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_inc_tot_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: EMPLOYMENT -->
+<div class="slide demo-shock-slide" id="demo-labor-emp">
+    <h2 class="slide-title">Heterogeneity: Employment</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_employed_0g_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_employed_0g_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_employed_0g_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_employed_0g_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_employed_0g_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_employed_0g_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: LABOR INCOME -->
+<div class="slide demo-shock-slide" id="demo-labor-incwork">
+    <h2 class="slide-title">Heterogeneity: Labor Income</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_inc_work_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_inc_work_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_inc_work_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_inc_work_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_inc_work_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_inc_work_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: HOURS -->
+<div class="slide demo-shock-slide" id="demo-labor-hours">
+    <h2 class="slide-title">Heterogeneity: Annual Hours</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_hours_y_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_hours_y_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_hours_y_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_hours_y_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_hours_y_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_hours_y_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: SHORT EMPLOYMENT SPELL -->
+<div class="slide demo-shock-slide" id="demo-labor-shortspell">
+    <h2 class="slide-title">Heterogeneity: Short Employment Spell</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_has_short_spell_u_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_has_short_spell_u_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_has_short_spell_u_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_has_short_spell_u_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_has_short_spell_u_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_has_short_spell_u_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: HOURLY WAGE -->
+<div class="slide demo-shock-slide" id="demo-labor-wage">
+    <h2 class="slide-title">Heterogeneity: Hourly Wage (Main Job)</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_wage_hourly_mainjob_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_wage_hourly_mainjob_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_wage_hourly_mainjob_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_wage_hourly_mainjob_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_wage_hourly_mainjob_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_wage_hourly_mainjob_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: DI TRANSFERS -->
+<div class="slide demo-shock-slide" id="demo-transfers-di">
+    <h2 class="slide-title">Heterogeneity: DI Transfers</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_inc_trans_di_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_inc_trans_di_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_inc_trans_di_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_inc_trans_di_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_inc_trans_di_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_inc_trans_di_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: UI TRANSFERS -->
+<div class="slide demo-shock-slide" id="demo-transfers-ui">
+    <h2 class="slide-title">Heterogeneity: UI Transfers</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_inc_trans_unemployment_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_inc_trans_unemployment_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_inc_trans_unemployment_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_inc_trans_unemployment_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_inc_trans_unemployment_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_inc_trans_unemployment_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: HOUSING TRANSFERS -->
+<div class="slide demo-shock-slide" id="demo-transfers-housing">
+    <h2 class="slide-title">Heterogeneity: Housing Transfers</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_inc_trans_housing_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_inc_trans_housing_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_inc_trans_housing_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_inc_trans_housing_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_inc_trans_housing_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_inc_trans_housing_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: MEDICAL BENEFITS -->
+<div class="slide demo-shock-slide" id="demo-transfers-medical">
+    <h2 class="slide-title">Heterogeneity: Medical Benefits</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_inc_trans_medical_benefits_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_inc_trans_medical_benefits_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_inc_trans_medical_benefits_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_inc_trans_medical_benefits_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_inc_trans_medical_benefits_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_inc_trans_medical_benefits_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: SICK LEAVE TRANSFERS -->
+<div class="slide demo-shock-slide" id="demo-transfers-sick">
+    <h2 class="slide-title">Heterogeneity: Sick Leave Transfers</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_inc_trans_sick_leave_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_inc_trans_sick_leave_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_inc_trans_sick_leave_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_inc_trans_sick_leave_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_inc_trans_sick_leave_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_inc_trans_sick_leave_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: PENSION TRANSFERS -->
+<div class="slide demo-shock-slide" id="demo-transfers-pension">
+    <h2 class="slide-title">Heterogeneity: Pension Transfers</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_inc_trans_sum_pension_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_inc_trans_sum_pension_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_inc_trans_sum_pension_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_inc_trans_sum_pension_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_inc_trans_sum_pension_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_inc_trans_sum_pension_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: CAPITAL INCOME -->
+<div class="slide demo-shock-slide" id="demo-income-capital">
+    <h2 class="slide-title">Heterogeneity: Capital Income</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_inc_capital_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_inc_capital_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_inc_capital_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_inc_capital_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_inc_capital_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_inc_capital_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: NET WEALTH -->
+<div class="slide demo-shock-slide" id="demo-wealth-net">
+    <h2 class="slide-title">Heterogeneity: Net Wealth (Wins 1%)</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_wealth_net_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_wealth_net_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_wealth_net_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_wealth_net_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_wealth_net_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_wealth_net_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: HOUSING WEALTH -->
+<div class="slide demo-shock-slide" id="demo-wealth-housing">
+    <h2 class="slide-title">Heterogeneity: Housing Wealth (Wins 1%)</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_wealth_housing_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_wealth_housing_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_wealth_housing_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_wealth_housing_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_wealth_housing_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_wealth_housing_wins1_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: IN EDUCATION -->
+<div class="slide demo-shock-slide" id="demo-educ">
+    <h2 class="slide-title">Heterogeneity: In Education</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_ineduc_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_ineduc_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_ineduc_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_ineduc_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_ineduc_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_ineduc_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: IN HIGH SCHOOL -->
+<div class="slide demo-shock-slide" id="demo-educ-hs">
+    <h2 class="slide-title">Heterogeneity: In High School</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_ineduc_highschool_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_ineduc_highschool_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_ineduc_highschool_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_ineduc_highschool_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_ineduc_highschool_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_ineduc_highschool_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: IN COLLEGE -->
+<div class="slide demo-shock-slide" id="demo-educ-college">
+    <h2 class="slide-title">Heterogeneity: In College</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_ineduc_college_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_ineduc_college_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_ineduc_college_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_ineduc_college_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_ineduc_college_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_ineduc_college_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: SCHOLARSHIP TRANSFERS -->
+<div class="slide demo-shock-slide" id="demo-transfers-scholarship">
+    <h2 class="slide-title">Heterogeneity: Scholarship Transfers</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_inc_trans_scholarship_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_inc_trans_scholarship_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_inc_trans_scholarship_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_inc_trans_scholarship_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_inc_trans_scholarship_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_inc_trans_scholarship_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: ANY RELOCATION -->
+<div class="slide demo-shock-slide" id="demo-reloc-any">
+    <h2 class="slide-title">Heterogeneity: Any Relocation</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_reloc_any_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_reloc_any_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_reloc_any_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_reloc_any_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_reloc_any_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_reloc_any_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: RELOC ACROSS MUNICIPALITY -->
+<div class="slide demo-shock-slide" id="demo-reloc-across">
+    <h2 class="slide-title">Heterogeneity: Relocation Across Municipality</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_reloc_across_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_reloc_across_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_reloc_across_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_reloc_across_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_reloc_across_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_reloc_across_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: RELOC WITHIN MUNICIPALITY -->
+<div class="slide demo-shock-slide" id="demo-reloc-within">
+    <h2 class="slide-title">Heterogeneity: Relocation Within Municipality</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_reloc_within_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_reloc_within_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_reloc_within_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_reloc_within_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_reloc_within_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_reloc_within_mun_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: NUMBER OF CHILDREN -->
+<div class="slide demo-shock-slide" id="demo-family-children">
+    <h2 class="slide-title">Heterogeneity: Number of Children</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_n_children_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_n_children_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_n_children_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_n_children_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_n_children_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_n_children_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: HAS SPOUSE -->
+<div class="slide demo-shock-slide" id="demo-family-spouse">
+    <h2 class="slide-title">Heterogeneity: Has Spouse</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_has_spouse_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_has_spouse_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_has_spouse_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_has_spouse_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_has_spouse_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_has_spouse_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: MARRIED -->
+<div class="slide demo-shock-slide" id="demo-family-married">
+    <h2 class="slide-title">Heterogeneity: Married</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_married_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_married_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_married_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_married_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_married_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_married_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<!-- COMBINED: COHABITATION -->
+<div class="slide demo-shock-slide" id="demo-family-cohab">
+    <h2 class="slide-title">Heterogeneity: Cohabitation</h2>
+    <p class="slide-subtitle">Demographics and Life Event Shocks</p>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Female</div>
+        <div class="comparison-label">Single</div>
+        <div class="comparison-label">Has Kids</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/female/eventstudy_female_cohabitation_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/single_tm1/eventstudy_single_tm1_cohabitation_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/has_kids_tm1/eventstudy_has_kids_tm1_cohabitation_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="comparison-label">Employed (t-1)</div>
+        <div class="comparison-label">Employment Shock</div>
+        <div class="comparison-label">Close Death</div>
+    </div>
+    <div class="comparison-row" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="figure-card">
+            <img src="figs/employed_tm1/eventstudy_employed_tm1_cohabitation_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_employment_shock/eventstudy_any_employment_shock_cohabitation_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+        <div class="figure-card">
+            <img src="figs/any_close_death_tm2_t/eventstudy_any_close_death_tm2_t_cohabitation_amt_dur_balanced_noronly_allapp.png" onclick="openModal(this)" onerror="this.parentElement.style.display='none'">
+        </div>
+    </div>
+</div>
+
+<script>
+    // Track where user came from when clicking "Extreme Comparisons"
+    let returnToSlide = null;
+
+    // Modal functionality
+    function openModal(img) {
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modal-img');
+        modal.style.display = 'flex';
+        modalImg.src = img.src;
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    // Smooth scrolling for navigation links (works in both normal and presentation mode)
+    document.querySelectorAll('.nav-toc a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                // Find the index of the target slide
+                const allSlides = document.querySelectorAll('.slide');
+                for (let i = 0; i < allSlides.length; i++) {
+                    if (allSlides[i] === target) {
+                        currentSlideIndex = i;
+                        break;
+                    }
+                }
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Update slide counter if in presentation mode
+                if (typeof updateSlideCounter === 'function' && presentationMode) {
+                    updateSlideCounter();
+                }
+            }
+        });
+    });
+
+    // Track clicks on "Extreme Comparisons" links
+    document.querySelectorAll('.appendix-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Store the current slide's ID (parent slide of this link)
+            const currentSlide = this.closest('.slide');
+            if (currentSlide && currentSlide.id) {
+                returnToSlide = currentSlide.id;
+            }
+        });
+    });
+
+    // Back to main button click handler
+    document.getElementById('back-to-main').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (returnToSlide) {
+            const target = document.getElementById(returnToSlide);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+
+    // Show/hide back button based on which slide is in view
+    function updateBackButton() {
+        const backBtn = document.getElementById('back-to-main');
+        const slides = document.querySelectorAll('.slide');
+        const viewportCenter = window.innerHeight / 2;
+
+        let currentSlide = null;
+        slides.forEach(slide => {
+            const rect = slide.getBoundingClientRect();
+            // Check if slide is in the center of viewport
+            if (rect.top <= viewportCenter && rect.bottom >= viewportCenter) {
+                currentSlide = slide;
+            }
+        });
+
+        // Show back button only on appendix slides
+        if (currentSlide && currentSlide.classList.contains('appendix-slide') && returnToSlide) {
+            backBtn.style.display = 'block';
+        } else {
+            backBtn.style.display = 'none';
+        }
+    }
+
+    // Update back button on scroll
+    window.addEventListener('scroll', updateBackButton);
+
+    // Initial check
+    updateBackButton();
+
+    // ==================== PRESENTATION MODE ====================
+    let presentationMode = false;
+    let currentSlideIndex = 0;
+    const allSlides = document.querySelectorAll('.slide');
+
+    // Create presentation mode toggle button
+    const presBtn = document.createElement('button');
+    presBtn.id = 'presentation-toggle';
+    presBtn.innerHTML = '▶ Presentation Mode (P)';
+    presBtn.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        padding: 10px 15px;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    `;
+    presBtn.addEventListener('mouseenter', () => presBtn.style.background = '#555');
+    presBtn.addEventListener('mouseleave', () => presBtn.style.background = presentationMode ? '#007bff' : '#333');
+    document.body.appendChild(presBtn);
+
+    // Create slide counter
+    const slideCounter = document.createElement('div');
+    slideCounter.id = 'slide-counter';
+    slideCounter.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        padding: 8px 15px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        border-radius: 5px;
+        font-size: 14px;
+        display: none;
+    `;
+    document.body.appendChild(slideCounter);
+
+    function updateSlideCounter() {
+        slideCounter.textContent = `${currentSlideIndex + 1} / ${allSlides.length}`;
+    }
+
+    function getCurrentSlideIndex() {
+        const viewportCenter = window.innerHeight / 2;
+        for (let i = 0; i < allSlides.length; i++) {
+            const rect = allSlides[i].getBoundingClientRect();
+            if (rect.top <= viewportCenter && rect.bottom >= viewportCenter) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    function goToSlide(index) {
+        if (index >= 0 && index < allSlides.length) {
+            currentSlideIndex = index;
+            allSlides[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            updateSlideCounter();
+        }
+    }
+
+    function nextSlide() {
+        goToSlide(currentSlideIndex + 1);
+    }
+
+    function prevSlide() {
+        goToSlide(currentSlideIndex - 1);
+    }
+
+    function togglePresentationMode() {
+        presentationMode = !presentationMode;
+
+        if (presentationMode) {
+            // Entering presentation mode
+            currentSlideIndex = getCurrentSlideIndex();
+            presBtn.innerHTML = '⏹ Exit Presentation (P)';
+            presBtn.style.background = '#007bff';
+            slideCounter.style.display = 'block';
+            document.body.classList.add('presentation-mode');
+
+            // Snap to current slide
+            allSlides[currentSlideIndex].scrollIntoView({ block: 'start' });
+            updateSlideCounter();
+        } else {
+            // Exiting presentation mode
+            presBtn.innerHTML = '▶ Presentation Mode (P)';
+            presBtn.style.background = '#333';
+            slideCounter.style.display = 'none';
+            document.body.classList.remove('presentation-mode');
+        }
+    }
+
+    presBtn.addEventListener('click', togglePresentationMode);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        // P key toggles presentation mode
+        if (e.key === 'p' || e.key === 'P') {
+            if (!e.target.matches('input, textarea')) {
+                togglePresentationMode();
+            }
+        }
+
+        // Arrow keys, Page Up/Down, Space for navigation (in presentation mode)
+        if (presentationMode) {
+            switch(e.key) {
+                case 'ArrowRight':
+                case 'ArrowDown':
+                case 'PageDown':
+                case ' ':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'ArrowUp':
+                case 'PageUp':
+                    e.preventDefault();
+                    prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(allSlides.length - 1);
+                    break;
+            }
+        }
+    });
+
+    // Update current slide index on scroll (when not in presentation mode)
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        if (!presentationMode) {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                currentSlideIndex = getCurrentSlideIndex();
+            }, 100);
+        }
+    });
+
+    // ==================== FIGURE TOGGLES ====================
+    let isBalanced = false;   // Default: Unbalanced
+    let isFirstApp = false;   // Default: All Apps (since all current figures have _allapp)
+
+    function toggleBalanced() {
+        isBalanced = !isBalanced;
+        const btn = document.getElementById('toggle-balanced');
+
+        if (isBalanced) {
+            btn.textContent = 'Balanced';
+            btn.classList.remove('active-unbalanced');
+        } else {
+            btn.textContent = 'Unbalanced';
+            btn.classList.add('active-unbalanced');
+        }
+
+        updateAllFigures();
+    }
+
+    function toggleAppType() {
+        isFirstApp = !isFirstApp;
+        const btn = document.getElementById('toggle-apptype');
+
+        if (isFirstApp) {
+            btn.textContent = 'First App';
+            btn.classList.remove('active-allapp');
+        } else {
+            btn.textContent = 'All Apps';
+            btn.classList.add('active-allapp');
+        }
+
+        updateAllFigures();
+    }
+
+    // Initialize buttons and figures to show current state on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const appBtn = document.getElementById('toggle-apptype');
+        if (appBtn) {
+            appBtn.textContent = 'All Apps';
+            appBtn.classList.add('active-allapp');
+        }
+        const balBtn = document.getElementById('toggle-balanced');
+        if (balBtn) {
+            balBtn.textContent = 'Unbalanced';
+            balBtn.classList.add('active-unbalanced');
+        }
+        updateAllFigures();
+    });
+
+    function updateAllFigures() {
+        const images = document.querySelectorAll('img[src*="figs/"]');
+        images.forEach(img => {
+            let src = img.getAttribute('src');
+
+            // Store original src on first call
+            // Original src = balanced + allapp (default state)
+            if (!img.dataset.origSrc) {
+                img.dataset.origSrc = src;
+            }
+
+            // Start from original src every time
+            src = img.dataset.origSrc;
+
+            // Toggle balanced <-> unbalanced
+            if (!isBalanced) {
+                src = src.replace(/_balanced/g, '_unbalanced');
+            }
+
+            // Toggle allapp <-> firstapp
+            // Default has _allapp; firstapp removes it
+            if (isFirstApp) {
+                src = src.replace('_allapp.png', '.png');
+                // Handle distributional reversed order: _allapp_balanced -> _balanced
+                src = src.replace('_allapp_balanced', '_balanced');
+                src = src.replace('_allapp_unbalanced', '_unbalanced');
+            }
+
+            img.setAttribute('src', src);
+
+            // Reset visibility (onerror may have hidden it)
+            img.parentElement.style.display = '';
+            img.style.display = '';
+        });
+    }
+</script>
+
+</body>
+</html>
