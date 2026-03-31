@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAV Social Assistance - 3-Period Results</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f5f5; color: #333;
+  }
+  /* Navigation */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #1a1a2e; color: white; padding: 8px 20px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .nav h1 { font-size: 15px; font-weight: 600; white-space: nowrap; }
+  .nav select {
+    padding: 4px 8px; border-radius: 4px; border: 1px solid #555;
+    background: #16213e; color: white; font-size: 13px; cursor: pointer;
+  }
+  .nav .sep { color: #555; }
+  /* TOC sidebar */
+  .sidebar {
+    position: fixed; top: 44px; left: 0; bottom: 0; width: 240px;
+    background: #16213e; color: #ccc; overflow-y: auto;
+    padding: 12px 0; font-size: 13px; z-index: 90;
+  }
+  .sidebar a {
+    display: block; padding: 6px 16px; color: #aab; text-decoration: none;
+    border-left: 3px solid transparent;
+  }
+  .sidebar a:hover { background: #1a1a3e; color: white; }
+  .sidebar a.active { border-left-color: #e94560; color: white; background: #1a1a3e; }
+  .sidebar .section-header {
+    padding: 10px 16px 4px; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1px; color: #667; font-weight: 600;
+  }
+  /* Main content */
+  .main { margin-left: 240px; margin-top: 44px; padding: 20px; }
+  .section { margin-bottom: 40px; }
+  .section h2 {
+    font-size: 22px; font-weight: 700; margin-bottom: 4px;
+    padding-bottom: 8px; border-bottom: 2px solid #e94560;
+  }
+  .section h3 {
+    font-size: 16px; font-weight: 600; color: #555; margin: 20px 0 10px;
+  }
+  .section .desc { font-size: 13px; color: #777; margin-bottom: 16px; }
+  /* Figure grid */
+  .fig-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 12px; margin-bottom: 20px;
+  }
+  .fig-grid.wide {
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  }
+  .fig-card {
+    background: white; border-radius: 6px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1); cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .fig-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .fig-card img {
+    width: 100%; height: auto; display: block;
+    border-bottom: 1px solid #eee;
+  }
+  .fig-card .label {
+    padding: 6px 10px; font-size: 12px; color: #555;
+    text-align: center; background: #fafafa;
+  }
+  /* Lightbox */
+  .lightbox {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85); z-index: 200;
+    justify-content: center; align-items: center; cursor: pointer;
+  }
+  .lightbox.active { display: flex; }
+  .lightbox img { max-width: 92%; max-height: 92%; border-radius: 4px; }
+  /* Image error handling */
+  .fig-card.missing { opacity: 0.3; }
+  .fig-card.missing img { display: none; }
+  .fig-card.missing .label { color: #999; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <h1>NAV SA - 3-Period Reduced Form Results</h1>
+  <span class="sep">|</span>
+  <select id="jumpSelect" onchange="jumpTo(this.value)">
+    <option value="">Jump to section...</option>
+    <option value="sec-all-amtdur">I. Full Sample (Amt x Dur)</option>
+    <option value="sec-all-avd">II. Full Sample (Amt vs Dur)</option>
+    <option value="sec-female">III. By Gender</option>
+    <option value="sec-educ_level_tm1">IV. By Education Level</option>
+    <option value="sec-HHI_split">V. By HHI Concentration</option>
+    <option value="sec-u_rate_llm_high">VI. By Unemployment Rate</option>
+    <option value="sec-employed_1g_tm1">VII. By Employment > 1G</option>
+    <option value="sec-employed_2g_tm1">VIII. By Employment > 2G</option>
+    <option value="sec-ever_employed_1g_tm1">IX. By Ever Employed</option>
+    <option value="sec-EtoU_2g_tm1">X. By E-to-U Transition</option>
+    <option value="sec-hs_dropout_tm1">XI. By HS Dropout</option>
+    <option value="sec-llm_faceted">XII. LLM 4-Panel Faceted</option>
+  </select>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <div class="section-header">Full Sample</div>
+  <a href="#sec-all-amtdur">I. Amt x Dur</a>
+  <a href="#sec-all-avd">II. Amt vs Dur</a>
+  <div class="section-header">Sample Splits</div>
+  <a href="#sec-female">III. Gender</a>
+  <a href="#sec-educ_level_tm1">IV. Education</a>
+  <a href="#sec-HHI_split">V. HHI</a>
+  <a href="#sec-u_rate_llm_high">VI. Unemployment</a>
+  <a href="#sec-employed_1g_tm1">VII. Employed > 1G</a>
+  <a href="#sec-employed_2g_tm1">VIII. Employed > 2G</a>
+  <a href="#sec-ever_employed_1g_tm1">IX. Ever Employed</a>
+  <a href="#sec-EtoU_2g_tm1">X. E-to-U</a>
+  <a href="#sec-hs_dropout_tm1">XI. HS Dropout</a>
+  <div class="section-header">Faceted</div>
+  <a href="#sec-llm_faceted">XII. LLM 4-Panel</a>
+</div>
+
+<div class="main">
+
+<!-- ================================================================== -->
+<!-- OUTCOME GROUPS (used throughout)                                    -->
+<!-- ================================================================== -->
+
+<script>
+// Outcome groupings (order matters for display)
+const outcomeGroups = [
+  {
+    name: 'Labor Market',
+    outcomes: [
+      ['index_labor', 'Labor Index'],
+      ['employed_y', 'Employed'],
+      ['fulltime_y', 'Full-Time Employed'],
+      ['hours_y', 'Annual Hours'],
+      ['in_educ_or_work', 'In Education or Work'],
+      ['employed_taxable_1g', 'Employed (Tax > 1G)'],
+      ['employed_taxable_2g', 'Employed (Tax > 2G)'],
+    ]
+  },
+  {
+    name: 'Income',
+    outcomes: [
+      ['taxable_income', 'Taxable Income'],
+      ['inc_capital', 'Capital Income'],
+    ]
+  },
+  {
+    name: 'Transfers',
+    outcomes: [
+      ['sa_transfers', 'SA Transfers'],
+      ['focal_trans_y', 'Focal SA Transfers'],
+      ['inc_trans_di', 'DI Transfers'],
+      ['any_inc_trans_di', 'Any DI Transfers'],
+      ['inc_trans_sick_leave', 'Sick Leave'],
+      ['inc_trans_work_assessment', 'Work Assessment'],
+      ['inc_trans_scholarship', 'Scholarship'],
+      ['inc_other_transfers', 'Other Transfers'],
+    ]
+  },
+  {
+    name: 'Education',
+    outcomes: [
+      ['index_educ', 'Education Index'],
+      ['ineduc', 'In Education'],
+      ['ineduc_highschool', 'In High School'],
+      ['ineduc_college', 'In College'],
+      ['has_hs', 'Has HS Degree'],
+      ['has_college', 'Has College Degree'],
+    ]
+  },
+  {
+    name: 'Family',
+    outcomes: [
+      ['n_children', 'Number of Children'],
+      ['has_spouse', 'Has Spouse'],
+      ['married', 'Married'],
+      ['cohabitation', 'Cohabiting'],
+      ['union', 'In Union'],
+    ]
+  },
+  {
+    name: 'Wealth',
+    outcomes: [
+      ['wealth_net', 'Net Wealth'],
+      ['wealth_net_wins1', 'Net Wealth (W1%)'],
+      ['wealth_net_wins5', 'Net Wealth (W5%)'],
+      ['wealth_housing', 'Housing Wealth'],
+      ['wealth_housing_wins1', 'Housing Wealth (W1%)'],
+      ['wealth_housing_wins5', 'Housing Wealth (W5%)'],
+    ]
+  },
+  {
+    name: 'Mortality & Mobility',
+    outcomes: [
+      ['has_died', 'Died'],
+      ['reloc_any', 'Any Relocation'],
+      ['reloc_across_mun', 'Across Municipality'],
+      ['reloc_within_mun', 'Within Municipality'],
+    ]
+  },
+  {
+    name: 'Municipality Characteristics',
+    outcomes: [
+      ['index_municipality', 'Municipality Index'],
+      ['municipality_epop', 'Emp-to-Pop'],
+      ['municipality_inc', 'Avg Income'],
+      ['municipality_college', 'College Share'],
+      ['municipality_highschool', 'HS Share'],
+      ['municipality_age', 'Avg Age'],
+      ['municipality_death_age', 'Avg Death Age'],
+      ['municipality_imm_share', 'Immigrant Share'],
+      ['municipality_pop_density', 'Pop Density'],
+      ['municipality_wealth_net', 'Net Wealth'],
+      ['municipality_wealth_housing', 'Housing Wealth'],
+      ['municipality_welfare_dependent', 'Welfare Dep.'],
+    ]
+  },
+];
+
+// Build a figure card
+function figCard(src, label) {
+  return `<div class="fig-card" onclick="openLightbox('${src}')">
+    <img src="${src}" loading="lazy" onerror="this.parentElement.classList.add('missing')">
+    <div class="label">${label}</div>
+  </div>`;
+}
+
+// Build a section of grouped outcome figures
+function buildGroupedFigs(basePath, groups, wide) {
+  let html = '';
+  for (const g of groups) {
+    html += `<h3>${g.name}</h3>`;
+    html += `<div class="fig-grid${wide ? ' wide' : ''}">`;
+    for (const [outc, label] of g.outcomes) {
+      html += figCard(`${basePath}/${outc}.png`, label);
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+// Build a split section (amt_dur overlaid split)
+function buildSplitSection(splitName, splitTitle, splitDesc) {
+  let html = '';
+  html += `<h3 style="font-size:18px; color:#1a1a2e; margin-top:10px;">Amount x Duration (Split Overlaid)</h3>`;
+  html += `<p class="desc">Groups overlaid on same axes, amt_dur instrument</p>`;
+  for (const g of outcomeGroups) {
+    html += `<h3>${g.name}</h3>`;
+    html += '<div class="fig-grid">';
+    for (const [outc, label] of g.outcomes) {
+      html += figCard(`figs_adam/${splitName}/amt_dur/${outc}.png`, label);
+    }
+    html += '</div>';
+  }
+  return html;
+}
+</script>
+
+<!-- ================================================================== -->
+<!-- SECTION I: FULL SAMPLE - AMT x DUR                                 -->
+<!-- ================================================================== -->
+<div class="section" id="sec-all-amtdur">
+  <h2>I. Full Sample &mdash; Amount &times; Duration</h2>
+  <p class="desc">Reduced form event studies for the combined amt_dur instrument, full sample.</p>
+  <div id="content-all-amtdur"></div>
+</div>
+<script>
+  document.getElementById('content-all-amtdur').innerHTML =
+    buildGroupedFigs('figs_adam/all/amt_dur', outcomeGroups, false);
+</script>
+
+<!-- ================================================================== -->
+<!-- SECTION II: FULL SAMPLE - AMT vs DUR                               -->
+<!-- ================================================================== -->
+<div class="section" id="sec-all-avd">
+  <h2>II. Full Sample &mdash; Amount vs Duration</h2>
+  <p class="desc">Amt and Dur instruments overlaid on the same figure for direct comparison.</p>
+  <div id="content-all-avd"></div>
+</div>
+<script>
+  document.getElementById('content-all-avd').innerHTML =
+    buildGroupedFigs('figs_adam/all_combined', outcomeGroups, false);
+</script>
+
+<!-- ================================================================== -->
+<!-- SECTION III-XII: SAMPLE SPLITS                                     -->
+<!-- ================================================================== -->
+
+<div class="section" id="sec-female">
+  <h2>III. By Gender</h2>
+  <p class="desc">Male vs Female, overlaid on same axes.</p>
+  <div id="content-female"></div>
+</div>
+<script>
+  document.getElementById('content-female').innerHTML =
+    buildSplitSection('female', 'Gender', 'Male vs Female');
+</script>
+
+<div class="section" id="sec-educ_level_tm1">
+  <h2>IV. By Education Level (t-1)</h2>
+  <p class="desc">No High School vs High School vs College.</p>
+  <div id="content-educ_level_tm1"></div>
+</div>
+<script>
+  document.getElementById('content-educ_level_tm1').innerHTML =
+    buildSplitSection('educ_level_tm1', 'Education Level', '');
+</script>
+
+<div class="section" id="sec-HHI_split">
+  <h2>V. By HHI Concentration</h2>
+  <p class="desc">Low HHI (competitive) vs High HHI (concentrated).</p>
+  <div id="content-HHI_split"></div>
+</div>
+<script>
+  document.getElementById('content-HHI_split').innerHTML =
+    buildSplitSection('HHI_split', 'HHI Concentration', '');
+</script>
+
+<div class="section" id="sec-u_rate_llm_high">
+  <h2>VI. By Local Unemployment Rate</h2>
+  <p class="desc">Low vs High unemployment rate in local labor market.</p>
+  <div id="content-u_rate_llm_high"></div>
+</div>
+<script>
+  document.getElementById('content-u_rate_llm_high').innerHTML =
+    buildSplitSection('u_rate_llm_high', 'Unemployment Rate', '');
+</script>
+
+<div class="section" id="sec-employed_1g_tm1">
+  <h2>VII. By Employment > 1G (t-1)</h2>
+  <p class="desc">Not Employed vs Employed above 1G threshold at t-1.</p>
+  <div id="content-employed_1g_tm1"></div>
+</div>
+<script>
+  document.getElementById('content-employed_1g_tm1').innerHTML =
+    buildSplitSection('employed_1g_tm1', 'Employment > 1G', '');
+</script>
+
+<div class="section" id="sec-employed_2g_tm1">
+  <h2>VIII. By Employment > 2G (t-1)</h2>
+  <p class="desc">Not Employed vs Employed above 2G threshold at t-1.</p>
+  <div id="content-employed_2g_tm1"></div>
+</div>
+<script>
+  document.getElementById('content-employed_2g_tm1').innerHTML =
+    buildSplitSection('employed_2g_tm1', 'Employment > 2G', '');
+</script>
+
+<div class="section" id="sec-ever_employed_1g_tm1">
+  <h2>IX. By Ever Employed > 1G</h2>
+  <p class="desc">Never Employed vs Ever Employed above 1G.</p>
+  <div id="content-ever_employed_1g_tm1"></div>
+</div>
+<script>
+  document.getElementById('content-ever_employed_1g_tm1').innerHTML =
+    buildSplitSection('ever_employed_1g_tm1', 'Ever Employed', '');
+</script>
+
+<div class="section" id="sec-EtoU_2g_tm1">
+  <h2>X. By Employment-to-Unemployment Transition</h2>
+  <p class="desc">No E-to-U Transition vs E-to-U Transition.</p>
+  <div id="content-EtoU_2g_tm1"></div>
+</div>
+<script>
+  document.getElementById('content-EtoU_2g_tm1').innerHTML =
+    buildSplitSection('EtoU_2g_tm1', 'E-to-U Transition', '');
+</script>
+
+<div class="section" id="sec-hs_dropout_tm1">
+  <h2>XI. By HS Dropout Status (t-1)</h2>
+  <p class="desc">No HS Dropout vs HS Dropout at t-1.</p>
+  <div id="content-hs_dropout_tm1"></div>
+</div>
+<script>
+  document.getElementById('content-hs_dropout_tm1').innerHTML =
+    buildSplitSection('hs_dropout_tm1', 'HS Dropout', '');
+</script>
+
+<!-- ================================================================== -->
+<!-- SECTION XIII: LLM 4-PANEL FACETED                                  -->
+<!-- ================================================================== -->
+<div class="section" id="sec-llm_faceted">
+  <h2>XII. LLM 4-Panel Faceted (HHI &times; Unemployment)</h2>
+  <p class="desc">2x2 panels: Low/High HHI (rows) x Low/High Unemployment (columns).</p>
+  <div id="content-llm-faceted"></div>
+</div>
+<script>
+  // LLM faceted: show amt_dur first, then amt, then dur
+  (function() {
+    let html = '';
+    html += buildGroupedFigs(`figs_adam/llm_faceted/amt_dur`, outcomeGroups, true);
+    document.getElementById('content-llm-faceted').innerHTML = html;
+  })();
+</script>
+
+</div><!-- end .main -->
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="">
+</div>
+
+<script>
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+function jumpTo(id) {
+  if (id) { document.getElementById(id).scrollIntoView({behavior: 'smooth'}); }
+}
+// Highlight active sidebar link on scroll
+const sections = document.querySelectorAll('.section');
+const sidebarLinks = document.querySelectorAll('.sidebar a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  for (const s of sections) {
+    if (s.getBoundingClientRect().top < 120) current = s.id;
+  }
+  sidebarLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+// ESC to close lightbox
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+
+</body>
+</html>
