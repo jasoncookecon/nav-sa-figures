@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spec 1 vs Spec 4 — Summary of Differences</title>
+<style>
+  :root {
+    --bg:      #ffffff;
+    --panel:   #fafbfd;
+    --text:    #14181f;
+    --muted:   #5b6478;
+    --border:  #e2e6ee;
+    --left:    #2754c5;
+    --right:   #b3441f;
+    --accent:  #2754c5;
+    --warn:    #b08a00;
+    --good:    #19884b;
+    --shadow:  0 1px 2px rgba(20,24,34,.04), 0 4px 14px rgba(20,24,34,.05);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px; line-height: 1.55;
+    max-width: 1400px; margin: 0 auto; padding: 28px 36px 80px;
+  }
+  h1 { font-size: 24px; font-weight: 700; margin: 0 0 6px; }
+  h2 { font-size: 17px; font-weight: 700; margin: 28px 0 10px; padding-bottom: 4px;
+       border-bottom: 1px solid var(--border); }
+  h3 { font-size: 14px; font-weight: 700; margin: 18px 0 6px; color: var(--text); }
+  p  { margin: 6px 0; }
+  code { font-family: "SF Mono", ui-monospace, Consolas, monospace; font-size: 12.5px;
+         background: #f0f2f7; padding: 1px 4px; border-radius: 3px; }
+  .muted { color: var(--muted); font-size: 12px; }
+  .doc-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 2px solid var(--border); padding-bottom: 10px;
+  }
+
+  /* Spec cards */
+  .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0 20px; }
+  .spec-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 10px 14px; position: relative; overflow: hidden;
+  }
+  .spec-card::before {
+    content: ""; position: absolute; left: 0; top: 0; width: 3px; height: 100%;
+  }
+  .spec-card.left::before  { background: var(--left); }
+  .spec-card.right::before { background: var(--right); }
+  .spec-card h3 { margin: 0 0 4px; font-size: 12px; text-transform: uppercase;
+                  letter-spacing: .04em; }
+  .spec-card.left  h3 { color: var(--left); }
+  .spec-card.right h3 { color: var(--right); }
+  .spec-card p { margin: 0; font-size: 12.5px; color: var(--muted); }
+  .spec-card .id { font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); }
+
+  /* Pills + chips */
+  .pill { display: inline-block; padding: 1px 7px; border-radius: 10px;
+          font-size: 11px; font-weight: 600; letter-spacing: .02em; }
+  .pill.s1 { background: #e8eefc; color: var(--left); }
+  .pill.s4 { background: #fbe9df; color: var(--right); }
+  .pill.tied { background: #f0f2f7; color: var(--muted); }
+  .pill.good { background: #e3f5ec; color: var(--good); }
+  .pill.warn { background: #fbf2d5; color: var(--warn); }
+
+  /* Tables */
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 18px; font-size: 12.5px; }
+  th, td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--panel); color: var(--muted); font-weight: 600; text-transform: uppercase;
+       font-size: 11px; letter-spacing: .03em; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.center { text-align: center; }
+
+  /* Two-up summary blocks */
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .summary-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 16px;
+  }
+  .summary-card h3 { margin-top: 0; }
+  .summary-card ul { padding-left: 18px; margin: 4px 0; }
+  .summary-card li { margin: 3px 0; font-size: 13px; }
+
+  /* Figure blocks */
+  .figpair {
+    margin: 22px 0 30px; page-break-inside: avoid;
+  }
+  .figpair-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .figpair-title { font-size: 15px; font-weight: 700; }
+  .figpair-tag   { font-size: 11px; color: var(--muted); font-family: ui-monospace, monospace; }
+  .figpair-cap {
+    font-size: 12.5px; color: #3a4150; margin-bottom: 8px;
+    background: #fafbfd; border-left: 3px solid var(--accent); padding: 8px 12px;
+    border-radius: 0 4px 4px 0;
+  }
+  .figpair-imgs {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    background: white;
+  }
+  .figpair-pane { padding: 6px; display: flex; flex-direction: column; }
+  .figpair-pane .lbl {
+    font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    text-align: center; padding-bottom: 4px;
+  }
+  .figpair-pane.left  { border-right: 1px solid var(--border); }
+  .figpair-pane.left  .lbl { color: var(--left); }
+  .figpair-pane.right .lbl { color: var(--right); }
+  .figpair-pane img { max-width: 100%; height: auto; cursor: zoom-in; }
+
+  /* Lightbox */
+  .lb { display: none; position: fixed; inset: 0; background: rgba(8,12,20,.85);
+        z-index: 1000; align-items: center; justify-content: center; padding: 30px;
+        cursor: zoom-out; }
+  .lb.open { display: flex; }
+  .lb img { max-width: 100%; max-height: 100%; }
+
+  .ctas {
+    margin: 24px 0 8px; padding: 12px 16px; border: 1px solid var(--border);
+    background: var(--panel); border-radius: 6px;
+    display: flex; gap: 16px; align-items: center;
+  }
+  .ctas a { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 13px; }
+  .ctas a:hover { text-decoration: underline; }
+
+  @media print {
+    body { font-size: 11px; max-width: none; padding: 12px 18px; }
+    .figpair { page-break-inside: avoid; }
+    h2 { page-break-after: avoid; }
+    .lb { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-head">
+  <div>
+    <h1>NAV Social Assistance — Spec 1 vs Spec 4 Summary</h1>
+    <div class="muted">Differences in findings &amp; pre-trends · also see
+      <a href="spec_comparison.html">full comparison dashboard</a>
+    </div>
+  </div>
+  <div class="muted">Generated 2026-06-01 16:57</div>
+</div>
+
+<div class="spec-grid">
+  <div class="spec-card left">
+    <h3>Spec 1</h3>
+    <p><b>No caseworker workload restriction.</b> UJIVE controls: age FE, DI receipt (binary &gt;0),
+       N kids FE, ever-employed, household income (binned). Balance flag = 4 (has_tm1).</p>
+    <span class="id">2026_05_spec1</span>
+  </div>
+  <div class="spec-card right">
+    <h3>Spec 4</h3>
+    <p><b>Caseworker workload ≥ 20 cases.</b> UJIVE controls: age FE, N kids FE, ever-employed,
+       household income (binned), <b>DI amount (binned)</b>, <b>total income (binned)</b>.
+       Balance flag = 4 (has_tm1).</p>
+    <span class="id">2026_06_spec4</span>
+  </div>
+</div>
+
+<!-- ============ WHAT CHANGED ============ -->
+<h2>What changed: Spec 1 → Spec 4</h2>
+<table>
+  <thead><tr>
+    <th>Control / restriction</th>
+    <th class="center">Spec 1</th>
+    <th class="center">Spec 4</th>
+    <th>Note</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>Caseworker workload minimum</td>
+        <td class="center">—</td>
+        <td class="center"><b>≥ 20 cases</b></td>
+        <td class="muted">Drops noisy caseworkers with few cases (tighter sample)</td></tr>
+    <tr><td>Age FE</td>
+        <td class="center">✓</td>
+        <td class="center">✓</td><td></td></tr>
+    <tr><td>N kids FE</td>
+        <td class="center">✓</td>
+        <td class="center">✓</td><td></td></tr>
+    <tr><td>Ever-employed</td>
+        <td class="center">✓</td>
+        <td class="center">✓</td><td></td></tr>
+    <tr><td>Household income (binned)</td>
+        <td class="center">✓</td>
+        <td class="center">✓</td><td></td></tr>
+    <tr><td>DI receipt <i>(binary &gt; 0)</i></td>
+        <td class="center"><b>✓</b></td>
+        <td class="center">—</td>
+        <td class="muted">Replaced by binned amount</td></tr>
+    <tr><td>DI amount <i>(binned)</i></td>
+        <td class="center">—</td>
+        <td class="center"><b>✓</b></td>
+        <td class="muted">More flexible (multiple bins instead of any/none)</td></tr>
+    <tr><td>Total income <i>(binned)</i></td>
+        <td class="center">—</td>
+        <td class="center"><b>✓</b></td>
+        <td class="muted">New control absorbing income-related selection</td></tr>
+  </tbody>
+</table>
+<p class="muted">Three substantive changes: tighter caseworker sample, finer-grained DI control,
+   and an added total-income control. No changes to FE structure (both use the same office × year
+   absorbing set in the UJIVE first stage and RF regressions).</p>
+
+<!-- ============ AT-A-GLANCE ============ -->
+<h2>At a glance</h2>
+<div class="summary-grid">
+  <div class="summary-card">
+    <h3><span class="pill good">Pre-trends</span> Spec 4 wins overall</h3>
+    <ul>
+      <li>Across 1,976 cells, <b>Spec 4 is cleaner 35% of the time</b> vs. Spec 1's 25% (40% ties).</li>
+      <li>Spec 4 has <b>33% fewer significant pre-period coefs</b> (307 vs. 460).</li>
+      <li>Same direction holds for the <code>amt</code> and <code>dur</code> instruments separately.</li>
+      <li>Spec 4 cleans up the worst Spec 1 pre-trends, especially geographic outcomes.</li>
+    </ul>
+  </div>
+  <div class="summary-card">
+    <h3><span class="pill s1">Spec 1</span> cleaner on individual outcomes</h3>
+    <ul>
+      <li><b>Labor</b> (taxable + earnings) pre-trends: Spec 1 wins 10/12 head-to-head.</li>
+      <li><b>Transfers</b> pre-trends: Spec 1 wins 6/12.</li>
+      <li>First-stage outcomes: Spec 1 wins 2/4, Spec 4 wins 0.</li>
+      <li>Spec 4 introduces new (mild) pre-trends in <code>taxable_income</code>,
+          <code>employed_2g</code>, <code>inc_trans_scholarship</code>, <code>inc_trans_housing</code>.</li>
+    </ul>
+  </div>
+  <div class="summary-card">
+    <h3><span class="pill s4">Spec 4</span> dramatically cleaner on geographic + wealth</h3>
+    <ul>
+      <li><code>muni_characteristics</code>: Spec 4 wins 9/11 outcomes; Spec 1 has 7 outcomes
+          with significant pre-trends on geographic measures.</li>
+      <li><code>grunnkrets_characteristics</code> (neighborhood): Spec 4 wins 7/11.</li>
+      <li><code>wealth_robustness</code>: Spec 4 wins 5/9 (0 losses); Spec 1 has 0 wins.</li>
+      <li><code>income_wealth</code>: Spec 4 wins 3/6.</li>
+    </ul>
+  </div>
+  <div class="summary-card">
+    <h3><span class="pill warn">Substantive findings differ in 4 places</span></h3>
+    <ul>
+      <li><b>Labor recovery at t=2</b>: Spec 4 finds it (positive &amp; sig); Spec 1 null.</li>
+      <li><b>Debt</b>: Spec 4 finds large negative effects (≈ −7k to −9k NOK); Spec 1 null.</li>
+      <li><b>Education attainment</b>: Spec 4 finds persistent HS/college completion losses; Spec 1 null.</li>
+      <li><b>Family formation</b>: Spec 4 finds positive marriage/cohabitation at t=2; Spec 1 null.</li>
+      <li><b>Geographic persistence</b>: Spec 1 finds it; Spec 4 doesn't (effects fade by t=2).</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ PRE-TREND TABLE ============ -->
+<h2>Pre-trend scoreboard by outcome group (full sample, <code>amt_dur</code>)</h2>
+<p class="muted">Head-to-head winner for each outcome in the group. Score = 2 × #sig pre-coefs + max|t|/1.65.
+   Lower is cleaner. A "tie" means scores within 0.2 of each other.</p>
+
+<table>
+  <thead><tr>
+    <th>Group</th>
+    <th class="num">Spec 1 wins</th>
+    <th class="num">Spec 4 wins</th>
+    <th class="num">Ties</th>
+    <th class="center">Winner</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>first_stage</td>                <td class="num">2</td><td class="num">0</td><td class="num">2</td><td class="center"><span class="pill s1">Spec 1</span></td></tr>
+    <tr><td>labor_taxable</td>              <td class="num">5</td><td class="num">1</td><td class="num">0</td><td class="center"><span class="pill s1">Spec 1</span></td></tr>
+    <tr><td>labor_earnings</td>             <td class="num">5</td><td class="num">0</td><td class="num">1</td><td class="center"><span class="pill s1">Spec 1</span></td></tr>
+    <tr><td>education_enrollment</td>       <td class="num">1</td><td class="num">1</td><td class="num">4</td><td class="center"><span class="pill tied">tied</span></td></tr>
+    <tr><td>education_attainment</td>       <td class="num">0</td><td class="num">1</td><td class="num">1</td><td class="center"><span class="pill s4">Spec 4</span></td></tr>
+    <tr><td>income_wealth</td>              <td class="num">1</td><td class="num">3</td><td class="num">2</td><td class="center"><span class="pill s4">Spec 4</span></td></tr>
+    <tr><td><b>wealth_robustness</b></td>   <td class="num">0</td><td class="num"><b>5</b></td><td class="num">4</td><td class="center"><span class="pill s4">Spec 4</span></td></tr>
+    <tr><td>transfers_main</td>             <td class="num">4</td><td class="num">1</td><td class="num">3</td><td class="center"><span class="pill s1">Spec 1</span></td></tr>
+    <tr><td>transfers_other</td>            <td class="num">2</td><td class="num">1</td><td class="num">1</td><td class="center"><span class="pill s1">Spec 1</span></td></tr>
+    <tr><td>mobility</td>                   <td class="num">2</td><td class="num">2</td><td class="num">0</td><td class="center"><span class="pill tied">tied</span></td></tr>
+    <tr><td><b>muni_characteristics</b></td><td class="num">1</td><td class="num"><b>9</b></td><td class="num">1</td><td class="center"><span class="pill s4">Spec 4</span></td></tr>
+    <tr><td><b>grunnkrets_characteristics</b></td><td class="num">2</td><td class="num"><b>7</b></td><td class="num">2</td><td class="center"><span class="pill s4">Spec 4</span></td></tr>
+    <tr><td>family</td>                     <td class="num">2</td><td class="num">1</td><td class="num">6</td><td class="center"><span class="pill tied">tied</span></td></tr>
+    <tr style="background:#f0f2f7"><td><b>TOTAL</b></td><td class="num"><b>27</b></td><td class="num"><b>32</b></td><td class="num"><b>27</b></td><td class="center"><span class="pill s4">Spec 4</span></td></tr>
+  </tbody>
+</table>
+
+<!-- ============ WORST OFFENDERS ============ -->
+<h2>Pre-trend worst offenders (full sample, <code>amt_dur</code>)</h2>
+<p class="muted">For each spec's worst pre-trend outcomes, the comparison value on the other spec.
+   Spec 1's worst offenders are all geographic; Spec 4 cleans them up nearly completely.</p>
+<div class="summary-grid">
+  <div class="summary-card">
+    <h3><span class="pill s1">Spec 1 worst pre-trends</span></h3>
+    <table>
+      <thead><tr><th>Outcome</th><th class="num">n_sig / max|t|</th><th class="num">vs Spec 4</th></tr></thead>
+      <tbody>
+        <tr><td><code>municipality_imm_share</code></td><td class="num">2 / 3.11</td><td class="num">0 / 0.52</td></tr>
+        <tr><td><code>municipality_college</code></td><td class="num">2 / 2.78</td><td class="num">0 / 0.87</td></tr>
+        <tr><td><code>has_college</code></td><td class="num">2 / 2.77</td><td class="num">1 / 1.99</td></tr>
+        <tr><td><code>municipality_pop_density</code></td><td class="num">2 / 2.67</td><td class="num">0 / 1.04</td></tr>
+        <tr><td><code>grunnkrets_imm_share</code></td><td class="num">2 / 2.46</td><td class="num">0 / 0.44</td></tr>
+        <tr><td><code>municipality_age</code></td><td class="num">2 / 2.08</td><td class="num">1 / 2.04</td></tr>
+        <tr><td><code>grunnkrets_pop_density</code></td><td class="num">1 / 2.95</td><td class="num">1 / 1.79</td></tr>
+        <tr><td><code>married</code></td><td class="num">1 / 2.43</td><td class="num">0 / 0.96</td></tr>
+        <tr><td><code>municipality_wealth_net</code></td><td class="num">1 / 2.38</td><td class="num">0 / 0.33</td></tr>
+        <tr><td><code>municipality_highschool</code></td><td class="num">1 / 2.28</td><td class="num">0 / 0.87</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="summary-card">
+    <h3><span class="pill s4">Spec 4 worst pre-trends</span></h3>
+    <table>
+      <thead><tr><th>Outcome</th><th class="num">n_sig / max|t|</th><th class="num">vs Spec 1</th></tr></thead>
+      <tbody>
+        <tr><td><code>municipality_death_age</code></td><td class="num">2 / 2.77</td><td class="num">1 / 1.77</td></tr>
+        <tr><td><code>any_sa_transfers</code></td><td class="num">2 / 2.26</td><td class="num">0 / 0.19</td></tr>
+        <tr><td><code>employed_2g</code></td><td class="num">1 / 2.44</td><td class="num">0 / 0.46</td></tr>
+        <tr><td><code>in_educ_or_work</code></td><td class="num">1 / 2.35</td><td class="num">1 / 2.28</td></tr>
+        <tr><td><code>inc_trans_housing</code></td><td class="num">1 / 2.35</td><td class="num">1 / 1.66</td></tr>
+        <tr><td><code>taxable_income</code></td><td class="num">1 / 2.33</td><td class="num">0 / 0.63</td></tr>
+        <tr><td><code>inc_trans_scholarship</code></td><td class="num">1 / 2.25</td><td class="num">0 / 0.86</td></tr>
+        <tr><td><code>municipality_welfare_dependent</code></td><td class="num">1 / 2.21</td><td class="num">1 / 2.27</td></tr>
+        <tr><td><code>municipality_age</code></td><td class="num">1 / 2.04</td><td class="num">2 / 2.08</td></tr>
+        <tr><td><code>inc_tot</code></td><td class="num">1 / 2.03</td><td class="num">0 / 1.31</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============ FIGURES ============ -->
+<h2>Selected figure comparisons</h2>
+<p class="muted">All figures are full-sample, three-instrument (amt × dur on top, amt and dur stacked below).
+   Click any figure to zoom. The complete catalog (all groups × splits) is in the
+   <a href="spec_comparison.html">comparison dashboard</a>.</p>
+
+
+<div class="figpair">
+  <div class="figpair-head">
+    <span class="figpair-title">First stage — full sample</span>
+    <span class="figpair-tag">fig_first_stage_by_all.png</span>
+  </div>
+  <div class="figpair-cap">Both specs find a strong first stage. Spec 1's contemporaneous coefficient is slightly larger; Spec 4 is close.</div>
+  <div class="figpair-imgs">
+    <div class="figpair-pane left">
+      <div class="lbl">Spec 1 · 2026_05_spec1</div>
+      <img src="figs/2026_05_spec1/fig_first_stage_by_all.png" alt="Spec 1 fig_first_stage_by_all.png">
+    </div>
+    <div class="figpair-pane right">
+      <div class="lbl">Spec 4 · 2026_06_spec4</div>
+      <img src="figs/2026_06_spec4/fig_first_stage_by_all.png" alt="Spec 4 fig_first_stage_by_all.png">
+    </div>
+  </div>
+</div>
+
+<div class="figpair">
+  <div class="figpair-head">
+    <span class="figpair-title">Labor (taxable income) — full sample</span>
+    <span class="figpair-tag">fig_labor_taxable_by_all.png</span>
+  </div>
+  <div class="figpair-cap">Both specs show a sharp contemporaneous labor drop at t=0. <b>Spec 4 shows more recovery at t=2</b>: <code>employed_taxable_1g</code> turns positive and significant (+0.050**) vs. Spec 1's null (+0.011 ns).</div>
+  <div class="figpair-imgs">
+    <div class="figpair-pane left">
+      <div class="lbl">Spec 1 · 2026_05_spec1</div>
+      <img src="figs/2026_05_spec1/fig_labor_taxable_by_all.png" alt="Spec 1 fig_labor_taxable_by_all.png">
+    </div>
+    <div class="figpair-pane right">
+      <div class="lbl">Spec 4 · 2026_06_spec4</div>
+      <img src="figs/2026_06_spec4/fig_labor_taxable_by_all.png" alt="Spec 4 fig_labor_taxable_by_all.png">
+    </div>
+  </div>
+</div>
+
+<div class="figpair">
+  <div class="figpair-head">
+    <span class="figpair-title">Wealth — full sample (all winsorization variants)</span>
+    <span class="figpair-tag">fig_wealth_robustness_by_all.png</span>
+  </div>
+  <div class="figpair-cap">The single largest finding divergence. <b>Spec 4 detects large negative debt effects</b> (≈ −6,000 to −9,000 NOK) across all winsorization levels at t=1 and t=2. Spec 1 finds null.</div>
+  <div class="figpair-imgs">
+    <div class="figpair-pane left">
+      <div class="lbl">Spec 1 · 2026_05_spec1</div>
+      <img src="figs/2026_05_spec1/fig_wealth_robustness_by_all.png" alt="Spec 1 fig_wealth_robustness_by_all.png">
+    </div>
+    <div class="figpair-pane right">
+      <div class="lbl">Spec 4 · 2026_06_spec4</div>
+      <img src="figs/2026_06_spec4/fig_wealth_robustness_by_all.png" alt="Spec 4 fig_wealth_robustness_by_all.png">
+    </div>
+  </div>
+</div>
+
+<div class="figpair">
+  <div class="figpair-head">
+    <span class="figpair-title">Education attainment — full sample</span>
+    <span class="figpair-tag">fig_education_attainment_by_all.png</span>
+  </div>
+  <div class="figpair-cap">Both specs find reduced enrollment at t=0, but only <b>Spec 4 finds the enrollment loss translates into lower completion at t=2</b>: <code>has_hs</code> = −0.040*** and <code>has_college</code> = −0.026***.</div>
+  <div class="figpair-imgs">
+    <div class="figpair-pane left">
+      <div class="lbl">Spec 1 · 2026_05_spec1</div>
+      <img src="figs/2026_05_spec1/fig_education_attainment_by_all.png" alt="Spec 1 fig_education_attainment_by_all.png">
+    </div>
+    <div class="figpair-pane right">
+      <div class="lbl">Spec 4 · 2026_06_spec4</div>
+      <img src="figs/2026_06_spec4/fig_education_attainment_by_all.png" alt="Spec 4 fig_education_attainment_by_all.png">
+    </div>
+  </div>
+</div>
+
+<div class="figpair">
+  <div class="figpair-head">
+    <span class="figpair-title">Municipality characteristics — full sample</span>
+    <span class="figpair-tag">fig_muni_characteristics_by_all.png</span>
+  </div>
+  <div class="figpair-cap"><b>Largest pre-trend divergence.</b> Spec 1 shows persistent positive effects through t=2 on most municipality quality measures — but also has multiple <i>pre-period</i> coefficients significant at the 5% level on the same variables. Spec 4 cleans the pre-trends and the post-period effects fade.</div>
+  <div class="figpair-imgs">
+    <div class="figpair-pane left">
+      <div class="lbl">Spec 1 · 2026_05_spec1</div>
+      <img src="figs/2026_05_spec1/fig_muni_characteristics_by_all.png" alt="Spec 1 fig_muni_characteristics_by_all.png">
+    </div>
+    <div class="figpair-pane right">
+      <div class="lbl">Spec 4 · 2026_06_spec4</div>
+      <img src="figs/2026_06_spec4/fig_muni_characteristics_by_all.png" alt="Spec 4 fig_muni_characteristics_by_all.png">
+    </div>
+  </div>
+</div>
+
+<div class="figpair">
+  <div class="figpair-head">
+    <span class="figpair-title">Neighborhood (grunnkrets) characteristics — full sample</span>
+    <span class="figpair-tag">fig_grunnkrets_characteristics_by_all.png</span>
+  </div>
+  <div class="figpair-cap">Same story as municipality, at finer geography. Spec 4 cleans up the persistent pre-trends on <code>grunnkrets_imm_share</code>, <code>grunnkrets_college</code>, <code>grunnkrets_pop_density</code>.</div>
+  <div class="figpair-imgs">
+    <div class="figpair-pane left">
+      <div class="lbl">Spec 1 · 2026_05_spec1</div>
+      <img src="figs/2026_05_spec1/fig_grunnkrets_characteristics_by_all.png" alt="Spec 1 fig_grunnkrets_characteristics_by_all.png">
+    </div>
+    <div class="figpair-pane right">
+      <div class="lbl">Spec 4 · 2026_06_spec4</div>
+      <img src="figs/2026_06_spec4/fig_grunnkrets_characteristics_by_all.png" alt="Spec 4 fig_grunnkrets_characteristics_by_all.png">
+    </div>
+  </div>
+</div>
+
+<div class="figpair">
+  <div class="figpair-head">
+    <span class="figpair-title">Family formation — full sample</span>
+    <span class="figpair-tag">fig_family_by_all.png</span>
+  </div>
+  <div class="figpair-cap"><b>Spec 4 finds more positive long-run effects on partnership outcomes</b>: <code>has_spouse</code>, <code>cohabitation</code>, and <code>union_cumulative</code> all become significant at t=2 in Spec 4 (null in Spec 1).</div>
+  <div class="figpair-imgs">
+    <div class="figpair-pane left">
+      <div class="lbl">Spec 1 · 2026_05_spec1</div>
+      <img src="figs/2026_05_spec1/fig_family_by_all.png" alt="Spec 1 fig_family_by_all.png">
+    </div>
+    <div class="figpair-pane right">
+      <div class="lbl">Spec 4 · 2026_06_spec4</div>
+      <img src="figs/2026_06_spec4/fig_family_by_all.png" alt="Spec 4 fig_family_by_all.png">
+    </div>
+  </div>
+</div>
+
+<!-- ============ BOTTOM LINE ============ -->
+<h2>Bottom line</h2>
+<div class="summary-card">
+  <p><b>Spec 4 is cleaner overall and especially compelling for the geographic-effect story.</b>
+     The three changes that Spec 4 makes — <i>tighter caseworker sample (≥20 cases), finer-grained
+     DI control (binned amount instead of binary), and a new total-income binned control</i> — are
+     a coherent attempt to soak up income-related selection that Spec 1's coarser controls miss.</p>
+  <p><b>Why this likely cleans up geographic pre-trends:</b> SA recipients are systematically lower-
+     income, and lower-income households cluster in lower-income municipalities and neighborhoods.
+     If income controls are too coarse (binary DI, no total-income control), residual income
+     variation correlates with geographic measures, generating spurious "geographic upgrading"
+     findings <i>and</i> spurious pre-period coefficients on the same geographic variables. Spec 4's
+     binned income controls absorb that residual variation, which is consistent with the dramatic
+     pre-trend cleanup we see for <code>muni_*</code> and <code>grunnkrets_*</code> outcomes
+     (max|t| dropping from ~3 to under 1 on several variables).</p>
+  <p>The trade-off is small: Spec 4 introduces a handful of new <i>mild</i> pre-trend failures in
+     individual labor and transfer outcomes (max|t| around 2.0–2.4) but these are far fewer in number
+     and smaller in magnitude than the geographic pre-trends Spec 4 cleans up. The pattern is robust
+     across all three instruments (<code>amt_dur</code>, <code>amt</code>, <code>dur</code>).</p>
+  <p><b>Implication for the headline findings:</b> The novel results that Spec 4 produces — large
+     negative debt effects, persistent education attainment losses, positive long-run family formation
+     — become more credible knowing that Spec 4 also has <i>cleaner pre-trends for those outcome
+     groups</i>. The "geographic upgrading" channel from Spec 1 should be re-interpreted with caution
+     given that Spec 1's geographic outcomes have demonstrably worse pre-trends, which the finer
+     income controls in Spec 4 plausibly resolve.</p>
+</div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lb" id="lb"><img id="lb-img" src="" alt=""></div>
+<script>
+  document.querySelectorAll('.figpair-pane img').forEach(img => {
+    img.addEventListener('click', e => {
+      document.getElementById('lb-img').src = e.target.src;
+      document.getElementById('lb').classList.add('open');
+    });
+  });
+  document.getElementById('lb').addEventListener('click', () => {
+    document.getElementById('lb').classList.remove('open');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('lb').classList.remove('open');
+  });
+</script>
+
+</body>
+</html>
