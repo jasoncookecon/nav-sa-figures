@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spec 4 (workload ≥ 3) — Summary</title>
+<style>
+  :root {
+    --bg:      #ffffff;
+    --panel:   #fafbfd;
+    --text:    #14181f;
+    --muted:   #5b6478;
+    --border:  #e2e6ee;
+    --accent:  #2754c5;
+    --warn:    #b08a00;
+    --shadow:  0 1px 2px rgba(20,24,34,.04), 0 4px 14px rgba(20,24,34,.05);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px; line-height: 1.55;
+    max-width: 1400px; margin: 0 auto; padding: 28px 36px 80px;
+  }
+  h1 { font-size: 24px; font-weight: 700; margin: 0 0 6px; }
+  h2 { font-size: 17px; font-weight: 700; margin: 28px 0 10px; padding-bottom: 4px;
+       border-bottom: 1px solid var(--border); }
+  h3 { font-size: 14px; font-weight: 700; margin: 18px 0 6px; }
+  p  { margin: 6px 0; }
+  code { font-family: "SF Mono", ui-monospace, Consolas, monospace; font-size: 12.5px;
+         background: #f0f2f7; padding: 1px 4px; border-radius: 3px; }
+  .muted { color: var(--muted); font-size: 12px; }
+  .doc-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 2px solid var(--border); padding-bottom: 10px;
+  }
+
+  /* Spec card */
+  .spec-card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-left: 4px solid var(--accent); border-radius: 6px;
+    padding: 12px 16px; margin: 14px 0 26px;
+  }
+  .spec-card h3 {
+    margin: 0 0 6px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .spec-card .id { font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); }
+
+  /* Table cards */
+  .table-card {
+    background: white; border: 1px solid var(--border); border-radius: 6px;
+    padding: 10px; margin-bottom: 18px; box-shadow: var(--shadow);
+    overflow-x: auto;
+  }
+  .table-card .cap {
+    font-size: 12.5px; color: var(--muted); font-style: italic;
+    padding: 4px 8px;
+  }
+  .latex-table {
+    border-collapse: collapse;
+    font-size: 11.5px;
+    font-family: "Charter", "Georgia", "Cambria", serif;
+    color: var(--text);
+    margin: 0 auto; white-space: nowrap;
+  }
+  .latex-table td { padding: 2px 6px; vertical-align: top; }
+  .latex-table td.bt { border-top: 1px solid #5b6478; }
+  .latex-table sup.sig { color: #b3441f; font-weight: 700; font-size: 9px; }
+  .latex-table .ck { color: #19884b; font-weight: 700; }
+  .latex-table .math i { font-style: italic; font-family: "Cambria Math", "Times New Roman", serif; }
+
+  /* Figure blocks */
+  .figgrp { margin: 22px 0 30px; page-break-inside: avoid; }
+  .figgrp-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .figgrp-title { font-size: 15px; font-weight: 700; }
+  .figgrp-tag   { font-size: 11px; color: var(--muted); font-family: ui-monospace, monospace; }
+  .figgrp-wrap {
+    background: white; border: 1px solid var(--border); border-radius: 6px;
+    padding: 8px; text-align: center;
+  }
+  .figgrp-wrap img { max-width: 100%; height: auto; cursor: zoom-in; }
+  .figgrp-wrap.missing {
+    padding: 40px; color: var(--muted); font-style: italic;
+  }
+
+  /* Lightbox */
+  .lb { display: none; position: fixed; inset: 0; background: rgba(8,12,20,.85);
+        z-index: 1000; align-items: center; justify-content: center; padding: 30px;
+        cursor: zoom-out; }
+  .lb.open { display: flex; }
+  .lb img { max-width: 100%; max-height: 100%; }
+
+  /* TOC */
+  .toc {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 10px 16px; margin-bottom: 22px;
+  }
+  .toc h3 {
+    margin: 0 0 6px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--muted); font-weight: 700;
+  }
+  .toc ol { margin: 4px 0; padding-left: 22px; columns: 2; column-gap: 24px; }
+  .toc li { margin: 2px 0; font-size: 12.5px; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  @media print {
+    body { font-size: 11px; max-width: none; padding: 12px 18px; }
+    .figgrp { page-break-inside: avoid; }
+    h2 { page-break-after: avoid; }
+    .lb { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-head">
+  <div>
+    <h1>NAV Social Assistance — Spec 4 (workload ≥ 3)</h1>
+    <div class="muted">Single-spec summary · full-sample only</div>
+  </div>
+  <div class="muted">Generated 2026-06-02 15:50</div>
+</div>
+
+<div class="spec-card">
+  <h3>Specification</h3>
+  <p>Same as Spec 4 except caseworker workload restriction loosened to ≥ 3 cases (vs. Spec 4's ≥ 20). UJIVE controls: age FE, N kids FE, ever-employed, household income (binned), DI amount (binned), total income (binned). Balance flag = 4 (has_tm1). Intent: keep Spec 4's richer income controls but recover sample size by including caseworkers with as few as 3 cases.</p>
+  <span class="id">spec_4_with_caseworker_workload_gte_3</span>
+</div>
+
+<!-- ============ TOC ============ -->
+<div class="toc">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#tables">Specification tables (Balance + Cross-Partial)</a></li>
+    <li><a href="#fig-first_stage">1. First Stage / SA Receipt</a></li>
+    <li><a href="#fig-labor_taxable">2. Labor (Taxable Income)</a></li>
+    <li><a href="#fig-labor_earnings">3. Labor (Earnings)</a></li>
+    <li><a href="#fig-education_enrollment">4. Education (Enrollment)</a></li>
+    <li><a href="#fig-education_attainment">5. Education (Attainment)</a></li>
+    <li><a href="#fig-income_wealth">6. Income & Wealth</a></li>
+    <li><a href="#fig-wealth_robustness">7. Wealth Robustness</a></li>
+    <li><a href="#fig-transfers_main">8. Transfers (Main)</a></li>
+    <li><a href="#fig-transfers_other">9. Transfers (Other)</a></li>
+    <li><a href="#fig-mobility">10. Mobility</a></li>
+    <li><a href="#fig-muni_characteristics">11. Municipality Characteristics</a></li>
+    <li><a href="#fig-grunnkrets_characteristics">12. Neighborhood (Grunnkrets)</a></li>
+    <li><a href="#fig-family">13. Family Formation</a></li>
+  </ol>
+</div>
+
+<!-- ============ TABLES ============ -->
+<h2 id="tables">Specification tables</h2>
+
+<h3>Balance: First-Stage Coefficients on UJIVE Controls</h3>
+<div class="table-card">
+  <div class="empty-table">[no table available]</div>
+  <div class="cap">balance_splitimm_firstapp0_diff10_full_bal4.tex</div>
+</div>
+
+<h3>Cross-Partial: Treatment ↔ Instrument</h3>
+<div class="table-card">
+  <table class="latex-table"><tr><td style="text-align:left" class="bt"></td><td style="text-align:center" class="bt" colspan="7">Outcome: Treatment</td></tr><tr><td style="text-align:left"></td><td style="text-align:center" class="bt">amt*dur</td><td style="text-align:center" class="bt" colspan="3">amt</td><td style="text-align:center" class="bt" colspan="3">dur</td></tr><tr><td style="text-align:left" class="bt">amt*dur</td><td style="text-align:center" class="bt">0.652<sup class="sig">***</sup></td><td style="text-align:center" class="bt"></td><td style="text-align:center" class="bt"></td><td style="text-align:center" class="bt"></td><td style="text-align:center" class="bt"></td><td style="text-align:center" class="bt"></td><td style="text-align:center" class="bt"></td></tr><tr><td style="text-align:left"></td><td style="text-align:center">(0.082)</td><td style="text-align:center"></td><td style="text-align:center"></td><td style="text-align:center"></td><td style="text-align:center"></td><td style="text-align:center"></td><td style="text-align:center"></td></tr><tr><td style="text-align:left">UJIVE amt (avg)</td><td style="text-align:center"></td><td style="text-align:center">0.471<sup class="sig">***</sup></td><td style="text-align:center"></td><td style="text-align:center">0.472<sup class="sig">***</sup></td><td style="text-align:center">-0.004</td><td style="text-align:center"></td><td style="text-align:center">-0.001</td></tr><tr><td style="text-align:left"></td><td style="text-align:center"></td><td style="text-align:center">(0.049)</td><td style="text-align:center"></td><td style="text-align:center">(0.049)</td><td style="text-align:center">(0.005)</td><td style="text-align:center"></td><td style="text-align:center">(0.005)</td></tr><tr><td style="text-align:left">UJIVE dur</td><td style="text-align:center"></td><td style="text-align:center"></td><td style="text-align:center">-0.028</td><td style="text-align:center">0.009</td><td style="text-align:center"></td><td style="text-align:center">0.040<sup class="sig">***</sup></td><td style="text-align:center">0.040<sup class="sig">***</sup></td></tr><tr><td style="text-align:left"></td><td style="text-align:center"></td><td style="text-align:center"></td><td style="text-align:center">(0.037)</td><td style="text-align:center">(0.037)</td><td style="text-align:center"></td><td style="text-align:center">(0.006)</td><td style="text-align:center">(0.006)</td></tr><tr><td style="text-align:left">Office#Year FE</td><td style="text-align:center"><span class="ck">✓</span></td><td style="text-align:center"><span class="ck">✓</span></td><td style="text-align:center"><span class="ck">✓</span></td><td style="text-align:center"><span class="ck">✓</span></td><td style="text-align:center"><span class="ck">✓</span></td><td style="text-align:center"><span class="ck">✓</span></td><td style="text-align:center"><span class="ck">✓</span></td></tr><tr><td style="text-align:left" class="bt">Observations</td><td style="text-align:center" class="bt">97,832</td><td style="text-align:center" class="bt">97,832</td><td style="text-align:center" class="bt">97,832</td><td style="text-align:center" class="bt">97,832</td><td style="text-align:center" class="bt">97,832</td><td style="text-align:center" class="bt">97,832</td><td style="text-align:center" class="bt">97,832</td></tr><tr><td style="text-align:left">R2</td><td style="text-align:center">0.07</td><td style="text-align:center">0.11</td><td style="text-align:center">0.10</td><td style="text-align:center">0.11</td><td style="text-align:center">0.09</td><td style="text-align:center">0.09</td><td style="text-align:center">0.09</td></tr><tr><td style="text-align:left">F-stat</td><td style="text-align:center">63.8</td><td style="text-align:center">91.3</td><td style="text-align:center">0.6</td><td style="text-align:center">45.7</td><td style="text-align:center">0.8</td><td style="text-align:center">44.1</td><td style="text-align:center">22.1</td></tr></table>
+  <div class="cap">cross_firstapp0_diff10_bal4.tex</div>
+</div>
+
+<!-- ============ FIGURES ============ -->
+
+<h2 id="fig-first_stage">1. First Stage / SA Receipt</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">1. First Stage / SA Receipt — full sample</span>
+    <span class="figgrp-tag">fig_first_stage_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_first_stage_by_all.png" alt="fig_first_stage_by_all.png"></div>
+</div>
+
+<h2 id="fig-labor_taxable">2. Labor (Taxable Income)</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">2. Labor (Taxable Income) — full sample</span>
+    <span class="figgrp-tag">fig_labor_taxable_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_labor_taxable_by_all.png" alt="fig_labor_taxable_by_all.png"></div>
+</div>
+
+<h2 id="fig-labor_earnings">3. Labor (Earnings)</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">3. Labor (Earnings) — full sample</span>
+    <span class="figgrp-tag">fig_labor_earnings_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_labor_earnings_by_all.png" alt="fig_labor_earnings_by_all.png"></div>
+</div>
+
+<h2 id="fig-education_enrollment">4. Education (Enrollment)</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">4. Education (Enrollment) — full sample</span>
+    <span class="figgrp-tag">fig_education_enrollment_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_education_enrollment_by_all.png" alt="fig_education_enrollment_by_all.png"></div>
+</div>
+
+<h2 id="fig-education_attainment">5. Education (Attainment)</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">5. Education (Attainment) — full sample</span>
+    <span class="figgrp-tag">fig_education_attainment_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_education_attainment_by_all.png" alt="fig_education_attainment_by_all.png"></div>
+</div>
+
+<h2 id="fig-income_wealth">6. Income & Wealth</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">6. Income & Wealth — full sample</span>
+    <span class="figgrp-tag">fig_income_wealth_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_income_wealth_by_all.png" alt="fig_income_wealth_by_all.png"></div>
+</div>
+
+<h2 id="fig-wealth_robustness">7. Wealth Robustness</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">7. Wealth Robustness — full sample</span>
+    <span class="figgrp-tag">fig_wealth_robustness_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_wealth_robustness_by_all.png" alt="fig_wealth_robustness_by_all.png"></div>
+</div>
+
+<h2 id="fig-transfers_main">8. Transfers (Main)</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">8. Transfers (Main) — full sample</span>
+    <span class="figgrp-tag">fig_transfers_main_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_transfers_main_by_all.png" alt="fig_transfers_main_by_all.png"></div>
+</div>
+
+<h2 id="fig-transfers_other">9. Transfers (Other)</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">9. Transfers (Other) — full sample</span>
+    <span class="figgrp-tag">fig_transfers_other_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_transfers_other_by_all.png" alt="fig_transfers_other_by_all.png"></div>
+</div>
+
+<h2 id="fig-mobility">10. Mobility</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">10. Mobility — full sample</span>
+    <span class="figgrp-tag">fig_mobility_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_mobility_by_all.png" alt="fig_mobility_by_all.png"></div>
+</div>
+
+<h2 id="fig-muni_characteristics">11. Municipality Characteristics</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">11. Municipality Characteristics — full sample</span>
+    <span class="figgrp-tag">fig_muni_characteristics_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_muni_characteristics_by_all.png" alt="fig_muni_characteristics_by_all.png"></div>
+</div>
+
+<h2 id="fig-grunnkrets_characteristics">12. Neighborhood (Grunnkrets)</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">12. Neighborhood (Grunnkrets) — full sample</span>
+    <span class="figgrp-tag">fig_grunnkrets_characteristics_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_grunnkrets_characteristics_by_all.png" alt="fig_grunnkrets_characteristics_by_all.png"></div>
+</div>
+
+<h2 id="fig-family">13. Family Formation</h2>
+<div class="figgrp">
+  <div class="figgrp-head">
+    <span class="figgrp-title">13. Family Formation — full sample</span>
+    <span class="figgrp-tag">fig_family_by_all.png</span>
+  </div>
+  <div class="figgrp-wrap"><img src="figs/spec_4_with_caseworker_workload_gte_3/fig_family_by_all.png" alt="fig_family_by_all.png"></div>
+</div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lb" id="lb"><img id="lb-img" src="" alt=""></div>
+<script>
+  document.querySelectorAll('.figgrp-wrap img').forEach(img => {
+    img.addEventListener('click', e => {
+      document.getElementById('lb-img').src = e.target.src;
+      document.getElementById('lb').classList.add('open');
+    });
+  });
+  document.getElementById('lb').addEventListener('click', () => {
+    document.getElementById('lb').classList.remove('open');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('lb').classList.remove('open');
+  });
+</script>
+
+</body>
+</html>
