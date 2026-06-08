@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spec 1 — Findings Narrative</title>
+<style>
+  :root {
+    --bg: #fafbfd; --panel: #ffffff; --text: #15181f; --muted: #5b6478;
+    --border: #e2e6ee; --accent: #2754c5; --warn: #b08a00; --good: #19884b;
+    --shadow: 0 1px 3px rgba(20,24,34,.04), 0 6px 18px rgba(20,24,34,.04);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: "Charter", Georgia, Cambria, "Times New Roman", Times, serif;
+    font-size: 15px; line-height: 1.65;
+    max-width: 920px; margin: 0 auto; padding: 36px 40px 80px;
+  }
+  .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+
+  h1 { font-size: 28px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em;
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  h2 { font-size: 22px; font-weight: 700; margin: 42px 0 6px; padding-bottom: 6px;
+       border-bottom: 2px solid var(--accent); color: var(--accent);
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+       letter-spacing: -0.01em; }
+  h3 { font-size: 18px; font-weight: 700; margin: 30px 0 6px; color: var(--text);
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  h4 { font-size: 16px; font-weight: 700; margin: 18px 0 4px; color: #1a1f2e;
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  p  { margin: 8px 0; }
+  b, strong { font-weight: 700; color: var(--text); }
+  code { font-family: "SF Mono", ui-monospace, Consolas, monospace; font-size: 13px;
+         background: #f0f2f7; padding: 1px 4px; border-radius: 3px; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid #cfd9f3; }
+  a:hover { border-bottom-color: var(--accent); }
+  .muted { color: var(--muted); font-size: 13px; font-family: -apple-system, sans-serif; }
+  .lede {
+    font-size: 16px; line-height: 1.6; color: #2a2e38;
+    border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; margin: 18px 0 24px;
+  }
+  .section-intro {
+    font-family: -apple-system, sans-serif;
+    font-size: 14px; line-height: 1.55; color: #303644;
+    background: #f4f7fc; border-left: 3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 14px 0 8px;
+  }
+  .doc-head {
+    border-bottom: 2px solid var(--border); padding-bottom: 14px; margin-bottom: 6px;
+  }
+  .doc-head .meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-top: 6px;
+  }
+
+  /* Story block */
+  .story {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 22px; margin: 14px 0;
+    box-shadow: var(--shadow);
+  }
+  .story h4 { margin-top: 0; }
+  .story .keyfind {
+    font-family: -apple-system, sans-serif;
+    background: #f4f7fc; border-left: 3px solid var(--accent);
+    padding: 8px 12px; border-radius: 0 4px 4px 0;
+    font-size: 13.5px; color: #2a2e38; margin: 6px 0 12px;
+  }
+  .story .keyfind.good { background: #eaf5ee; border-left-color: var(--good); }
+  .story .keyfind.warn { background: #faf2da; border-left-color: var(--warn); }
+  .story .keyfind b { color: #0a1a2e; }
+  .story p { font-size: 14px; color: #2a2e38; line-height: 1.55; }
+  .story figure { margin: 12px 0 0; text-align: center; }
+  .story figure img { max-width: 100%; height: auto; cursor: zoom-in; border-radius: 4px; }
+  .story figcaption {
+    font-family: -apple-system, sans-serif;
+    font-size: 11px; color: var(--muted); margin-top: 4px;
+  }
+
+  /* Spec card */
+  .spec-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 16px; margin: 14px 0 18px;
+    font-family: -apple-system, sans-serif; font-size: 13px;
+  }
+  .spec-card .id { font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); }
+
+  /* Caveat box */
+  .caveat {
+    border: 1px solid #e3d9b3; background: #fbf6e7; border-radius: 8px;
+    padding: 14px 18px; margin: 24px 0;
+    font-family: -apple-system, sans-serif; font-size: 14px;
+  }
+  .caveat h3 { color: var(--warn); margin-top: 0; border: none; padding: 0; }
+
+  /* Bottom-line card */
+  .bottom {
+    background: linear-gradient(180deg, #f4f7fc 0%, #fafbfd 100%);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px 24px; margin: 32px 0 16px;
+    font-family: -apple-system, sans-serif;
+  }
+  .bottom h2 { margin-top: 0; border: none; padding-bottom: 0; }
+  .bottom ol { padding-left: 22px; }
+  .bottom li { margin: 6px 0; }
+
+  /* TOC */
+  .toc {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 18px; margin: 20px 0 24px;
+    font-family: -apple-system, sans-serif; font-size: 13px;
+  }
+  .toc strong { display: block; font-size: 11px; color: var(--muted);
+                text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .toc ol { margin: 4px 0; padding-left: 20px; }
+  .toc li { margin: 2px 0; }
+
+  /* Lightbox */
+  .lb { display: none; position: fixed; inset: 0; background: rgba(8,12,20,.88);
+        z-index: 1000; align-items: center; justify-content: center; padding: 30px;
+        cursor: zoom-out; }
+  .lb.open { display: flex; }
+  .lb img { max-width: 92%; max-height: 92%; }
+
+  @media print {
+    body { font-size: 11.5px; max-width: none; padding: 12px 24px; }
+    .story { page-break-inside: avoid; box-shadow: none; }
+    h2, h3 { page-break-after: avoid; }
+    .lb { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-head">
+  <h1>Spec 1 — Findings Narrative</h1>
+  <div class="meta">
+    <span class="muted">Headline results and subgroup heterogeneity</span>
+    <span class="muted">Generated 2026-06-08 12:58</span>
+  </div>
+</div>
+
+<p class="lede">
+  Norwegian Social Assistance (SA) causes a <b>sharp short-run drop in employment, hours, and education
+  enrollment</b> — most of which fades by 2-4 years out. The <b>persistent effects</b> are a reorganization
+  of the transfer portfolio (housing benefit up, DI down), tightened mobility (more local, less far),
+  and modest neighborhood upgrading. <b>Splitting the instrument into amount and duration reveals that
+  they act in opposite directions on labor outcomes</b>: extra cash per month helps, longer spells hurt
+  — the combined amt × dur effect cancels them out. <b>Subgroup analysis</b>, organized below by one
+  subgroup lens at a time, reveals a consistent two-group narrative: SA acts as a <i>bridge</i> for the
+  labor-attached and as <i>substitution</i> for the labor-detached.
+</p>
+
+<div class="spec-card">
+  <b>Spec 1</b> — no caseworker workload restriction. UJIVE controls: age FE, DI receipt (binary &gt;0),
+  N kids FE, ever-employed, household income (binned). Balance flag = 4 (has_tm1). 2SLS scaled to 1,000 NOK.
+  Robust to spec variations (~95% agreement with alternative specs).
+  <span class="id">2026_05_spec1</span> &nbsp;·&nbsp;
+  See also: <a href="spec1_full_dashboard.html">full Spec 1 dashboard</a> · <a href="spec_comparison.html">Spec 1 vs Spec 4 comparison</a>
+</div>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#sec-1">The full-sample story</a> &nbsp;<span class="muted">(6 stories)</span></li>
+    <li><a href="#sec-2">Amt vs Dur — opposite directions</a> &nbsp;<span class="muted">(6 stories)</span></li>
+    <li><a href="#sec-3">Subgroup deep-dives</a>
+      <ol>
+        <li><a href="#sec-3a">The age divide</a></li>
+        <li><a href="#sec-3b">Prior labor market attachment</a></li>
+        <li><a href="#sec-3c">Education matters</a></li>
+        <li><a href="#sec-3d">Local labor market mediates</a></li>
+        <li><a href="#sec-3e">The recent job-loss exception</a></li>
+        <li><a href="#sec-3f">Urban vs rural — big cities are different</a></li>
+      </ol>
+    </li>
+    <li><a href="#bottom">Bottom line</a></li>
+  </ol>
+</div>
+
+<!-- ============ §1 FULL SAMPLE ============ -->
+<h2 id="sec-1">1. The full-sample story</h2>
+<p>Six stories the data tells at the headline level. Effect signs and stars are amt × dur 2SLS.</p>
+
+
+<div class="story">
+  <h4>The first stage works</h4>
+  <div class="keyfind"><b>SA Transfers: +0.158 NOK ***</b> at t=0 per 1 NOK of caseworker leniency, with a strong persistent effect (+0.046 NOK ***) even 2-4 years later.</div>
+  <p>Caseworkers vary in how much SA they grant for similar applicants — the leniency instrument captures this variation. Spec 1 confirms the assignment is meaningful: applicants assigned more lenient caseworkers receive substantially more SA in the year of application and remain on SA at higher rates 1-2 years out.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_first_stage.png" alt="fig_first_stage.png">
+    <figcaption>fig_first_stage.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Sharp short-run labor disruption, then recovery</h4>
+  <div class="keyfind"><b>Employment (taxable > 1G) drops 8.3 pp ***</b> at t=0; <b>taxable income falls 3,877 NOK ***</b>. Both back to null by t=2.</div>
+  <p>The contemporary effect on labor is large but doesn't persist: by 2-4 years out, employment and taxable income are statistically indistinguishable from baseline. The figure shows the textbook shape of a transient labor disruption — sharp dip on both the extensive margin (employment) and intensive margin (income), then return.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_labor_full_sample.png" alt="fig_labor_full_sample.png">
+    <figcaption>fig_labor_full_sample.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Education enrollment postponed, not lost</h4>
+  <div class="keyfind"><b>College enrollment falls 2.1 pp ***</b> at t=0 (baseline 6%) and recovers by t=1.</div>
+  <p>SA recipients reduce education enrollment in the year of application (especially college), but the effect is short-lived — they re-enroll later. Completion (has_HS, has_college) at t=2 is statistically null, so the disruption doesn't translate into lower attainment.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_education_dip.png" alt="fig_education_dip.png">
+    <figcaption>fig_education_dip.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Persistent transfer substitution: housing UP, DI DOWN</h4>
+  <div class="keyfind"><b>Housing Benefit rises by 269 NOK ***</b> by t=2; <b>DI Amount falls by 919 NOK **</b>.</div>
+  <p>The most persistent effect of SA is reorganization of the transfer portfolio. Recipients shift toward housing benefits (which keep growing) and away from disability insurance (which falls sharply by t=2). Other transfers — sick leave, medical benefits, scholarships, pension — also drift down. SA is partly a coordination mechanism for the broader welfare system.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_transfers_substitution.png" alt="fig_transfers_substitution.png">
+    <figcaption>fig_transfers_substitution.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Mobility tightens — less long-distance, more local</h4>
+  <div class="keyfind"><b>Across-municipality moves drop −2.6 pp **</b> and <b>−1.9 pp **</b> at t=1, t=2; <b>within-municipality moves rise +2.8 pp *</b> at t=0.</div>
+  <p>SA recipients become more rooted in their current municipality but more likely to move locally. The pattern is consistent with using SA to stabilize a current life (find a different apartment in the same town) rather than to relocate.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_mobility_split.png" alt="fig_mobility_split.png">
+    <figcaption>fig_mobility_split.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Neighborhood upgrading: housing wealth rises (clean pre-trends)</h4>
+  <div class="keyfind">Neighborhood housing wealth rises <b>+5,980 NOK **</b> at t=1, growing to <b>+6,870 NOK **</b> at t=2. Pre-trends are clean.</div>
+  <p>At the fine-grained neighborhood (grunnkrets) level, SA recipients end up in places with higher housing wealth — and the effect grows over time. Pre-trends are clean for this outcome, unlike the municipality-level housing-wealth measure and the neighborhood college-share measure (both of which have t=−2 pre-trend issues). The pattern extends to other neighborhood wealth/income measures with similar magnitudes.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_neighborhood_upgrading.png" alt="fig_neighborhood_upgrading.png">
+    <figcaption>fig_neighborhood_upgrading.png</figcaption>
+  </figure>
+</div>
+
+<!-- ============ §2 AMT vs DUR ============ -->
+<h2 id="sec-2">2. Amt vs Dur — same outcome, opposite directions</h2>
+<p>So far the figures show the <b>amt × dur</b> coefficient (total transfer). But splitting the
+instrument into its two components — the <b>amount</b> per month and the <b>duration</b> in months —
+reveals a striking pattern across labor outcomes: <b>amt and dur work in opposite directions</b>.
+More cash per month is mildly beneficial; longer-duration dependence is sharply harmful. The amt × dur
+combined coefficient is sometimes null precisely because the two channels cancel out. <b>It's the
+duration of dependence, not the dollar amount, that damages labor outcomes.</b></p>
+
+
+<div class="story">
+  <h4>Labor Index: amt and dur pull in OPPOSITE directions</h4>
+  <div class="keyfind warn"><b>Amt</b> coef on Labor Index at t=2: <b>+0.063</b> (positive). <b>Dur</b> coef: <b>−0.172 *</b> (negative). pval_diff = 0.002 ***.</div>
+  <p>The combined amt_dur effect is statistically null at t=2, but it masks two opposing forces. More cash per month is weakly beneficial for the labor index. Longer SA spells are sharply harmful. The same pattern holds at t=0 and t=1, with the dur effect dominating in magnitude. <b>It's the duration of dependence, not the amount, that damages labor outcomes.</b></p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_amt_vs_dur_labor.png" alt="fig_amt_vs_dur_labor.png">
+    <figcaption>fig_amt_vs_dur_labor.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Total income: more cash helps, longer spells hurt</h4>
+  <div class="keyfind warn">Total Income at t=0: amt = <b>+0.19</b> (10K NOK), dur = <b>−0.38</b> (10K NOK). pval_diff = 0.0002 ***.</div>
+  <p>At every post-period, amt has positive effect on total income while dur has negative. The combined (amt_dur) effect is null. This is the clearest dollar-denominated example of the divergence: extra per-month support increases total household income; longer-duration dependence decreases it.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_amt_vs_dur_inctot.png" alt="fig_amt_vs_dur_inctot.png">
+    <figcaption>fig_amt_vs_dur_inctot.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Employment: amt boosts, dur depresses</h4>
+  <div class="keyfind warn">Employed (tax>1G) at t=1: amt = <b>+0.018</b>, dur = <b>−0.181 ***</b>. pval_diff &lt; 0.001 ***.</div>
+  <p>Spec 1's headline finding that employment recovers by t=2 hides this divergence: it recovers because the amt and dur effects cancel out. The dur channel keeps pushing employment down throughout the observation window; only the amt channel's positive effect prevents a persistent net negative.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_amt_vs_dur_employed.png" alt="fig_amt_vs_dur_employed.png">
+    <figcaption>fig_amt_vs_dur_employed.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Taxable income: amt vs dur diverge by t=2</h4>
+  <div class="keyfind warn">Taxable income at t=2: amt = <b>+0.025</b>, dur = <b>−0.049 *</b>. pval_diff = 0.004 ***.</div>
+  <p>Same story for taxable income (the cleaner labor-income measure): the amt channel is mildly positive at all post-periods; the dur channel is significantly negative. Both channels are real, but the amt_dur summary obscures them.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_amt_vs_dur_taxable.png" alt="fig_amt_vs_dur_taxable.png">
+    <figcaption>fig_amt_vs_dur_taxable.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>College enrollment: dur drives the t=0 drop</h4>
+  <div class="keyfind warn">Enrolled in college at t=0: amt = <b>−0.012</b> (ns) vs dur = <b>−0.055 ***</b>. pval_diff = 0.009 ***.</div>
+  <p>Both channels reduce college enrollment at t=0, but the dur effect is <b>4–5× larger</b>. The combined amt × dur story (−0.021***) is real, but the duration component is what's actually driving it. By t=1 and t=2 both channels are insignificant — college enrollment recovers regardless of which channel you focus on. Same direction-but-bigger-dur pattern holds for the &quot;college (relevant age)&quot; measure at t=0.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_amt_vs_dur_college.png" alt="fig_amt_vs_dur_college.png">
+    <figcaption>fig_amt_vs_dur_college.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Debt amount: amt builds it, dur pays it down (t=2)</h4>
+  <div class="keyfind warn">Debt (wins5) at t=2: amt = <b>+0.39</b> (10K NOK) vs dur = <b>−0.98</b> (10K NOK). pval_diff = 0.083 *. Same pattern in raw and wins1 versions.</div>
+  <p>The amt vs dur split reveals a debt story invisible in the combined amt_dur coefficient (which is null). Extra cash per month is associated with higher household debt by t=2 (~+3,900 NOK); longer SA spells coincide with debt reduction (~−9,800 NOK). Plausible reading: higher monthly income relaxes a borrowing constraint, while prolonged dependence forces deleveraging. Neither channel is individually significant at p&lt;0.10 at t=2, but the divergence between them is.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_amt_vs_dur_debt.png" alt="fig_amt_vs_dur_debt.png">
+    <figcaption>fig_amt_vs_dur_debt.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Any debt: same pattern on the extensive margin</h4>
+  <div class="keyfind warn">Any household debt at t=2: amt = <b>+0.009</b> (ns) vs dur = <b>−0.054 *</b>. pval_diff = 0.046 **.</div>
+  <p>Confirms the debt story on the binary &quot;any debt&quot; measure: longer SA spells reduce the probability of holding any debt at all (~5.4 pp drop at t=2); extra cash per month has no detectable effect. <b>Caveat:</b> any_debt has a borderline pre-trend at t=−2 for the dur channel (p=0.072) and a sig pval_diff at t=−2 (0.048). So treat this finding as suggestive — the wealth_debt amount measure (above) has cleaner pre-trends.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_amt_vs_dur_any_debt.png" alt="fig_amt_vs_dur_any_debt.png">
+    <figcaption>fig_amt_vs_dur_any_debt.png</figcaption>
+  </figure>
+</div>
+
+<p class="muted" style="margin-top:14px;line-height:1.55;font-size:13px">
+
+Beyond the focal examples above, significant amt-vs-dur differences also appear in:
+<b>other social transfers</b> at t=1 (amt crowds them OUT ~−1,932 NOK, dur pulls them IN ~+902 NOK; pval_diff = 0.032; same pattern for AAP);
+<b>education enrollment index</b> at t=2 (amt +0.011 vs dur <b>−0.155**</b>, opposite signs);
+and <b>scholarships and child-related transfers</b> (opposite signs at t=0).
+The two outcomes with <i>no</i> amt-vs-dur difference are <b>education attainment</b>
+(has_HS, has_college) and <b>family formation</b> (spouse, marriage, cohabitation, children) —
+both are unmoved by either channel in the full sample.
+
+</p>
+
+<!-- ============ §3 SUBGROUP DEEP-DIVES ============ -->
+<h2 id="sec-3">3. Subgroup deep-dives</h2>
+<p>Below, each subsection picks one subgroup lens and shows several outcomes through it. The point is
+to see how a single split shapes multiple parts of the SA story, rather than jumping between splits.</p>
+
+
+<h3 id="sec-3a">3a. The age divide</h3>
+<div class="section-intro">Age is the single sharpest cleavage in the data. <b>Older recipients (30+) recover; younger ones (under 30) don't</b>. The pattern shows up across labor, wealth, relationship stability, transfer use, AND education — once we view the data through the age lens, the story is remarkably consistent: <b>SA is a bridge for the older, substitution for the younger</b>.</div>
+
+<div class="story">
+  <h4>Labor recovery happens only for older recipients</h4>
+  <div class="keyfind">By t=2: Age 30+ recover to <b>+0.098 **</b> on the labor index. Under-30 stay at <b>−0.092 **</b>. pval_diff = 0.002.</div>
+  <p>The single sharpest heterogeneity in the data. Same pattern holds for taxable income and employment >2G: prime-age recipients have a transitory labor disruption; under-30s don't recover within the observation window.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_labor_by_age.png" alt="fig_labor_by_age.png">
+    <figcaption>fig_labor_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Housing wealth: older gain, younger lose</h4>
+  <div class="keyfind">Housing wealth at t=2: Age 30+ <b>+0.61 </b> (10K NOK) vs Under-30 <b>−1.23 **</b>. Opposite-sign effects.</div>
+  <p>Asset accumulation diverges sharply by age. The 30+ group uses SA as a bridge — they keep accumulating housing wealth — while the under-30s see real wealth losses. This mirrors the labor recovery split.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_wealth_by_age.png" alt="fig_wealth_by_age.png">
+    <figcaption>fig_wealth_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Neighborhood housing wealth: opposite signs from t=0 onward</h4>
+  <div class="keyfind">Grunnkrets housing wealth at t=0: Age 30+ <b>+0.89 **</b> vs Under-30 <b>−0.80 *</b>. pval_diff = 0.002 ***. Persists through t=2.</div>
+  <p>Older recipients end up in neighborhoods with HIGHER housing wealth (upgrading); younger recipients end up in neighborhoods with LOWER wealth (downgrading). The opposite-sign divergence appears immediately at t=0 and grows by t=1 (pdiff = 0.002 ***). The geographic-upgrading story isn't 'SA improves neighborhoods on average' — it's a sharp polarization by age.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_neighborhood_wealth_by_age.png" alt="fig_neighborhood_wealth_by_age.png">
+    <figcaption>fig_neighborhood_wealth_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Debt: older accumulate, younger deleverage</h4>
+  <div class="keyfind">Debt (wins5) at t=2: Age 30+ <b>+1.05 *</b> (10K NOK) vs Under-30 <b>−1.19 ***</b>. pval_diff = 0.002 ***. Same pattern in raw debt.</div>
+  <p>Another clean opposite-sign result. Older recipients use SA as a buffer that allows them to take on (or maintain) debt — likely mortgage-related, consistent with the housing-wealth gain. Younger recipients are forced to pay down debt — consistent with reduced access to credit when labor incomes are damaged. Any-debt extensive margin shows the same direction (pdiff = 0.081 *).</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_debt_by_age.png" alt="fig_debt_by_age.png">
+    <figcaption>fig_debt_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Cumulative separations: fewer for older recipients</h4>
+  <div class="keyfind">Cumulative separations at t=2: Age 30+ <b>−0.041 *</b> vs Under-30 +0.004 (ns). Same direction at t=0 (30+ <b>−0.023 *</b>) and t=1.</div>
+  <p>Older recipients see a meaningful reduction in the cumulative rate of relationship dissolution — about 4 pp fewer separations by t=2. Under-30s show no separation effect. The pval_diff isn't individually significant but the directional consistency across all three post-periods is striking.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_separations_by_age.png" alt="fig_separations_by_age.png">
+    <figcaption>fig_separations_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Has spouse: rises for older — driven by fewer separations, not new partnerships</h4>
+  <div class="keyfind">Has spouse at t=1: Age 30+ <b>+0.052 **</b> vs Under-30 <b>−0.005</b> (ns). At t=2: 30+ <b>+0.050 *</b> vs Under-30 −0.019, pval_diff = 0.081 *.</div>
+  <p>Spouse-having rises ~5 pp for 30+ recipients at t=1 and t=2 but stays null for under-30s. <b>This is not about forming new partnerships</b> — the cumulative-separations figure above shows the mechanism: older recipients' existing partnerships hold together while under-30s' don't. SA stabilizes the relationships of recipients who already had them; it doesn't create new ones.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_spouse_by_age.png" alt="fig_spouse_by_age.png">
+    <figcaption>fig_spouse_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>DI substitution: only older recipients reduce DI use</h4>
+  <div class="keyfind">DI Amount at t=2: Age 30+ <b>−2,182 NOK **</b> vs Under-30 +795 NOK (ns). pval_diff = 0.011 **.</div>
+  <p>The full-sample DI substitution finding (−919 ** at t=2) is entirely driven by 30+ recipients. The under-30s, who don't recover labor, don't transition off DI either. The DI substitution and labor recovery findings are tightly linked: only those who recover labor reduce DI use.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_di_by_age.png" alt="fig_di_by_age.png">
+    <figcaption>fig_di_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Other transfers: older substitute OUT, younger pile ON</h4>
+  <div class="keyfind">Other transfers at t=2: Age 30+ <b>−2,521 NOK **</b> vs Under-30 <b>+1,308 NOK</b>. pval_diff = 0.010 ***. Pattern holds at every post-period.</div>
+  <p>Among the cleanest age contrasts in the data — significant opposite-sign pval_diffs at t=0, t=1, AND t=2. Older recipients reduce their use of other social transfers; younger recipients add MORE transfers on top of SA. This is the &quot;bridge vs substitution&quot; story in its purest form: SA helps older recipients transition off the welfare system; SA pulls younger recipients deeper into it.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_othertrans_by_age.png" alt="fig_othertrans_by_age.png">
+    <figcaption>fig_othertrans_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>College enrollment dip: only the young</h4>
+  <div class="keyfind">Enrolled in college at t=0: Age 30+ −0.012 (ns) vs Under-30 <b>−0.035 **</b>.</div>
+  <p>The full-sample college-enrollment dip (−2.1 pp ***) is driven by under-30 recipients. Older recipients aren't enrolled in college to begin with, so they don't show an effect. The disruption is concentrated where it matters — among the young who would otherwise be in school.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_college_enroll_by_age.png" alt="fig_college_enroll_by_age.png">
+    <figcaption>fig_college_enroll_by_age.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3b">3b. Prior labor market attachment</h3>
+<div class="section-intro">Whether you were employed in the year before applying for SA reshapes nearly every outcome. All figures in this section use the same <b>Employed (taxable > 1G) t−1</b> split for consistency: the <b>previously-employed take a bigger short-run hit</b> but use SA as a transition; the <b>not-employed</b> end up on different trajectories. The clearest contrasts are in labor itself, in partnership formation, and in geographic location.</div>
+
+<div class="story">
+  <h4>Labor disruption hits the previously employed</h4>
+  <div class="keyfind">Employment (tax>1G) at t=0: Employed t-1 <b>−0.111 ***</b> vs Not employed −0.037 *.</div>
+  <p>The contemporary labor drop is mostly about people losing jobs they had. By t=2 both groups are similar (no persistent damage), but the path differs: previously-employed take a bigger hit and recover; not-employed see modest drops they don't fully reverse.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_labor_by_emp.png" alt="fig_labor_by_emp.png">
+    <figcaption>fig_labor_by_emp.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Marriage: opposite-sign effects by prior employment</h4>
+  <div class="keyfind">Married at t=2: Not-employed t-1 <b>−0.026 ***</b> vs Employed t-1 <b>+0.028 **</b>. pval_diff = 0.001 ***.</div>
+  <p>A clean and striking opposite-sign result. SA induces marriage formation for those with prior employment but reduces it for those without. The plausible story is that SA stabilizes the partnership prospects of the labor-attached (who already had stable income paths) but doesn't compensate for the partnership-deterring effects of weak labor attachment.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_married_by_emp.png" alt="fig_married_by_emp.png">
+    <figcaption>fig_married_by_emp.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Geographic upgrading: only for the previously employed</h4>
+  <div class="keyfind">Neighborhood housing wealth at t=1: Employed t-1 <b>+1.10 ***</b> (10K NOK); Not employed −0.09 (ns). pval_diff = 0.028 **. Effect persists to t=2 (Employed +1.21 ***, Not employed −0.04, pval_diff = 0.050 *).</div>
+  <p>The 'recipients end up in better neighborhoods' headline is driven entirely by people with prior labor market attachment. Not-employed t−1 recipients see no neighborhood-wealth gains. Pre-trends are clean (both groups null at t=−2 and t=−3). Same lens as the other §3b figures — the previously-employed group reaps the geographic upgrade as well as the labor recovery and marriage gains.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_neighborhood_wealth_by_emp.png" alt="fig_neighborhood_wealth_by_emp.png">
+    <figcaption>fig_neighborhood_wealth_by_emp.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3c">3c. Education matters</h3>
+<div class="section-intro">Education attainment shapes how SA propagates into wealth and mortality. <b>HS dropouts see real wealth destruction; college-educated recipients see persistent mortality reductions</b>. The two effects are at different ends of the human-capital spectrum.</div>
+
+<div class="story">
+  <h4>Wealth destruction concentrated in HS dropouts</h4>
+  <div class="keyfind">Housing wealth at t=2: <b>HS Dropouts −2.2 ***</b> vs Has-HS+ +0.66 (ns). pval_diff = 0.003.</div>
+  <p>HS dropouts lose housing wealth and reduce debt (both significantly) — the deleveraging story. HS+ recipients are largely insulated from wealth effects. Education attainment moderates the long-run material consequences of SA.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_wealth_by_education.png" alt="fig_wealth_by_education.png">
+    <figcaption>fig_wealth_by_education.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Mortality reduction strongest for higher-educated</h4>
+  <div class="keyfind">College+: <b>−1.11 pp **</b> at t=1, persisting to −2.20 pp * at t=2. HS: similar. Primary: no effect.</div>
+  <p>Mortality reductions are concentrated in HS- and especially college-educated recipients. The 3-level split makes the gradient visible: primary-educated see no mortality effect, while higher-educated recipients benefit. Consistent with SA being most life-saving when recipients have the human capital to deploy it productively.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_mortality_by_educ.png" alt="fig_mortality_by_educ.png">
+    <figcaption>fig_mortality_by_educ.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3d">3d. Local labor market mediates</h3>
+<div class="section-intro">Where you live shapes how SA propagates. The clearest outcome through this lens is <b>mortality reduction concentrated in concentrated (worker-unfriendly) labor markets</b> — SA saves lives most where workers have the fewest outside options.</div>
+
+<div class="story">
+  <h4>Mortality reduction in concentrated labor markets</h4>
+  <div class="keyfind">High-HHI markets: <b>t=1 mortality −0.94 pp **</b>, persisting to −2.4 pp * at t=2. Low-HHI: no effect. pval_diff = 0.048 ** at t=0.</div>
+  <p>SA reduces mortality most where the labor market is worst for workers. Interpretation: when outside options are scarce, the material and stress relief from SA appears to translate into lower mortality risk. The pval_diff at t=0 confirms the heterogeneity is real.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_mortality_by_HHI.png" alt="fig_mortality_by_HHI.png">
+    <figcaption>fig_mortality_by_HHI.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3e">3e. The recent job-loss exception</h3>
+<div class="section-intro">One more important subgroup-mortality finding: <b>SA's mortality benefit is absent for people who recently lost a job</b>. This is the only sizable group where the broader life-saving effect of SA appears to disappear.</div>
+
+<div class="story">
+  <h4>Mortality reduction excludes recent job-losers</h4>
+  <div class="keyfind">No-transition group: <b>mortality −1.36 pp **</b> at t=2. Recent E→U group: no effect.</div>
+  <p>The split is between people who experienced an employment-to-unemployment transition in the two years before applying for SA, and everyone else. <b>Caveat: the &quot;no-transition&quot; group is heterogeneous</b> — it includes the stably employed, the stably unemployed, and U→E transitioners. So this is not &quot;SA helps stable workers.&quot; The right read is <b>SA's mortality benefit is absent for those whose lives were just shaken by losing a job</b>. Recent job loss appears to neutralize the otherwise-detectable mortality benefit.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_mortality_by_EtoU.png" alt="fig_mortality_by_EtoU.png">
+    <figcaption>fig_mortality_by_EtoU.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3f">3f. Urban vs rural — big cities are different</h3>
+<div class="section-intro">A separate "place" dimension orthogonal to local labor concentration: are recipients in one of Norway's 10 largest cities, or not? <b>City residents have systematically worse long-run employment effects</b>, and the <b>mortality benefit of SA is exclusive to non-city residents</b>. Two opposite-sign stories from the same urban-vs-rural lens.</div>
+
+<div class="story">
+  <h4>Employment recovery: outside the 10 largest cities only</h4>
+  <div class="keyfind">Employment (earnings>1G) at t=2: Not Big-10 +0.020 vs Big-10 <b>−0.046 ***</b>. pval_diff = 0.023 **. Same opposite-sign pattern at t=1 (pval_diff = 0.047 **).</div>
+  <p>Outside the 10 largest cities, SA recipients fully recover and even slightly gain on employment by t=2. Inside Big-10 cities, SA recipients see <i>persistent</i> employment damage. The full-sample &quot;labor recovery&quot; finding masks a sharp city-vs-rest divide. The pattern is consistent across all three earnings-based employment measures — employed_0g (any earnings; pdiff = 0.012 ** at t=2), employed_1g (shown here; pdiff = 0.023 **), and employed_2g (earnings &gt; 2G; pdiff = 0.066 * at t=2). The taxable-income measures show the same direction but with smaller magnitudes and pdiffs not always reaching significance, consistent with city residents losing &quot;under-the-table&quot; or marginal earnings even when their taxable-income trajectory is less affected.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_employment_by_bigcity_big10.png" alt="fig_employment_by_bigcity_big10.png">
+    <figcaption>fig_employment_by_bigcity_big10.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Mortality reduction exclusive to non-city residents</h4>
+  <div class="keyfind">Has died at t=2: Not Big-10 <b>−0.023 *</b> vs Big-10 +0.002 (ns). pval_diff = 0.072 *.</div>
+  <p>Non-city residents see a meaningful 2.3 pp mortality reduction at t=2 (about double the borderline full-sample effect). City residents see <i>no</i> mortality benefit at all. Combined with the labor-damage finding, the pattern suggests that the welfare-supportive infrastructure or social-network advantages that translate SA into mortality benefits operate primarily in non-urban settings.</p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_mortality_by_bigcity_big10.png" alt="fig_mortality_by_bigcity_big10.png">
+    <figcaption>fig_mortality_by_bigcity_big10.png</figcaption>
+  </figure>
+</div>
+
+<!-- ============ CAVEATS ============ -->
+<div class="caveat">
+  <h3>⚠ Pre-trend caveat for municipality outcomes</h3>
+  <p>Spec 1 finds large persistent positive effects on <b>municipality</b>-level characteristics
+  (income, wealth, college share, pop density). <b>But 9 of 11 municipality outcomes have significant
+  t=−2 pre-trends</b> (5 of 11 at t=−3). The neighborhood-level (grunnkrets) version of the same story
+  is much cleaner (only 2 of 11 flagged) — so report the grunnkrets findings as the main result and
+  treat the municipality findings as suggestive at best.</p>
+  <p>Outside that one issue, pre-trends are clean across the rest of the outcome list:
+  labor (0/12 outcomes flagged), transfers (1–2 of 12), wealth (1/15), family (0–1 of 9).</p>
+</div>
+
+<!-- ============ BOTTOM LINE ============ -->
+<div class="bottom" id="bottom">
+<h2>Bottom line</h2>
+<ol>
+  <li><b>Duration of dependence drives the labor damage, not the dollar amount.</b> When the instrument
+      is split into amt and dur, the two have opposite signs across labor outcomes — extra cash per
+      month is mildly beneficial, longer-duration dependence is sharply harmful. The combined amt × dur
+      effect masks this divergence.</li>
+  <li><b>SA is a bridge for the labor-attached.</b> Age 30+, employed, ever-employed, HS+ recipients
+      take a short-run labor hit, then recover. Along the way they accumulate housing wealth, see
+      fewer separations from existing partners, reduce DI use, and move to better neighborhoods.</li>
+  <li><b>SA is substitution for the labor-detached.</b> Young, never-employed, HS-dropout recipients
+      pile on other transfers, lose housing wealth, don't see relationship-stability gains, and don't
+      recover labor.</li>
+  <li><b>Place matters in two distinct ways.</b> (a) Labor-market structure: mortality reduction
+      concentrates in concentrated (worker-unfriendly) labor markets, where SA's stress and material
+      relief appears to translate most cleanly into lower mortality risk. (b) Urban vs rural: residents
+      of Norway's 10 largest cities see <i>persistent</i> long-run employment damage and no mortality
+      benefit; non-city recipients fully recover labor and get the mortality benefit.</li>
+  <li><b>SA reduces mortality in specific subgroups.</b> Concentrated labor markets, college-educated,
+      and recipients who did NOT recently experience an employment-to-unemployment transition see
+      persistent 1-2 pp mortality reductions. Full-sample effect is borderline.</li>
+  <li><b>Robustness:</b> Spec 1's results are highly stable. Variant specs (workload restrictions,
+      Spec 1D/F/Fb) agree on ≥95% of (outcome, period) significance cells.</li>
+</ol>
+</div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lb" id="lb"><img id="lb-img" src="" alt=""></div>
+<script>
+  document.querySelectorAll('.story figure img').forEach(img => {
+    img.addEventListener('click', e => {
+      document.getElementById('lb-img').src = e.target.src;
+      document.getElementById('lb').classList.add('open');
+    });
+  });
+  document.getElementById('lb').addEventListener('click', () => {
+    document.getElementById('lb').classList.remove('open');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('lb').classList.remove('open');
+  });
+</script>
+
+</body>
+</html>
