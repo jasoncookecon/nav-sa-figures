@@ -136,7 +136,7 @@
   <h1>Spec 1 — Findings Narrative</h1>
   <div class="meta">
     <span class="muted">Headline results and subgroup heterogeneity</span>
-    <span class="muted">Generated 2026-06-08 12:58</span>
+    <span class="muted">Generated 2026-06-08 13:17</span>
   </div>
 </div>
 
@@ -172,6 +172,7 @@
         <li><a href="#sec-3d">Local labor market mediates</a></li>
         <li><a href="#sec-3e">The recent job-loss exception</a></li>
         <li><a href="#sec-3f">Urban vs rural — big cities are different</a></li>
+        <li><a href="#sec-3g">Gender — mortality concentrates in women via amt</a></li>
       </ol>
     </li>
     <li><a href="#bottom">Bottom line</a></li>
@@ -536,6 +537,19 @@ to see how a single split shapes multiple parts of the SA story, rather than jum
   <figure>
     <img src="figs/2026_05_spec1/narrative/fig_mortality_by_bigcity_big10.png" alt="fig_mortality_by_bigcity_big10.png">
     <figcaption>fig_mortality_by_bigcity_big10.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3g">3g. Gender — mortality effects concentrate in women via the amt channel</h3>
+<div class="section-intro">Splitting the mortality finding by gender reveals a sharp asymmetry: <b>men show null mortality effects for every instrument at every post-period</b>, while <b>women see significant mortality reductions driven specifically by the amt (monthly cash) channel</b>. Duration produces nothing for either gender.</div>
+
+<div class="story">
+  <h4>Mortality reduction in women — driven by the amt channel</h4>
+  <div class="keyfind">Female × amt × t=1: <b>−0.0106 ***</b>. Same channel: t=0 = <b>−0.0033 **</b>, t=2 = <b>−0.0180 *</b>. Male × amt: null at every post-period.</div>
+  <p>All three instruments × gender (mortality coefficient, SE in parens, sig stars):<table style='margin-top:8px;font-size:12px;border-collapse:collapse;width:100%'><thead><tr><th></th><th colspan='3' style='text-align:center;padding:4px 10px;border-bottom:1px solid #ccc'>Men</th><th colspan='3' style='text-align:center;padding:4px 10px;border-bottom:1px solid #ccc'>Women</th></tr><tr><th style='padding:2px 6px;text-align:left'>Instrument</th><th style='padding:2px 6px;text-align:right'>t=0</th><th style='padding:2px 6px;text-align:right'>t=1</th><th style='padding:2px 6px;text-align:right'>t=2</th><th style='padding:2px 6px;text-align:right'>t=0</th><th style='padding:2px 6px;text-align:right'>t=1</th><th style='padding:2px 6px;text-align:right'>t=2</th></tr></thead><tbody><tr><td style='padding:3px 6px'><b>amt_dur</b></td><td style='padding:3px 6px;text-align:right'>+0.0003 (.001)</td><td style='padding:3px 6px;text-align:right'>−0.0032 (.004)</td><td style='padding:3px 6px;text-align:right'>−0.0074 (.010)</td><td style='padding:3px 6px;text-align:right'>−0.0004 (.002)</td><td style='padding:3px 6px;text-align:right'><b>−0.0058 (.004)*</b></td><td style='padding:3px 6px;text-align:right'>−0.0117 (.009)</td></tr><tr><td style='padding:3px 6px'><b>amt</b></td><td style='padding:3px 6px;text-align:right'>+0.0010 (.002)</td><td style='padding:3px 6px;text-align:right'>+0.0021 (.008)</td><td style='padding:3px 6px;text-align:right'>+0.0037 (.019)</td><td style='padding:3px 6px;text-align:right'><b>−0.0033 (.001)**</b></td><td style='padding:3px 6px;text-align:right'><b>−0.0106 (.004)***</b></td><td style='padding:3px 6px;text-align:right'><b>−0.0180 (.010)*</b></td></tr><tr><td style='padding:3px 6px'><b>dur</b></td><td style='padding:3px 6px;text-align:right'>+0.0011 (.002)</td><td style='padding:3px 6px;text-align:right'>−0.0145 (.009)</td><td style='padding:3px 6px;text-align:right'>−0.0396 (.028)</td><td style='padding:3px 6px;text-align:right'>+0.0060 (.007)</td><td style='padding:3px 6px;text-align:right'>−0.0123 (.014)</td><td style='padding:3px 6px;text-align:right'>−0.0411 (.039)</td></tr></tbody></table><p style='margin-top:10px'>The figure above shows the amt-instrument estimates (the strongest channel). Women's mortality drops significantly with extra cash per month at all three post-periods, with the effect growing over time (peak −1.8 pp at t=2). Men show null effects under every instrument. <b>The mortality benefit is fundamentally about income, not the length of welfare dependence — and it accrues to women.</b></p></p>
+  <figure>
+    <img src="figs/2026_05_spec1/narrative/fig_mortality_by_gender_amt.png" alt="fig_mortality_by_gender_amt.png">
+    <figcaption>fig_mortality_by_gender_amt.png</figcaption>
   </figure>
 </div>
 

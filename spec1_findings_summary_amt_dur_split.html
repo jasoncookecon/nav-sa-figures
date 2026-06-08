@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spec 1 — Findings Narrative (Amt | Dur split)</title>
+<style>
+  :root {
+    --bg: #fafbfd; --panel: #ffffff; --text: #15181f; --muted: #5b6478;
+    --border: #e2e6ee; --accent: #2754c5; --warn: #b08a00; --good: #19884b;
+    --shadow: 0 1px 3px rgba(20,24,34,.04), 0 6px 18px rgba(20,24,34,.04);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: "Charter", Georgia, Cambria, "Times New Roman", Times, serif;
+    font-size: 15px; line-height: 1.65;
+    max-width: 920px; margin: 0 auto; padding: 36px 40px 80px;
+  }
+  .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+
+  h1 { font-size: 28px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em;
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  h2 { font-size: 22px; font-weight: 700; margin: 42px 0 6px; padding-bottom: 6px;
+       border-bottom: 2px solid var(--accent); color: var(--accent);
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+       letter-spacing: -0.01em; }
+  h3 { font-size: 18px; font-weight: 700; margin: 30px 0 6px; color: var(--text);
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  h4 { font-size: 16px; font-weight: 700; margin: 18px 0 4px; color: #1a1f2e;
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  p  { margin: 8px 0; }
+  b, strong { font-weight: 700; color: var(--text); }
+  code { font-family: "SF Mono", ui-monospace, Consolas, monospace; font-size: 13px;
+         background: #f0f2f7; padding: 1px 4px; border-radius: 3px; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid #cfd9f3; }
+  a:hover { border-bottom-color: var(--accent); }
+  .muted { color: var(--muted); font-size: 13px; font-family: -apple-system, sans-serif; }
+  .lede {
+    font-size: 16px; line-height: 1.6; color: #2a2e38;
+    border-left: 3px solid var(--accent); padding: 4px 0 4px 16px; margin: 18px 0 24px;
+  }
+  .section-intro {
+    font-family: -apple-system, sans-serif;
+    font-size: 14px; line-height: 1.55; color: #303644;
+    background: #f4f7fc; border-left: 3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 14px 0 8px;
+  }
+  .doc-head {
+    border-bottom: 2px solid var(--border); padding-bottom: 14px; margin-bottom: 6px;
+  }
+  .doc-head .meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-top: 6px;
+  }
+
+  /* Story block */
+  .story {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 22px; margin: 14px 0;
+    box-shadow: var(--shadow);
+  }
+  .story h4 { margin-top: 0; }
+  .story .keyfind {
+    font-family: -apple-system, sans-serif;
+    background: #f4f7fc; border-left: 3px solid var(--accent);
+    padding: 8px 12px; border-radius: 0 4px 4px 0;
+    font-size: 13.5px; color: #2a2e38; margin: 6px 0 12px;
+  }
+  .story .keyfind.good { background: #eaf5ee; border-left-color: var(--good); }
+  .story .keyfind.warn { background: #faf2da; border-left-color: var(--warn); }
+  .story .keyfind b { color: #0a1a2e; }
+  .story p { font-size: 14px; color: #2a2e38; line-height: 1.55; }
+  .story figure { margin: 12px 0 0; text-align: center; }
+  .story figure img { max-width: 100%; height: auto; cursor: zoom-in; border-radius: 4px; }
+  .story figcaption {
+    font-family: -apple-system, sans-serif;
+    font-size: 11px; color: var(--muted); margin-top: 4px;
+  }
+
+  /* Spec card */
+  .spec-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 16px; margin: 14px 0 18px;
+    font-family: -apple-system, sans-serif; font-size: 13px;
+  }
+  .spec-card .id { font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); }
+
+  /* Caveat box */
+  .caveat {
+    border: 1px solid #e3d9b3; background: #fbf6e7; border-radius: 8px;
+    padding: 14px 18px; margin: 24px 0;
+    font-family: -apple-system, sans-serif; font-size: 14px;
+  }
+  .caveat h3 { color: var(--warn); margin-top: 0; border: none; padding: 0; }
+
+  /* Bottom-line card */
+  .bottom {
+    background: linear-gradient(180deg, #f4f7fc 0%, #fafbfd 100%);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px 24px; margin: 32px 0 16px;
+    font-family: -apple-system, sans-serif;
+  }
+  .bottom h2 { margin-top: 0; border: none; padding-bottom: 0; }
+  .bottom ol { padding-left: 22px; }
+  .bottom li { margin: 6px 0; }
+
+  /* TOC */
+  .toc {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 18px; margin: 20px 0 24px;
+    font-family: -apple-system, sans-serif; font-size: 13px;
+  }
+  .toc strong { display: block; font-size: 11px; color: var(--muted);
+                text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .toc ol { margin: 4px 0; padding-left: 20px; }
+  .toc li { margin: 2px 0; }
+
+  /* Lightbox */
+  .lb { display: none; position: fixed; inset: 0; background: rgba(8,12,20,.88);
+        z-index: 1000; align-items: center; justify-content: center; padding: 30px;
+        cursor: zoom-out; }
+  .lb.open { display: flex; }
+  .lb img { max-width: 92%; max-height: 92%; }
+
+  @media print {
+    body { font-size: 11.5px; max-width: none; padding: 12px 24px; }
+    .story { page-break-inside: avoid; box-shadow: none; }
+    h2, h3 { page-break-after: avoid; }
+    .lb { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-head">
+  <h1>Spec 1 — Findings Narrative (Amt | Dur split)</h1>
+  <div class="meta">
+    <span class="muted">Every story reframed around the two channels — amount per month and duration in months</span>
+    <span class="muted">Generated 2026-06-08 14:16</span>
+  </div>
+</div>
+
+<p class="lede">
+  This is the <b>amt | dur split</b> version of the Spec 1 narrative — every story is built from the
+  <b>two underlying instruments separately</b> (amount per month, duration of spell) rather than the
+  composite amt × dur instrument. The picture is sharper: Norwegian Social Assistance causes a sharp
+  short-run drop in employment, hours, and education enrollment — <b>driven largely by the duration
+  channel</b> — while extra monthly cash <b>boosts</b> labor and income outcomes, saves lives in certain
+  subgroups (women, non-city, high-HHI), and substitutes for the rest of the welfare portfolio. The
+  composite amt × dur coefficient often masks this divergence. <b>Subgroup analysis, organized below by
+  one lens at a time, reveals a consistent narrative: amt is a bridge for the labor-attached; dur is the
+  drag on the labor-detached.</b>
+</p>
+
+<div class="spec-card">
+  <b>Spec 1 — amt | dur split</b>. UJIVE controls: age FE, DI receipt (binary &gt;0),
+  N kids FE, ever-employed, household income (binned). Balance flag = 4 (has_tm1). 2SLS scaled to 1,000 NOK.
+  Robust to spec variations (~95% agreement with alternative specs).
+  <span class="id">2026_05_spec1_amt_dur_split</span> &nbsp;·&nbsp;
+  See also: <a href="spec1_findings_summary.html">composite amt × dur narrative</a> ·
+  <a href="spec1_full_dashboard.html">full Spec 1 dashboard</a>
+</div>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#sec-1">The full-sample story — amt and dur separately</a> &nbsp;<span class="muted">(12 stories)</span></li>
+    <li><a href="#sec-2">Amt vs Dur — opposite directions</a> &nbsp;<span class="muted">(7 stories)</span></li>
+    <li><a href="#sec-3">Subgroup deep-dives — each panel shows amt | dur side-by-side</a>
+      <ol>
+        <li><a href="#sec-3a">The age divide</a></li>
+        <li><a href="#sec-3b">Prior labor market attachment</a></li>
+        <li><a href="#sec-3c">Education matters</a></li>
+        <li><a href="#sec-3d">Local labor market mediates</a></li>
+        <li><a href="#sec-3e">The recent job-loss exception</a></li>
+        <li><a href="#sec-3f">Urban vs rural — big cities are different</a></li>
+        <li><a href="#sec-3g">Gender — mortality concentrates in women via amt</a></li>
+      </ol>
+    </li>
+    <li><a href="#bottom">Bottom line</a></li>
+  </ol>
+</div>
+
+<!-- ============ §1 FULL SAMPLE ============ -->
+<h2 id="sec-1">1. The full-sample story — amt and dur separately</h2>
+<p>Each headline finding is shown <b>on each channel separately</b>. Where the two channels tell the same
+story, the figures look alike. Where they tell <i>different</i> stories — labor, education, transfers,
+mobility, neighborhood — the channel-specific figures pull them apart so you can see which channel is
+doing the work.</p>
+
+
+<div class="story">
+  <h4>First stage — amt channel works</h4>
+  <div class="keyfind"><b>SA Amount: strong positive first stage</b> at t=0 driven by caseworker leniency on the per-month dimension.</div>
+  <p>Caseworkers vary in how much SA they grant <i>per month</i> for similar applicants — the amt leniency instrument captures this variation. Spec 1 confirms a clean first stage: applicants assigned more generous caseworkers receive substantially higher monthly transfers in the year of application.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_first_stage_amt.png" alt="fig_first_stage_amt.png">
+    <figcaption>fig_first_stage_amt.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>First stage — dur channel works</h4>
+  <div class="keyfind"><b>SA Duration: strong positive first stage</b> at t=0 and a persistent effect on months-on-SA out to t=2-4.</div>
+  <p>Caseworkers also vary in how <i>long</i> spells last for similar applicants — the dur leniency instrument captures this. The first stage on duration is large at t=0 and remains positive years later: applicants assigned long-spell caseworkers stay on SA longer and re-engage with SA at higher rates 1–2 years out.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_first_stage_dur.png" alt="fig_first_stage_dur.png">
+    <figcaption>fig_first_stage_dur.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Short-run labor disruption — amt channel</h4>
+  <div class="keyfind">Under <b>amt</b>, employment and taxable income show only a <b>mild</b> short-run disruption that quickly returns to baseline.</div>
+  <p>Extra cash per month does NOT do most of the damage. The amt channel shows small, sometimes positive, short-run movement in employment and taxable income — and it is back to null within a year. <b>The headline short-run labor drop is not coming from the amount of monthly cash.</b></p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_labor_full_sample_amt.png" alt="fig_labor_full_sample_amt.png">
+    <figcaption>fig_labor_full_sample_amt.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Short-run labor disruption — dur channel</h4>
+  <div class="keyfind">Under <b>dur</b>, employment drops sharply at t=0 and taxable income falls; the dur channel is what drives the textbook “transitory dip” shape.</div>
+  <p>Longer SA spells coincide with sharper short-run labor disruption — the textbook V-shape on employment and taxable income is essentially the dur channel acting on its own. By t=2, both groups largely converge, but the path was driven by duration of dependence rather than per-month amount.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_labor_full_sample_dur.png" alt="fig_labor_full_sample_dur.png">
+    <figcaption>fig_labor_full_sample_dur.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Education dip — amt channel is muted</h4>
+  <div class="keyfind">Under <b>amt</b>, education enrollment moves only slightly at t=0 and recovers quickly.</div>
+  <p>The amt channel is not the main driver of the education-enrollment dip. Extra cash per month has at most a small contemporary effect on college and overall enrollment, and the effect is gone within a year. Long-run attainment (has_HS, has_college) is statistically null.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_education_dip_amt.png" alt="fig_education_dip_amt.png">
+    <figcaption>fig_education_dip_amt.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Education dip — dur drives the t=0 drop</h4>
+  <div class="keyfind">Under <b>dur</b>, college enrollment drops sharply at t=0 and the overall enrollment index turns significantly negative by t=2.</div>
+  <p>Longer-duration SA spells, not higher monthly cash, are what crowd out education. The t=0 college dip is concentrated in the dur channel, and the broader enrollment-index effect is significantly negative by t=2 under dur. <b>Duration of dependence — not the amount — postpones (or prevents) re-engagement with school.</b></p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_education_dip_dur.png" alt="fig_education_dip_dur.png">
+    <figcaption>fig_education_dip_dur.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Transfer reorganization — amt channel</h4>
+  <div class="keyfind">Under <b>amt</b>: extra cash <b>crowds OUT other transfers</b> sharply (~−1,900 NOK at t=1) and reduces DI use by t=2.</div>
+  <p>More cash per month substitutes for other parts of the welfare portfolio: other social transfers fall, DI declines, and housing benefits drift up modestly. Amt acts like a partial replacement for the rest of the safety net.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_transfers_substitution_amt.png" alt="fig_transfers_substitution_amt.png">
+    <figcaption>fig_transfers_substitution_amt.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Transfer reorganization — dur channel</h4>
+  <div class="keyfind">Under <b>dur</b>: longer spells <b>pull IN MORE other transfers</b> (~+900 NOK at t=1) and significantly raise housing benefits.</div>
+  <p>Longer SA dependence does the opposite: it draws recipients further into the welfare system. Other social transfers rise, housing benefits rise persistently, and DI substitution is muted. <b>Dur deepens welfare reliance; amt substitutes for it.</b> This is the cleanest single-frame depiction of why the amt × dur composite obscures meaningful structure.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_transfers_substitution_dur.png" alt="fig_transfers_substitution_dur.png">
+    <figcaption>fig_transfers_substitution_dur.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Mobility — amt channel</h4>
+  <div class="keyfind">Under <b>amt</b>: across-municipality moves stay roughly null; the contemporary local-mobility uptick is weakly positive.</div>
+  <p>Extra cash per month has only a small effect on mobility. Geographic moves don't drop, and the local-move uptick at t=0 is muted under this channel.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_mobility_split_amt.png" alt="fig_mobility_split_amt.png">
+    <figcaption>fig_mobility_split_amt.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Mobility — dur drives the lock-in</h4>
+  <div class="keyfind">Under <b>dur</b>: across-municipality moves drop significantly at t=1–2; within-municipality moves rise at t=0.</div>
+  <p><b>It is the duration of dependence that roots recipients in place.</b> Longer spells reduce long-distance moves and increase short-distance moves, consistent with using SA to stabilize a current life. Amt doesn't drive geographic lock-in; dur does.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_mobility_split_dur.png" alt="fig_mobility_split_dur.png">
+    <figcaption>fig_mobility_split_dur.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Neighborhood upgrading — amt channel</h4>
+  <div class="keyfind">Under <b>amt</b>: neighborhood housing wealth drifts modestly; the headline +5,980 NOK ** at t=1 is muted on this channel alone.</div>
+  <p>Per-month cash isn't what improves the neighborhoods recipients live in. The amt-channel effect on grunkrets-level housing wealth is small and not consistently significant.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_neighborhood_upgrading_amt.png" alt="fig_neighborhood_upgrading_amt.png">
+    <figcaption>fig_neighborhood_upgrading_amt.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Neighborhood upgrading — dur channel</h4>
+  <div class="keyfind">Under <b>dur</b>: grunnkrets housing wealth rises significantly at t=1 and t=2.</div>
+  <p>Longer SA spells coincide with persistent moves into higher-wealth neighborhoods, with clean pre-trends at the grunnkrets level. The municipality-level version of this story has pre-trend issues; the grunnkrets-level version under dur is the cleanest read. <b>It is duration of dependence — possibly via geographic lock-in and local move-then-stay behavior — that maps onto neighborhood upgrading, not amount.</b></p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_neighborhood_upgrading_dur.png" alt="fig_neighborhood_upgrading_dur.png">
+    <figcaption>fig_neighborhood_upgrading_dur.png</figcaption>
+  </figure>
+</div>
+
+<!-- ============ §2 AMT vs DUR ============ -->
+<h2 id="sec-2">2. Amt vs Dur — same outcome, opposite directions</h2>
+<p>The figures in this section put <b>both channels on the same axes</b> for the full sample, so you can
+read the divergence directly. More cash per month is mildly beneficial; longer-duration dependence is
+sharply harmful. <b>It's the duration of dependence, not the dollar amount, that damages labor outcomes.</b></p>
+
+
+<div class="story">
+  <h4>Labor Index: amt and dur pull in OPPOSITE directions</h4>
+  <div class="keyfind warn"><b>Amt</b> coef on Labor Index at t=2: <b>+0.063</b> (positive). <b>Dur</b> coef: <b>−0.172 *</b> (negative). pval_diff = 0.002 ***.</div>
+  <p>Looking at the channels side by side on a single axis makes the divergence stark. More cash per month is weakly beneficial for the labor index. Longer SA spells are sharply harmful. The same pattern holds at t=0 and t=1, with the dur effect dominating in magnitude. <b>It's the duration of dependence, not the amount, that damages labor outcomes.</b></p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_amt_vs_dur_labor.png" alt="fig_amt_vs_dur_labor.png">
+    <figcaption>fig_amt_vs_dur_labor.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Total income: more cash helps, longer spells hurt</h4>
+  <div class="keyfind warn">Total Income at t=0: amt = <b>+0.19</b> (10K NOK), dur = <b>−0.38</b> (10K NOK). pval_diff = 0.0002 ***.</div>
+  <p>At every post-period, amt has a positive effect on total income while dur has a negative one. This is the clearest dollar-denominated example of the divergence: extra per-month support increases total household income; longer-duration dependence decreases it.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_amt_vs_dur_inctot.png" alt="fig_amt_vs_dur_inctot.png">
+    <figcaption>fig_amt_vs_dur_inctot.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Employment: amt boosts, dur depresses</h4>
+  <div class="keyfind warn">Employed (tax>1G) at t=1: amt = <b>+0.018</b>, dur = <b>−0.181 ***</b>. pval_diff &lt; 0.001 ***.</div>
+  <p>Spec 1's headline finding that employment recovers by t=2 hides a structural divergence: it recovers because the amt and dur effects cancel. The dur channel keeps pushing employment down throughout the observation window; only the amt channel's positive effect prevents a persistent net negative.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_amt_vs_dur_employed.png" alt="fig_amt_vs_dur_employed.png">
+    <figcaption>fig_amt_vs_dur_employed.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Taxable income: amt vs dur diverge by t=2</h4>
+  <div class="keyfind warn">Taxable income at t=2: amt = <b>+0.025</b>, dur = <b>−0.049 *</b>. pval_diff = 0.004 ***.</div>
+  <p>Same story for taxable income (the cleaner labor-income measure): the amt channel is mildly positive at all post-periods; the dur channel is significantly negative. Both channels are real, and they are pulling in opposite directions.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_amt_vs_dur_taxable.png" alt="fig_amt_vs_dur_taxable.png">
+    <figcaption>fig_amt_vs_dur_taxable.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>College enrollment: dur drives the t=0 drop</h4>
+  <div class="keyfind warn">Enrolled in college at t=0: amt = <b>−0.012</b> (ns) vs dur = <b>−0.055 ***</b>. pval_diff = 0.009 ***.</div>
+  <p>Both channels reduce college enrollment at t=0, but the dur effect is <b>4–5× larger</b>. The duration component is what's actually driving the headline education dip. By t=1 and t=2 both channels are insignificant — college enrollment recovers regardless of which channel you focus on.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_amt_vs_dur_college.png" alt="fig_amt_vs_dur_college.png">
+    <figcaption>fig_amt_vs_dur_college.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Debt amount: amt builds it, dur pays it down (t=2)</h4>
+  <div class="keyfind warn">Debt (wins5) at t=2: amt = <b>+0.39</b> (10K NOK) vs dur = <b>−0.98</b> (10K NOK). pval_diff = 0.083 *. Same pattern in raw and wins1 versions.</div>
+  <p>The amt vs dur split reveals a debt story invisible on either channel alone. Extra cash per month is associated with higher household debt by t=2 (~+3,900 NOK); longer SA spells coincide with debt reduction (~−9,800 NOK). Plausible reading: higher monthly income relaxes a borrowing constraint, while prolonged dependence forces deleveraging. Neither channel is individually significant at p&lt;0.10 at t=2, but the divergence between them is.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_amt_vs_dur_debt.png" alt="fig_amt_vs_dur_debt.png">
+    <figcaption>fig_amt_vs_dur_debt.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Any debt: same pattern on the extensive margin</h4>
+  <div class="keyfind warn">Any household debt at t=2: amt = <b>+0.009</b> (ns) vs dur = <b>−0.054 *</b>. pval_diff = 0.046 **.</div>
+  <p>Confirms the debt story on the binary &quot;any debt&quot; measure: longer SA spells reduce the probability of holding any debt at all (~5.4 pp drop at t=2); extra cash per month has no detectable effect. <b>Caveat:</b> any_debt has a borderline pre-trend at t=−2 for the dur channel (p=0.072) and a sig pval_diff at t=−2 (0.048). So treat this finding as suggestive — the wealth_debt amount measure (above) has cleaner pre-trends.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_amt_vs_dur_any_debt.png" alt="fig_amt_vs_dur_any_debt.png">
+    <figcaption>fig_amt_vs_dur_any_debt.png</figcaption>
+  </figure>
+</div>
+
+<p class="muted" style="margin-top:14px;line-height:1.55;font-size:13px">
+
+Beyond the focal examples above, significant amt-vs-dur differences also appear in:
+<b>other social transfers</b> at t=1 (amt crowds them OUT ~−1,932 NOK, dur pulls them IN ~+902 NOK; pval_diff = 0.032; same pattern for AAP);
+<b>education enrollment index</b> at t=2 (amt +0.011 vs dur <b>−0.155**</b>, opposite signs);
+and <b>scholarships and child-related transfers</b> (opposite signs at t=0).
+The two outcomes with <i>no</i> amt-vs-dur difference are <b>education attainment</b>
+(has_HS, has_college) and <b>family formation</b> (spouse, marriage, cohabitation, children) —
+both are unmoved by either channel in the full sample.
+
+</p>
+
+<!-- ============ §3 SUBGROUP DEEP-DIVES ============ -->
+<h2 id="sec-3">3. Subgroup deep-dives — amt | dur side-by-side, by lens</h2>
+<p>Each figure below is a <b>2-panel mini</b>: the left panel shows the amt channel, the right panel the
+dur channel, with one line per subgroup level on each side. Reading both panels of one figure at once
+shows how the channels split the subgroup story — usually with amt and dur loading on different
+mechanisms.</p>
+
+
+<h3 id="sec-3a">3a. The age divide</h3>
+<div class="section-intro">Age is the single sharpest cleavage in the data. <b>Older recipients (30+) recover; younger ones (under 30) don't</b>. With the amt|dur split, the figures below show that this age contrast is largely a story about <b>how older recipients respond to additional monthly cash, while younger recipients respond more to spell duration</b> — and the two channels often have opposite-sign effects within each age group.</div>
+
+<div class="story">
+  <h4>Labor recovery: age divide visible on BOTH channels</h4>
+  <div class="keyfind">By t=2 on the labor index: under <b>amt</b>, 30+ recover above baseline while under-30s lag. Under <b>dur</b>, longer spells damage labor for both groups but more sharply for under-30s.</div>
+  <p>The left panel (amt) shows the recovery story: extra cash helps 30+ regain labor traction while under-30s stay below. The right panel (dur) shows the damage story: longer spells depress labor for both age groups, but the under-30 line stays consistently lower. <b>Older recipients translate extra monthly cash into labor recovery; younger recipients carry the duration-of-dependence cost.</b> Same direction holds for taxable income and employment >2G.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_labor_by_age.png" alt="fig_labor_by_age.png">
+    <figcaption>fig_labor_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Housing wealth: 30+ gain via amt, under-30 lose via dur</h4>
+  <div class="keyfind">Housing wealth at t=2 under <b>amt</b>: 30+ positive, under-30 weakly negative. Under <b>dur</b>: 30+ roughly flat, under-30 sharply negative.</div>
+  <p>The two panels decompose the headline wealth-divergence story. Under amt, 30+ recipients accumulate housing wealth while under-30s don't gain. Under dur, longer spells coincide with real wealth losses for under-30s. The mechanism differs across age groups: <b>amt is the bridge for older recipients; dur is the drag on younger ones.</b></p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_wealth_by_age.png" alt="fig_wealth_by_age.png">
+    <figcaption>fig_wealth_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Neighborhood housing wealth: opposite signs visible in both channels</h4>
+  <div class="keyfind">Grunnkrets housing wealth at t=1 under <b>amt</b>: 30+ positive vs under-30 weakly negative. Under <b>dur</b>: same opposite-sign split, larger magnitude.</div>
+  <p>Both panels show the same polarization. Older recipients end up in higher-wealth neighborhoods regardless of which channel you read; younger recipients end up in lower-wealth neighborhoods. The dur panel shows the sharper divergence — consistent with the geographic-lock-in story: long-spell young recipients get rooted in worse neighborhoods, while long-spell 30+ recipients move up.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_neighborhood_wealth_by_age.png" alt="fig_neighborhood_wealth_by_age.png">
+    <figcaption>fig_neighborhood_wealth_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Debt: 30+ accumulate (amt), under-30 deleverage (dur)</h4>
+  <div class="keyfind">Debt (wins5) at t=2 under <b>amt</b>: 30+ positive, under-30 flat-to-negative. Under <b>dur</b>: 30+ flat, under-30 sharply negative.</div>
+  <p>Two clean opposite-sign panels. Under amt, older recipients use extra monthly cash to take on (or maintain) debt — likely mortgage-related, consistent with the housing-wealth gain. Under dur, longer spells force under-30s to pay down debt, consistent with reduced access to credit when labor incomes are damaged. Any-debt extensive margin shows the same direction.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_debt_by_age.png" alt="fig_debt_by_age.png">
+    <figcaption>fig_debt_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Cumulative separations: amt stabilizes older couples; dur destabilizes younger ones</h4>
+  <div class="keyfind">Cumulative separations at t=2 under <b>amt</b>: 30+ negative (fewer separations), under-30 ~null. Under <b>dur</b>: divergence widens — 30+ still favorable, under-30 worse.</div>
+  <p>Both panels point the same way: SA appears to stabilize the relationships of older recipients, particularly through the amt channel. Younger recipients see no relationship-stability benefit from either channel — and the dur panel shows hints of relationship damage from prolonged dependence.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_separations_by_age.png" alt="fig_separations_by_age.png">
+    <figcaption>fig_separations_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Has spouse: 30+ gain (both channels), under-30 do not</h4>
+  <div class="keyfind">Has spouse at t=1 under <b>amt</b>: 30+ positive, under-30 null. Under <b>dur</b>: similar direction.</div>
+  <p>Both panels confirm the spouse-having gain is exclusive to 30+ recipients. Combined with the separations panel above, the mechanism is clearly retention of existing partnerships, not formation of new ones. <b>SA stabilizes the relationships of older recipients; it doesn't create them.</b></p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_spouse_by_age.png" alt="fig_spouse_by_age.png">
+    <figcaption>fig_spouse_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>DI substitution: 30+ via amt; under-30 not at all</h4>
+  <div class="keyfind">DI Amount at t=2 under <b>amt</b>: 30+ significantly negative, under-30 null/positive. Under <b>dur</b>: smaller effects for both.</div>
+  <p>The amt panel carries the DI-substitution story: extra monthly cash substitutes for DI specifically among 30+ recipients. Under-30s show no DI substitution under either channel. <b>Cash substitutes for DI when recipients are old enough to have DI to substitute against — that's the 30+ group.</b></p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_di_by_age.png" alt="fig_di_by_age.png">
+    <figcaption>fig_di_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Other transfers: 30+ substitute OUT (amt), under-30 pile ON (dur)</h4>
+  <div class="keyfind">Other transfers at t=2 under <b>amt</b>: 30+ significantly negative, under-30 ~positive. Under <b>dur</b>: opposite — both groups push UP, especially under-30.</div>
+  <p>Among the cleanest age-by-channel contrasts in the data. The amt panel shows substitution: extra cash replaces other transfers for 30+ recipients. The dur panel shows the opposite for under-30s: longer spells pull in <i>more</i> transfers on top of SA. <b>The bridge-vs-substitution story isn't one effect — it's two: amt-driven crowding-out for the older, dur-driven crowding-in for the younger.</b></p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_othertrans_by_age.png" alt="fig_othertrans_by_age.png">
+    <figcaption>fig_othertrans_by_age.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>College enrollment: under-30 drop driven by dur</h4>
+  <div class="keyfind">Enrolled in college at t=0 under <b>amt</b>: small for both. Under <b>dur</b>: under-30 significantly negative; 30+ flat.</div>
+  <p>The full-sample college-enrollment dip is concentrated in under-30s and is driven specifically by the dur channel (right panel). Per-month amount of cash isn't what postpones education for younger recipients — duration of welfare dependence is. Older recipients aren't enrolled in college to begin with, so they show no effect on either channel.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_college_enroll_by_age.png" alt="fig_college_enroll_by_age.png">
+    <figcaption>fig_college_enroll_by_age.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3b">3b. Prior labor market attachment</h3>
+<div class="section-intro">Whether you were employed in the year before applying for SA reshapes nearly every outcome. With the amt|dur split, the contrast becomes sharper: the <b>previously-employed get the amt-channel benefits</b> (recovery, wealth, marriage, neighborhood gains), while the <b>not-employed are exposed mostly to dur-channel damage</b>.</div>
+
+<div class="story">
+  <h4>Labor: dur damage concentrates on the previously employed</h4>
+  <div class="keyfind">Employment (tax>1G) at t=0 under <b>dur</b>: Employed t-1 sharply negative; Not-employed mild. Under <b>amt</b>: similar magnitudes, smaller spread.</div>
+  <p>The contemporary labor drop is mostly about people losing jobs they had — and it loads on the dur channel. By t=2 both groups largely converge on each channel, but the path differs: previously-employed take a bigger dur-driven hit and recover; not-employed see modest drops they don't fully reverse on either channel.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_labor_by_emp.png" alt="fig_labor_by_emp.png">
+    <figcaption>fig_labor_by_emp.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Marriage: opposite-sign effects by prior employment, visible in both panels</h4>
+  <div class="keyfind">Married at t=2 under <b>amt</b>: Employed t-1 positive vs Not-employed negative. Under <b>dur</b>: same opposite-sign pattern, smaller magnitudes.</div>
+  <p>A clean and striking opposite-sign result in both panels. SA induces marriage formation for those with prior employment but reduces it for those without. The plausible story is that SA stabilizes the partnership prospects of the labor-attached (who already had stable income paths) but doesn't compensate for the partnership-deterring effects of weak labor attachment. The amt channel carries most of the divergence.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_married_by_emp.png" alt="fig_married_by_emp.png">
+    <figcaption>fig_married_by_emp.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Geographic upgrading: previously employed only — driven mostly by dur</h4>
+  <div class="keyfind">Neighborhood housing wealth at t=1 under <b>amt</b>: Employed positive, Not-employed null. Under <b>dur</b>: Employed sharply positive, Not-employed null. pval_diff sig on dur.</div>
+  <p>The 'recipients end up in better neighborhoods' headline is driven entirely by previously-employed people, and the dur panel carries most of the action — consistent with the geographic-lock-in / move-then-stay story working in their favor. Not-employed t−1 recipients see no neighborhood-wealth gains on either channel. Pre-trends clean.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_neighborhood_wealth_by_emp.png" alt="fig_neighborhood_wealth_by_emp.png">
+    <figcaption>fig_neighborhood_wealth_by_emp.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3c">3c. Education matters</h3>
+<div class="section-intro">Education attainment shapes how SA propagates into wealth and mortality. <b>HS dropouts see real wealth destruction; college-educated recipients see persistent mortality reductions</b>. Splitting by channel localizes these effects further.</div>
+
+<div class="story">
+  <h4>Wealth destruction in HS dropouts: visible on both channels, sharper on dur</h4>
+  <div class="keyfind">Housing wealth at t=2 under <b>amt</b>: HS Dropouts negative, Has-HS+ flat. Under <b>dur</b>: HS Dropouts sharply negative.</div>
+  <p>HS dropouts lose housing wealth under both channels, but the dur panel shows the sharper drop — prolonged dependence is what does most of the wealth damage. HS+ recipients are largely insulated under either channel. Education attainment moderates the long-run material consequences of SA, with the duration channel being the more dangerous one.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_wealth_by_education.png" alt="fig_wealth_by_education.png">
+    <figcaption>fig_wealth_by_education.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Mortality reduction strongest for higher-educated</h4>
+  <div class="keyfind">College+ and HS: mortality reductions on both channels, larger under <b>amt</b>. Primary-educated: null on both.</div>
+  <p>Mortality reductions are concentrated in HS- and especially college-educated recipients. The 3-level split makes the education gradient visible. Under amt, the mortality benefit is sharper for higher-educated recipients; under dur, the effects are smaller. Consistent with SA being most life-saving via the cash channel when recipients have the human capital to deploy it productively.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_mortality_by_educ.png" alt="fig_mortality_by_educ.png">
+    <figcaption>fig_mortality_by_educ.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3d">3d. Local labor market mediates</h3>
+<div class="section-intro">Where you live shapes how SA propagates. With the amt|dur split, the clearest story remains <b>mortality reduction concentrated in concentrated (worker-unfriendly) labor markets — most clearly via the amt channel</b>.</div>
+
+<div class="story">
+  <h4>Mortality reduction in concentrated labor markets (amt-led)</h4>
+  <div class="keyfind">High-HHI markets under <b>amt</b>: mortality drops 1–2 pp at t=1–2; Low-HHI ~null. Under <b>dur</b>: smaller and noisier.</div>
+  <p>SA reduces mortality most where the labor market is worst for workers, and the amt channel does most of the work. When outside options are scarce, the material relief from extra monthly cash appears to translate into lower mortality risk. The dur channel shows directionally similar but smaller effects.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_mortality_by_HHI.png" alt="fig_mortality_by_HHI.png">
+    <figcaption>fig_mortality_by_HHI.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Housing benefit substitution in high-HHI: dur-led</h4>
+  <div class="keyfind">Housing benefit under <b>dur</b>: rises persistently in high-HHI markets. Under <b>amt</b>: smaller, mostly flat.</div>
+  <p>Long-spell recipients in concentrated labor markets see persistent increases in housing benefits — a transfer-substitution story that loads on duration. In low-HHI markets the effect is smaller. Coupled with the mortality finding, the high-HHI pattern looks like: <b>amt saves lives, dur deepens housing-benefit dependence</b>.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_housing_benefit_by_HHI.png" alt="fig_housing_benefit_by_HHI.png">
+    <figcaption>fig_housing_benefit_by_HHI.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3e">3e. The recent job-loss exception</h3>
+<div class="section-intro">One more important subgroup-mortality finding: <b>SA's mortality benefit is absent for people who recently lost a job</b>. With the amt|dur split, the no-transition group still gets the mortality benefit on the amt channel; the recent-job-loss group does not.</div>
+
+<div class="story">
+  <h4>Mortality reduction excludes recent job-losers (amt-led)</h4>
+  <div class="keyfind">No-transition group under <b>amt</b>: mortality drops at t=1–2. Recent E→U group: null on both channels.</div>
+  <p>The split is between people who experienced an employment-to-unemployment transition in the two years before applying for SA, and everyone else. <b>Caveat: the &quot;no-transition&quot; group is heterogeneous</b> — it includes the stably employed, the stably unemployed, and U→E transitioners. So this is not &quot;SA helps stable workers.&quot; The right read is <b>SA's mortality benefit is absent for those whose lives were just shaken by losing a job</b>, on either channel.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_mortality_by_EtoU.png" alt="fig_mortality_by_EtoU.png">
+    <figcaption>fig_mortality_by_EtoU.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3f">3f. Urban vs rural — big cities are different</h3>
+<div class="section-intro">A separate place dimension orthogonal to local labor concentration: are recipients in one of Norway's 10 largest cities, or not? <b>City residents have systematically worse long-run employment effects — driven by the dur channel; non-city residents get the mortality benefit — driven by the amt channel</b>.</div>
+
+<div class="story">
+  <h4>Employment recovery: outside Big-10 — dur-channel damage in Big-10</h4>
+  <div class="keyfind">Employment (earnings>1G) at t=2 under <b>amt</b>: both groups roughly null/positive. Under <b>dur</b>: Big-10 significantly negative, Not Big-10 null.</div>
+  <p>The right panel (dur) carries the persistent-damage story for Big-10 cities — longer SA spells in big cities translate into persistent employment loss. The left panel (amt) shows little contrast: extra cash doesn't hurt either group's employment. <b>Big-city employment damage is a duration story, not an amount story.</b></p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_employment_by_bigcity_big10.png" alt="fig_employment_by_bigcity_big10.png">
+    <figcaption>fig_employment_by_bigcity_big10.png</figcaption>
+  </figure>
+</div>
+
+<div class="story">
+  <h4>Mortality reduction exclusive to non-city residents (amt-led)</h4>
+  <div class="keyfind">Has died at t=2 under <b>amt</b>: Not Big-10 negative, Big-10 ~null. Under <b>dur</b>: smaller and noisier.</div>
+  <p>Non-city residents see a meaningful mortality reduction at t=2 on the amt channel — extra monthly cash saves lives in non-urban settings. City residents see no benefit on either channel. Combined with the labor-damage finding, the pattern suggests that the welfare-supportive infrastructure or social-network advantages that translate amt into mortality benefits operate primarily in non-urban settings, while dur in big cities does most of the labor harm.</p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_mortality_by_bigcity_big10.png" alt="fig_mortality_by_bigcity_big10.png">
+    <figcaption>fig_mortality_by_bigcity_big10.png</figcaption>
+  </figure>
+</div>
+
+<h3 id="sec-3g">3g. Gender — mortality concentrates in women via the amt channel</h3>
+<div class="section-intro">Splitting the mortality finding by gender reveals a sharp asymmetry: <b>men show null mortality effects on both channels at every post-period</b>, while <b>women see significant mortality reductions driven specifically by the amt (monthly cash) channel</b>. Duration produces nothing for either gender.</div>
+
+<div class="story">
+  <h4>Mortality reduction in women — driven by the amt channel</h4>
+  <div class="keyfind">Female × amt × t=1: <b>−0.0106 ***</b>. Same channel: t=0 = <b>−0.0033 **</b>, t=2 = <b>−0.0180 *</b>. Male × amt: null at every post-period. Dur channel: null for both genders.</div>
+  <p>Each panel below shows one channel (amt on the left, dur on the right) with men and women on the same axes:<table style='margin-top:8px;font-size:12px;border-collapse:collapse;width:100%'><thead><tr><th></th><th colspan='3' style='text-align:center;padding:4px 10px;border-bottom:1px solid #ccc'>Men</th><th colspan='3' style='text-align:center;padding:4px 10px;border-bottom:1px solid #ccc'>Women</th></tr><tr><th style='padding:2px 6px;text-align:left'>Channel</th><th style='padding:2px 6px;text-align:right'>t=0</th><th style='padding:2px 6px;text-align:right'>t=1</th><th style='padding:2px 6px;text-align:right'>t=2</th><th style='padding:2px 6px;text-align:right'>t=0</th><th style='padding:2px 6px;text-align:right'>t=1</th><th style='padding:2px 6px;text-align:right'>t=2</th></tr></thead><tbody><tr><td style='padding:3px 6px'><b>amt</b></td><td style='padding:3px 6px;text-align:right'>+0.0010 (.002)</td><td style='padding:3px 6px;text-align:right'>+0.0021 (.008)</td><td style='padding:3px 6px;text-align:right'>+0.0037 (.019)</td><td style='padding:3px 6px;text-align:right'><b>−0.0033 (.001)**</b></td><td style='padding:3px 6px;text-align:right'><b>−0.0106 (.004)***</b></td><td style='padding:3px 6px;text-align:right'><b>−0.0180 (.010)*</b></td></tr><tr><td style='padding:3px 6px'><b>dur</b></td><td style='padding:3px 6px;text-align:right'>+0.0011 (.002)</td><td style='padding:3px 6px;text-align:right'>−0.0145 (.009)</td><td style='padding:3px 6px;text-align:right'>−0.0396 (.028)</td><td style='padding:3px 6px;text-align:right'>+0.0060 (.007)</td><td style='padding:3px 6px;text-align:right'>−0.0123 (.014)</td><td style='padding:3px 6px;text-align:right'>−0.0411 (.039)</td></tr></tbody></table><p style='margin-top:10px'>Women's mortality drops significantly with extra cash per month at all three post-periods, with the effect growing over time (peak −1.8 pp at t=2). Men show null effects under both channels. Duration does not save lives for either gender. <b>The mortality benefit is fundamentally about income, not the length of welfare dependence — and it accrues to women.</b></p></p>
+  <figure>
+    <img src="figs/2026_05_spec1_amt_dur_split/narrative/fig_mortality_by_gender.png" alt="fig_mortality_by_gender.png">
+    <figcaption>fig_mortality_by_gender.png</figcaption>
+  </figure>
+</div>
+
+<!-- ============ CAVEATS ============ -->
+<div class="caveat">
+  <h3>⚠ Pre-trend caveat for municipality outcomes</h3>
+  <p>Spec 1 finds large persistent positive effects on <b>municipality</b>-level characteristics
+  (income, wealth, college share, pop density). <b>But 9 of 11 municipality outcomes have significant
+  t=−2 pre-trends</b> (5 of 11 at t=−3). The neighborhood-level (grunnkrets) version of the same story
+  is much cleaner (only 2 of 11 flagged) — so report the grunnkrets findings as the main result and
+  treat the municipality findings as suggestive at best.</p>
+  <p>Outside that one issue, pre-trends are clean across the rest of the outcome list:
+  labor (0/12 outcomes flagged), transfers (1–2 of 12), wealth (1/15), family (0–1 of 9).</p>
+</div>
+
+<!-- ============ BOTTOM LINE ============ -->
+<div class="bottom" id="bottom">
+<h2>Bottom line</h2>
+<ol>
+  <li><b>Amt and dur tell different stories — and the composite obscures both.</b> Across labor outcomes
+      (labor index, employment, taxable income, total income), amt is mildly positive while dur is sharply
+      negative. Across education, mobility, and neighborhood-upgrading outcomes, dur is the dominant
+      channel. Across transfer substitution, amt crowds OUT other transfers while dur crowds them IN.
+      The amt × dur composite often masks these divergences — sometimes producing a null because the
+      two channels cancel.</li>
+  <li><b>Duration of dependence drives the labor damage, not the dollar amount.</b> The textbook V-shape
+      on employment and taxable income is essentially the dur channel acting on its own. Extra cash per
+      month does not damage labor.</li>
+  <li><b>SA is a bridge for the labor-attached — operating through amt.</b> Age 30+, employed, ever-employed,
+      HS+ recipients get the amt-channel benefits: labor recovery, housing-wealth gains, partnership stability,
+      DI substitution, and neighborhood upgrading.</li>
+  <li><b>SA is substitution for the labor-detached — operating through dur.</b> Young, never-employed,
+      HS-dropout recipients carry the dur-channel costs: pile-on of other transfers, housing-wealth losses,
+      no relationship-stability gains, no labor recovery, downgraded neighborhoods.</li>
+  <li><b>Place matters in two distinct ways.</b> (a) Labor-market structure: mortality reduction
+      concentrates in concentrated (worker-unfriendly) labor markets and is amt-led. (b) Urban vs rural:
+      residents of Norway's 10 largest cities see <i>persistent</i> dur-channel employment damage and no
+      mortality benefit; non-city recipients get the amt-channel mortality benefit.</li>
+  <li><b>SA's mortality benefit comes from cash, not duration — and accrues to women.</b> Women see
+      significant mortality reductions on the amt channel at every post-period; men show null effects on
+      both channels; duration produces nothing for either gender. The life-saving mechanism is income, not
+      the length of welfare dependence.</li>
+  <li><b>Robustness:</b> Spec 1's results are highly stable. Variant specs (workload restrictions,
+      Spec 1D/F/Fb) agree on ≥95% of (outcome, period) significance cells.</li>
+</ol>
+</div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lb" id="lb"><img id="lb-img" src="" alt=""></div>
+<script>
+  document.querySelectorAll('.story figure img').forEach(img => {
+    img.addEventListener('click', e => {
+      document.getElementById('lb-img').src = e.target.src;
+      document.getElementById('lb').classList.add('open');
+    });
+  });
+  document.getElementById('lb').addEventListener('click', () => {
+    document.getElementById('lb').classList.remove('open');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('lb').classList.remove('open');
+  });
+</script>
+
+</body>
+</html>
