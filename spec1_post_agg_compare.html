@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Spec 1 — Post-Period Aggregation Comparison</title>
+<style>
+  :root { --ink:#1a1d24; --muted:#6b7280; --line:#e5e7eb; --bg:#f7f8fa; --card:#ffffff; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, "Segoe UI", Arial, sans-serif; color:var(--ink); background:var(--bg); }
+  header { background:#fff; border-bottom:1px solid var(--line); padding:26px 36px 18px; }
+  h1 { margin:0 0 6px; font-size:22px; }
+  .sub { color:var(--muted); font-size:13.5px; max-width:1000px; line-height:1.55; }
+  .sub b { color:var(--ink); }
+  .legendbox { display:flex; gap:22px; flex-wrap:wrap; margin-top:12px; font-size:13px; }
+  .legendbox div { background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 14px; }
+  nav { position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line);
+        padding:10px 36px; display:flex; gap:8px; flex-wrap:wrap; }
+  .chip { font-size:12.5px; text-decoration:none; color:var(--ink); background:var(--bg);
+          border:1px solid var(--line); border-radius:999px; padding:5px 12px; }
+  .chip:hover { border-color:#94a3b8; }
+  main { padding: 10px 36px 60px; }
+  section h2 { font-size:17px; margin:34px 0 12px; padding-top:8px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(560px, 1fr)); gap:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .card-head { padding:9px 12px; border-bottom:1px solid var(--line); font-size:13.5px; font-weight:600;
+               display:flex; align-items:center; justify-content:space-between; }
+  .card-id { font-family: ui-monospace, monospace; font-size:11px; color:var(--muted); font-weight:400; }
+  .card-body { padding:10px; }
+  .card-body img { max-width:100%; height:auto; cursor: zoom-in; display:block; margin:auto; }
+  .lightbox { display:none; position:fixed; inset:0; z-index:1000; background:rgba(8,12,20,.9); }
+  .lightbox.open { display:flex; align-items:center; justify-content:center; padding:40px; }
+  .lightbox.open.zoomed { display:block; padding:0; overflow:auto; }
+  .lightbox img { display:block; box-shadow:0 12px 40px rgba(0,0,0,.5); }
+  .lightbox:not(.zoomed) img { max-width:100%; max-height:100%; margin:auto; cursor:zoom-in; }
+  .lightbox.zoomed img { cursor:zoom-out; }
+  .lightbox-cap { position:fixed; bottom:18px; left:50%; transform:translateX(-50%); color:#fff;
+                  font-size:13px; background:rgba(0,0,0,.55); padding:6px 14px; border-radius:6px;
+                  z-index:1002; pointer-events:none; }
+  .lightbox-close { position:fixed; top:16px; right:22px; z-index:1002; width:38px; height:38px;
+                    border-radius:50%; border:none; background:rgba(255,255,255,.14); color:#fff;
+                    font-size:22px; line-height:1; cursor:pointer; }
+  .lightbox-close:hover { background:rgba(255,255,255,.28); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Spec 1 — Post-Period Aggregation Comparison</h1>
+  <div class="sub">
+    Each panel contrasts the <b>post-application</b> 2SLS estimates (Amount = blue squares,
+    Duration = orange triangles; 95% CI bars) under three aggregations of the post window,
+    sharing one y-axis. Pre-periods are omitted by design. Colored labels mark significant
+    estimates; gray labels report significant Amount&nbsp;&minus;&nbsp;Duration differences
+    ($^*$ p&lt;0.10, ** p&lt;0.05, *** p&lt;0.01). Baseline mean is the year before application.
+  </div>
+  <div class="legendbox">
+    <div><b>Yearly (current)</b> &mdash; periods 0, 1, 2&ndash;4 (paper setup)</div>
+    <div><b>Pooled from 1</b> &mdash; period 0 alone, periods 1&ndash;4 pooled</div>
+    <div><b>Pooled from 0</b> &mdash; periods 0&ndash;4 pooled into one estimate</div>
+  </div>
+</header>
+<nav><a class="chip" href="#first_stage">SA Receipt</a><a class="chip" href="#labor_taxable">Labor Supply</a><a class="chip" href="#education_enrollment">Education Enrollment</a><a class="chip" href="#income_wealth">Income &amp; Wealth</a><a class="chip" href="#wealth_robustness">Wealth Robustness (debt winsorization)</a><a class="chip" href="#transfers_main">Other Transfer Programs</a><a class="chip" href="#mobility">Residential Mobility</a><a class="chip" href="#muni_characteristics">Municipality Characteristics</a><a class="chip" href="#family">Family Formation</a></nav>
+<main>
+<section id="first_stage">
+  <h2>SA Receipt</h2>
+  <div class="grid">
+<div class="card">
+  <div class="card-head"><span>SA Transfers (NOK)</span><span class="card-id">sa_transfers</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_sa_transfers.png"
+       alt="SA Transfers (NOK)" onclick="openLightbox(this.src, &#x27;SA Transfers (NOK)&#x27;)"></div>
+</div>
+  </div>
+</section>
+<section id="labor_taxable">
+  <h2>Labor Supply</h2>
+  <div class="grid">
+<div class="card">
+  <div class="card-head"><span>Annual Hours (/ 1,000)</span><span class="card-id">hours_y</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_hours_y.png"
+       alt="Annual Hours (/ 1,000)" onclick="openLightbox(this.src, &#x27;Annual Hours (/ 1,000)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Employed (Taxable &gt; 1G)</span><span class="card-id">employed_taxable_1g</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_employed_taxable_1g.png"
+       alt="Employed (Taxable &gt; 1G)" onclick="openLightbox(this.src, &#x27;Employed (Taxable &gt; 1G)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Taxable Inc (/ 100,000)</span><span class="card-id">taxable_income</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_taxable_income.png"
+       alt="Taxable Inc (/ 100,000)" onclick="openLightbox(this.src, &#x27;Taxable Inc (/ 100,000)&#x27;)"></div>
+</div>
+  </div>
+</section>
+<section id="education_enrollment">
+  <h2>Education Enrollment</h2>
+  <div class="grid">
+<div class="card">
+  <div class="card-head"><span>Enrolled in College</span><span class="card-id">ineduc_college</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_ineduc_college.png"
+       alt="Enrolled in College" onclick="openLightbox(this.src, &#x27;Enrolled in College&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Enrolled in Education</span><span class="card-id">ineduc</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_ineduc.png"
+       alt="Enrolled in Education" onclick="openLightbox(this.src, &#x27;Enrolled in Education&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Enrolled in High School</span><span class="card-id">ineduc_highschool</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_ineduc_highschool.png"
+       alt="Enrolled in High School" onclick="openLightbox(this.src, &#x27;Enrolled in High School&#x27;)"></div>
+</div>
+  </div>
+</section>
+<section id="income_wealth">
+  <h2>Income &amp; Wealth</h2>
+  <div class="grid">
+<div class="card">
+  <div class="card-head"><span>Any Debt</span><span class="card-id">any_wealth_debt</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_any_wealth_debt.png"
+       alt="Any Debt" onclick="openLightbox(this.src, &#x27;Any Debt&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Debt (wins5, / 10K)</span><span class="card-id">wealth_debt_wins5</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_wealth_debt_wins5.png"
+       alt="Debt (wins5, / 10K)" onclick="openLightbox(this.src, &#x27;Debt (wins5, / 10K)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Total Income (/ 10,000)</span><span class="card-id">inc_tot</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_inc_tot.png"
+       alt="Total Income (/ 10,000)" onclick="openLightbox(this.src, &#x27;Total Income (/ 10,000)&#x27;)"></div>
+</div>
+  </div>
+</section>
+<section id="wealth_robustness">
+  <h2>Wealth Robustness (debt winsorization)</h2>
+  <div class="grid">
+<div class="card">
+  <div class="card-head"><span>Debt (raw, / 10K)</span><span class="card-id">wealth_debt</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_wealth_debt.png"
+       alt="Debt (raw, / 10K)" onclick="openLightbox(this.src, &#x27;Debt (raw, / 10K)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Debt (wins1, / 10K)</span><span class="card-id">wealth_debt_wins1</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_wealth_debt_wins1.png"
+       alt="Debt (wins1, / 10K)" onclick="openLightbox(this.src, &#x27;Debt (wins1, / 10K)&#x27;)"></div>
+</div>
+  </div>
+</section>
+<section id="transfers_main">
+  <h2>Other Transfer Programs</h2>
+  <div class="grid">
+<div class="card">
+  <div class="card-head"><span>DI Amount (/ 1,000)</span><span class="card-id">inc_trans_di</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_inc_trans_di.png"
+       alt="DI Amount (/ 1,000)" onclick="openLightbox(this.src, &#x27;DI Amount (/ 1,000)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Housing Benefit (/ 1,000)</span><span class="card-id">inc_trans_housing</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_inc_trans_housing.png"
+       alt="Housing Benefit (/ 1,000)" onclick="openLightbox(this.src, &#x27;Housing Benefit (/ 1,000)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Medical Benefits (/ 1,000)</span><span class="card-id">inc_trans_medical_benefits</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_inc_trans_medical_benefits.png"
+       alt="Medical Benefits (/ 1,000)" onclick="openLightbox(this.src, &#x27;Medical Benefits (/ 1,000)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Other Transfers (/ 1,000)</span><span class="card-id">inc_other_transfers</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_inc_other_transfers.png"
+       alt="Other Transfers (/ 1,000)" onclick="openLightbox(this.src, &#x27;Other Transfers (/ 1,000)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Sick Leave (/ 1,000)</span><span class="card-id">inc_trans_sick_leave</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_inc_trans_sick_leave.png"
+       alt="Sick Leave (/ 1,000)" onclick="openLightbox(this.src, &#x27;Sick Leave (/ 1,000)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Unemployment (/ 1,000)</span><span class="card-id">inc_trans_ui</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_inc_trans_ui.png"
+       alt="Unemployment (/ 1,000)" onclick="openLightbox(this.src, &#x27;Unemployment (/ 1,000)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Work Assessment (AAP, / 1K)</span><span class="card-id">inc_trans_work_assessment</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_inc_trans_work_assessment.png"
+       alt="Work Assessment (AAP, / 1K)" onclick="openLightbox(this.src, &#x27;Work Assessment (AAP, / 1K)&#x27;)"></div>
+</div>
+  </div>
+</section>
+<section id="mobility">
+  <h2>Residential Mobility</h2>
+  <div class="grid">
+<div class="card">
+  <div class="card-head"><span>Across- Municipality Move</span><span class="card-id">reloc_across_mun</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_reloc_across_mun.png"
+       alt="Across- Municipality Move" onclick="openLightbox(this.src, &#x27;Across- Municipality Move&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Within- Municipality Move</span><span class="card-id">reloc_within_mun</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_reloc_within_mun.png"
+       alt="Within- Municipality Move" onclick="openLightbox(this.src, &#x27;Within- Municipality Move&#x27;)"></div>
+</div>
+  </div>
+</section>
+<section id="muni_characteristics">
+  <h2>Municipality Characteristics</h2>
+  <div class="grid">
+<div class="card">
+  <div class="card-head"><span>College Share (pp)</span><span class="card-id">municipality_college</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_municipality_college.png"
+       alt="College Share (pp)" onclick="openLightbox(this.src, &#x27;College Share (pp)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Mean Age (years)</span><span class="card-id">municipality_age</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_municipality_age.png"
+       alt="Mean Age (years)" onclick="openLightbox(this.src, &#x27;Mean Age (years)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Mean Income (/ 10,000)</span><span class="card-id">municipality_inc</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_municipality_inc.png"
+       alt="Mean Income (/ 10,000)" onclick="openLightbox(this.src, &#x27;Mean Income (/ 10,000)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Mean Net Wealth (/ 10,000)</span><span class="card-id">municipality_wealth_net</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_municipality_wealth_net.png"
+       alt="Mean Net Wealth (/ 10,000)" onclick="openLightbox(this.src, &#x27;Mean Net Wealth (/ 10,000)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Welfare Dependency (pp)</span><span class="card-id">municipality_welfare_dependent</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_municipality_welfare_dependent.png"
+       alt="Welfare Dependency (pp)" onclick="openLightbox(this.src, &#x27;Welfare Dependency (pp)&#x27;)"></div>
+</div>
+  </div>
+</section>
+<section id="family">
+  <h2>Family Formation</h2>
+  <div class="grid">
+<div class="card">
+  <div class="card-head"><span>Died</span><span class="card-id">has_died</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_has_died.png"
+       alt="Died" onclick="openLightbox(this.src, &#x27;Died&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Has Spouse</span><span class="card-id">has_spouse</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_has_spouse.png"
+       alt="Has Spouse" onclick="openLightbox(this.src, &#x27;Has Spouse&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Number of Children</span><span class="card-id">n_children</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_n_children.png"
+       alt="Number of Children" onclick="openLightbox(this.src, &#x27;Number of Children&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Separation (this year)</span><span class="card-id">separation</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_separation.png"
+       alt="Separation (this year)" onclick="openLightbox(this.src, &#x27;Separation (this year)&#x27;)"></div>
+</div>
+<div class="card">
+  <div class="card-head"><span>Union (this year)</span><span class="card-id">union</span></div>
+  <div class="card-body"><img src="figs/2026_06_post_agg_compare/postagg_union.png"
+       alt="Union (this year)" onclick="openLightbox(this.src, &#x27;Union (this year)&#x27;)"></div>
+</div>
+  </div>
+</section>
+</main>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" title="Close (Esc)">&times;</button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-cap" id="lightbox-cap"></div>
+</div>
+<script>
+  const lb    = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightbox-img');
+  let lbZoom = 0;
+  function applyLbZoom() {
+    if (lbZoom <= 0) {
+      lb.classList.remove('zoomed');
+      lbImg.style.width = ''; lbImg.style.maxWidth = ''; lbImg.style.maxHeight = '';
+    } else {
+      lb.classList.add('zoomed');
+      lbImg.style.maxWidth = 'none'; lbImg.style.maxHeight = 'none';
+      lbImg.style.width = Math.round(lbImg.naturalWidth * lbZoom) + 'px';
+    }
+  }
+  function openLightbox(src, cap) {
+    lbImg.src = src;
+    document.getElementById('lightbox-cap').textContent = cap + '  —  scroll to zoom · click image for 1:1 · Esc to close';
+    lb.classList.add('open');
+    lbZoom = 0; applyLbZoom();
+  }
+  function closeLightbox() { lb.classList.remove('open'); lbZoom = 0; applyLbZoom(); }
+  lbImg.addEventListener('click', e => {
+    e.stopPropagation();
+    const goingIn = (lbZoom <= 0);
+    lbZoom = goingIn ? 1 : 0;
+    applyLbZoom();
+    if (goingIn) {
+      const r = lbImg.getBoundingClientRect();
+      lb.scrollLeft = (e.clientX - r.left) / r.width * lbImg.offsetWidth - lb.clientWidth / 2;
+      lb.scrollTop  = (e.clientY - r.top)  / r.height * lbImg.offsetHeight - lb.clientHeight / 2;
+    }
+  });
+  lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  lb.addEventListener('wheel', e => {
+    if (!lb.classList.contains('open')) return;
+    e.preventDefault();
+    if (lbZoom <= 0) lbZoom = 1;
+    lbZoom *= (e.deltaY < 0 ? 1.15 : 1 / 1.15);
+    lbZoom = Math.min(6, Math.max(0.25, lbZoom));
+    applyLbZoom();
+  }, { passive: false });
+</script>
+</body>
+</html>
