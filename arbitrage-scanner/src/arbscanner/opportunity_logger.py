@@ -15,9 +15,14 @@ FIELDNAMES = [
     "cost",
     "contracts",
     "match_score",
-    "a_source", "a_market_id", "a_side", "a_price", "a_title", "a_url",
-    "b_source", "b_market_id", "b_side", "b_price", "b_title", "b_url",
+    "available_size",
+    "a_source", "a_market_id", "a_side", "a_price", "a_size", "a_title", "a_url",
+    "b_source", "b_market_id", "b_side", "b_price", "b_size", "b_title", "b_url",
 ]
+
+
+def _num(value) -> str:
+    return "" if value is None else f"{value:.4f}"
 
 
 def _row(o: Opportunity, scan_time: str) -> dict:
@@ -31,10 +36,13 @@ def _row(o: Opportunity, scan_time: str) -> dict:
         "cost": f"{o.cost:.6f}",
         "contracts": o.contracts,
         "match_score": f"{o.match_score:.4f}",
+        "available_size": _num(o.available_size),
         "a_source": a.source, "a_market_id": a.market_id, "a_side": a.side,
-        "a_price": f"{a.price:.4f}", "a_title": a.title, "a_url": a.url,
+        "a_price": f"{a.price:.4f}", "a_size": _num(a.size),
+        "a_title": a.title, "a_url": a.url,
         "b_source": b.source, "b_market_id": b.market_id, "b_side": b.side,
-        "b_price": f"{b.price:.4f}", "b_title": b.title, "b_url": b.url,
+        "b_price": f"{b.price:.4f}", "b_size": _num(b.size),
+        "b_title": b.title, "b_url": b.url,
     }
 
 

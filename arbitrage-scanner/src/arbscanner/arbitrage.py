@@ -17,6 +17,7 @@ class ArbLeg:
     side: str  # "YES" or "NO"
     price: float
     url: str
+    size: Optional[float] = None  # contracts available at this ask (if known)
 
 
 @dataclass
@@ -33,10 +34,22 @@ class Opportunity:
     def is_arbitrage(self) -> bool:
         return self.profit > 0
 
+    @property
+    def available_size(self) -> Optional[float]:
+        """Contracts you could actually fill on both legs, or None if unknown.
+
+        It's the smaller of the two legs' resting ask sizes — you can only
+        complete as many hedged pairs as the thinner side allows.
+        """
+        sizes = [leg.size for leg in self.legs]
+        if any(s is None for s in sizes):
+            return None
+        return min(sizes)
+
 
 def _evaluate(
-    a: Quote, a_side: str, a_price: float, a_fee: FeeModel,
-    b: Quote, b_side: str, b_price: float, b_fee: FeeModel,
+    a: Quote, a_side: str, a_price: float, a_size: Optional[float], a_fee: FeeModel,
+    b: Quote, b_side: str, b_price: float, b_size: Optional[float], b_fee: FeeModel,
     contracts: int, match_score: float,
 ) -> Opportunity:
     cost = (a_price + b_price) * contracts
@@ -45,8 +58,8 @@ def _evaluate(
     profit = payout - cost
     roi = profit / cost if cost > 0 else 0.0
     legs = (
-        ArbLeg(a.source, a.market_id, a.title, a_side, a_price, a.url),
-        ArbLeg(b.source, b.market_id, b.title, b_side, b_price, b.url),
+        ArbLeg(a.source, a.market_id, a.title, a_side, a_price, a.url, a_size),
+        ArbLeg(b.source, b.market_id, b.title, b_side, b_price, b.url, b_size),
     )
     return Opportunity(legs, contracts, cost, payout, profit, roi, match_score)
 
@@ -75,23 +88,27 @@ def find_opportunity(
     if not a.tradable or not b.tradable:
         return None
 
+    # Express B's sides aligned to A's polarity (so "no-aligned" is the correct
+    # hedge for A-YES, regardless of how B words the question).
     if flip_b:
-        b_yes_ask, b_no_ask = b.no_ask, b.yes_ask
+        b_yes_ask, b_yes_size = b.no_ask, b.no_ask_size
+        b_no_ask, b_no_size = b.yes_ask, b.yes_ask_size
         b_yes_label, b_no_label = "NO", "YES"
     else:
-        b_yes_ask, b_no_ask = b.yes_ask, b.no_ask
+        b_yes_ask, b_yes_size = b.yes_ask, b.yes_ask_size
+        b_no_ask, b_no_size = b.no_ask, b.no_ask_size
         b_yes_label, b_no_label = "YES", "NO"
 
     # Direction 1: YES on A hedged with the opposing side on B.
     d1 = _evaluate(
-        a, "YES", a.yes_ask, a_fee,
-        b, b_no_label, b_no_ask, b_fee,
+        a, "YES", a.yes_ask, a.yes_ask_size, a_fee,
+        b, b_no_label, b_no_ask, b_no_size, b_fee,
         contracts, match_score,
     )
     # Direction 2: NO on A hedged with the opposing side on B.
     d2 = _evaluate(
-        a, "NO", a.no_ask, a_fee,
-        b, b_yes_label, b_yes_ask, b_fee,
+        a, "NO", a.no_ask, a.no_ask_size, a_fee,
+        b, b_yes_label, b_yes_ask, b_yes_size, b_fee,
         contracts, match_score,
     )
     return max((d1, d2), key=lambda o: o.profit)

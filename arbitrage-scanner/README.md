@@ -75,8 +75,21 @@ and is gone the next is not executable by hand; one that persists for minutes
 across many dollars of size is worth building execution for.
 
 Columns: `scan_time, roi, profit_per_contract, total_profit, cost, contracts,
-match_score`, plus `a_*` / `b_*` leg details (source, market_id, side, price,
-title, url).
+match_score, available_size`, plus `a_*` / `b_*` leg details (source,
+market_id, side, price, size, title, url).
+
+Then summarize how long edges actually lasted:
+
+```bash
+arbscanner-analyze opportunities.csv --top 20            # rank by persistence
+arbscanner-analyze opportunities.csv --sort roi          # rank by max ROI
+```
+
+It groups rows by market pair and reports, per edge: how many scans it appeared
+in, the span between first and last sighting, max/mean ROI, and max executable
+size. The headline number — *edges seen in >1 scan* — is your feasibility
+signal. `available_size` / `maxSize` is populated only when **both** venues
+expose order-book depth; today that's Polymarket (see roadmap for Kalshi).
 
 Output is a table of opportunities sorted by ROI, e.g.:
 
@@ -118,11 +131,12 @@ src/arbscanner/
   matching.py          # title normalization + fuzzy matching + manual map
   scanner.py           # orchestration: fetch -> match -> detect -> filter
   opportunity_logger.py # append opportunities to a timestamped CSV
+  analyze.py           # edge-persistence stats over a logged CSV
   cli.py               # argparse entrypoint + table output
   sources/
     base.py            # MarketSource interface
     kalshi.py          # Kalshi public market-data feed
-    polymarket.py      # Polymarket Gamma API
+    polymarket.py      # Polymarket Gamma (listings) + CLOB (best ask + size)
 ```
 
 Adding a venue = implement `MarketSource.fetch_quotes()` returning `Quote`s and
@@ -130,9 +144,14 @@ register it in `cli.SOURCE_REGISTRY`.
 
 ## Caveats (read this)
 
-- **Polymarket prices are approximate.** The Gamma API returns summary/mid
-  prices, not the live order-book ask. Reported edges are *optimistic*; an
-  execution layer must pull the real CLOB book (best ask + size) first.
+- **Polymarket now uses the real CLOB best ask + size** by default
+  (`use_clob: true`). If the order-book call fails it falls back to Gamma
+  mid-prices and logs a warning; with `use_clob: false` it uses mid-prices
+  always (faster, but optimistic and sizeless).
+- **Kalshi has no depth yet.** The Kalshi feed provides best bid/ask but not
+  resting size, so `available_size` is blank for any pair involving Kalshi.
+  Pulling Kalshi order-book depth (ideally only for matched pairs) is the next
+  roadmap item.
 - **Matching is heuristic.** Always sanity-check a pair before trusting it, and
   use `manual_map` for anything important. Identical wording ≠ identical
   resolution rules.
@@ -142,9 +161,11 @@ register it in `cli.SOURCE_REGISTRY`.
 
 ## Roadmap (phase 2+, only if phase 1 proves it out)
 
-1. Pull real order-book depth (Kalshi + Polymarket CLOB) for true asks & size.
-2. Persist scans to spot how long edges actually survive (the make-or-break
-   metric).
+1. ~~Polymarket CLOB best ask + size~~ ✅ done. Remaining: Kalshi order-book
+   depth (per-market endpoint, ideally fetched only for matched pairs to keep
+   request volume sane) so `available_size` covers Kalshi×Polymarket pairs.
+2. ~~Persist scans + analyze edge persistence~~ ✅ done (`--log` +
+   `arbscanner-analyze`). Next: chart persistence over a multi-day run.
 3. Alerting (Discord/Telegram/email) on qualifying edges.
 4. **Execution** — only on venues with official, ToS-compliant trading APIs
    (Kalshi, Polymarket). Requires authenticated keys, atomic two-leg fills,

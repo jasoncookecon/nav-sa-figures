@@ -19,6 +19,7 @@ dev = ["pytest>=7.0"]
 
 [project.scripts]
 arbscanner = "arbscanner.cli:main"
+arbscanner-analyze = "arbscanner.analyze:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

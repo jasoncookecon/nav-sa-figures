@@ -15,6 +15,7 @@ sources:
 
   - type: polymarket
     limit: 1000
+    use_clob: true       # pull real CLOB best-ask + size (set false for fast Gamma mid-prices)
     # Polymarket currently has no per-trade taker fee, but you still pay the
     # spread and (for on-chain settlement) gas. Model a small buffer so the
     # reported edge is closer to reality.

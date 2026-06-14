@@ -26,6 +26,10 @@ class Quote:
     no_ask: Optional[float]
     yes_bid: Optional[float] = None
     no_bid: Optional[float] = None
+    # Size (in contracts) resting at the best ask, when the source exposes
+    # real order-book depth. None means "unknown / not provided".
+    yes_ask_size: Optional[float] = None
+    no_ask_size: Optional[float] = None
     url: str = ""
     liquidity: Optional[float] = None
     close_time: Optional[datetime] = None

@@ -21,7 +21,7 @@ SOURCE_REGISTRY = {
     "polymarket": PolymarketSource,
 }
 
-_SOURCE_KWARGS = ("limit", "status", "timeout")
+_SOURCE_KWARGS = ("limit", "status", "timeout", "use_clob", "clob_batch")
 
 
 def load_config(path: Optional[str]) -> dict:
@@ -70,14 +70,16 @@ def print_opportunities(opps) -> None:
 
         title = f"{len(opps)} arbitrage opportunit{'y' if len(opps) == 1 else 'ies'}"
         table = Table(title=title)
-        for col in ("ROI", "Profit/ct", "Match", "Leg A", "Leg B"):
+        for col in ("ROI", "Profit/ct", "Match", "AvailSize", "Leg A", "Leg B"):
             table.add_column(col)
         for o in opps:
             a, b = o.legs
+            size = "?" if o.available_size is None else f"{o.available_size:.0f}"
             table.add_row(
                 f"{o.roi * 100:.1f}%",
                 f"${o.profit / o.contracts:.3f}",
                 f"{o.match_score * 100:.0f}%",
+                size,
                 f"{a.source}:{a.side} {a.price:.2f} {a.title[:40]}",
                 f"{b.source}:{b.side} {b.price:.2f} {b.title[:40]}",
             )
@@ -85,8 +87,9 @@ def print_opportunities(opps) -> None:
     except ImportError:
         for o in opps:
             a, b = o.legs
+            size = "?" if o.available_size is None else f"{o.available_size:.0f}"
             print(
-                f"[{o.roi * 100:5.1f}% ROI] "
+                f"[{o.roi * 100:5.1f}% ROI, size {size}] "
                 f"{a.source}:{a.side}@{a.price:.2f} + {b.source}:{b.side}@{b.price:.2f} | "
                 f"{a.title[:50]} <=> {b.title[:50]}"
             )
