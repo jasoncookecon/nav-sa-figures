@@ -11,6 +11,7 @@ except ImportError:  # pragma: no cover
     yaml = None
 
 from .fees import build_fee_model
+from .opportunity_logger import append_opportunities
 from .scanner import ScanConfig, Scanner
 from .sources.kalshi import KalshiSource
 from .sources.polymarket import PolymarketSource
@@ -101,6 +102,10 @@ def main(argv=None) -> None:
         "--interval", type=float, default=60.0,
         help="seconds between scans in loop mode (default: 60)",
     )
+    p.add_argument(
+        "--log", metavar="CSV",
+        help="append every opportunity to this CSV (overrides scan.log_file in config)",
+    )
     p.add_argument("-v", "--verbose", action="store_true", help="log fetch progress")
     args = p.parse_args(argv)
 
@@ -109,11 +114,17 @@ def main(argv=None) -> None:
         format="%(asctime)s %(levelname)s %(message)s",
     )
 
-    scanner = build_from_config(load_config(args.config))
+    cfg = load_config(args.config)
+    scanner = build_from_config(cfg)
+    log_path = args.log or (cfg.get("scan") or {}).get("log_file")
 
     while True:
         opps = scanner.scan()
         print_opportunities(opps)
+        if log_path:
+            n = append_opportunities(log_path, opps)
+            if n:
+                print(f"Logged {n} opportunit{'y' if n == 1 else 'ies'} to {log_path}")
         if args.once:
             break
         time.sleep(args.interval)

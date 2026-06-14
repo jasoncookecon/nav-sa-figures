@@ -27,6 +27,9 @@ scan:
   contracts: 100         # position size used when computing profit and fees
   min_profit: 0.01       # ignore opportunities below this total profit (dollars)
   min_roi: 0.0           # ignore opportunities below this ROI (fraction)
+  # Append every reported opportunity to this CSV (timestamped per scan) so you
+  # can measure how long edges actually survive. CLI --log overrides this.
+  # log_file: opportunities.csv
 
 # Force-pair markets the fuzzy matcher misses or gets wrong. Keyed
 # "sourceA->sourceB", then mapping a market_id in A to a market_id in B.

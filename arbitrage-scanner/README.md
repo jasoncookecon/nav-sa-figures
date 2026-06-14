@@ -59,7 +59,24 @@ arbscanner --once -v
 # use a config file and loop every 30s
 cp config.example.yaml config.yaml
 arbscanner -c config.yaml --interval 30
+
+# log every opportunity to a timestamped CSV (great for an overnight run)
+arbscanner --interval 30 --log opportunities.csv
 ```
+
+### Measuring edge persistence
+
+`--log FILE` (or `scan.log_file` in config) appends one row per opportunity per
+scan, all sharing that scan's UTC timestamp. Let it run on a loop and you can
+answer the question that actually decides feasibility: **how long does a given
+edge survive?** Group rows by the market pair (`a_market_id` + `b_market_id`)
+and look at the spread of `scan_time` values — an edge that appears in one scan
+and is gone the next is not executable by hand; one that persists for minutes
+across many dollars of size is worth building execution for.
+
+Columns: `scan_time, roi, profit_per_contract, total_profit, cost, contracts,
+match_score`, plus `a_*` / `b_*` leg details (source, market_id, side, price,
+title, url).
 
 Output is a table of opportunities sorted by ROI, e.g.:
 
@@ -100,6 +117,7 @@ src/arbscanner/
   arbitrage.py         # hedge math -> Opportunity
   matching.py          # title normalization + fuzzy matching + manual map
   scanner.py           # orchestration: fetch -> match -> detect -> filter
+  opportunity_logger.py # append opportunities to a timestamped CSV
   cli.py               # argparse entrypoint + table output
   sources/
     base.py            # MarketSource interface
