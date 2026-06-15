@@ -86,6 +86,43 @@ def test_missing_asks_marks_side_untradable():
     assert not q.tradable
 
 
+class _PagingSession:
+    """Serves Gamma markets in fixed-size pages keyed by the offset param."""
+
+    def __init__(self, all_markets, page):
+        self._all = all_markets
+        self._page = page
+
+    def get(self, url, params=None, timeout=None):
+        off = (params or {}).get("offset", 0)
+        return _Resp(self._all[off : off + self._page])
+
+    def post(self, url, json=None, timeout=None):
+        return _Resp([])  # no CLOB books needed for this test
+
+
+def _mk_market(i):
+    return {
+        "id": f"M{i}",
+        "slug": f"m{i}",
+        "question": f"Market {i}?",
+        "outcomes": '["Yes", "No"]',
+        "outcomePrices": '["0.50", "0.50"]',
+        "clobTokenIds": f'["Y{i}", "N{i}"]',
+    }
+
+
+def test_gamma_pagination_fetches_all_pages():
+    # 250 markets served 100 at a time must all come back (not just page 1).
+    markets = [_mk_market(i) for i in range(250)]
+    src = PolymarketSource(
+        limit=1000, session=_PagingSession(markets, page=100),
+        use_clob=False, gamma_page=100,
+    )
+    quotes = src.fetch_quotes()
+    assert len(quotes) == 250
+
+
 def test_clob_failure_falls_back_to_gamma():
     class _Boom(_StubSession):
         def post(self, url, json=None, timeout=None):

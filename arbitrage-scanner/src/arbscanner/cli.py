@@ -21,7 +21,7 @@ SOURCE_REGISTRY = {
     "polymarket": PolymarketSource,
 }
 
-_SOURCE_KWARGS = ("limit", "status", "timeout", "use_clob", "clob_batch")
+_SOURCE_KWARGS = ("limit", "status", "timeout", "use_clob", "clob_batch", "gamma_page")
 
 
 def load_config(path: Optional[str]) -> dict:

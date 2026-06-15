@@ -43,12 +43,15 @@ class PolymarketSource(MarketSource):
         session: Optional[requests.Session] = None,
         use_clob: bool = True,
         clob_batch: int = 100,
+        gamma_page: int = 100,
     ):
         self.limit = limit
         self.timeout = timeout
         self.session = session or requests.Session()
         self.use_clob = use_clob
         self.clob_batch = clob_batch
+        # Gamma caps /markets at 100 rows per request, so page in 100s.
+        self.gamma_page = gamma_page
 
     def fetch_quotes(self) -> list[Quote]:
         # entries: (quote, yes_token_id, no_token_id)
@@ -79,9 +82,8 @@ class PolymarketSource(MarketSource):
     def _fetch_gamma_markets(self) -> list[dict]:
         markets: list[dict] = []
         offset = 0
-        page = 500
         while offset < self.limit:
-            want = min(page, self.limit - offset)
+            want = min(self.gamma_page, self.limit - offset)
             params = {"closed": "false", "active": "true", "limit": want, "offset": offset}
             resp = self.session.get(f"{GAMMA_API}/markets", params=params, timeout=self.timeout)
             resp.raise_for_status()
@@ -90,6 +92,7 @@ class PolymarketSource(MarketSource):
                 break
             markets.extend(batch)
             offset += len(batch)
+            # A short page means we've reached the end of the listing.
             if len(batch) < want:
                 break
         return markets
