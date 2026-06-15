@@ -1,0 +1,41 @@
+# Example configuration for the prediction-market arbitrage scanner.
+#
+# This tool is READ-ONLY: it never places trades. It only reports potential
+# arbitrage so you can judge whether the idea is worth pursuing.
+#
+# Copy to config.yaml and run:  arbscanner -c config.yaml --once -v
+
+sources:
+  - type: kalshi
+    limit: 1000
+    status: open
+    # Kalshi charges a trading fee: ceil(0.07 * contracts * price * (1 - price)).
+    fees:
+      type: kalshi
+
+  - type: polymarket
+    limit: 1000
+    use_clob: true       # pull real CLOB best-ask + size (set false for fast Gamma mid-prices)
+    # Polymarket currently has no per-trade taker fee, but you still pay the
+    # spread and (for on-chain settlement) gas. Model a small buffer so the
+    # reported edge is closer to reality.
+    fees:
+      type: flat_bps
+      bps: 50            # 0.50% of notional per leg
+
+scan:
+  match_threshold: 0.88  # 0..1 title similarity required to call two markets "the same"
+  contracts: 100         # position size used when computing profit and fees
+  min_profit: 0.01       # ignore opportunities below this total profit (dollars)
+  min_roi: 0.0           # ignore opportunities below this ROI (fraction)
+  # Append every reported opportunity to this CSV (timestamped per scan) so you
+  # can measure how long edges actually survive. CLI --log overrides this.
+  # log_file: opportunities.csv
+
+# Force-pair markets the fuzzy matcher misses or gets wrong. Keyed
+# "sourceA->sourceB", then mapping a market_id in A to a market_id in B.
+# This is your safety valve against the #1 failure mode: trading two markets
+# that look identical but resolve under different rules.
+manual_map: {}
+#  kalshi->polymarket:
+#    "FED-23DEC-T3.00": "0x1234abcd..."
